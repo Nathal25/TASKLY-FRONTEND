@@ -1,0 +1,68 @@
+.home-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  height: 100vh;
+  background: var(--background-color);
+}
+
+.home-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  text-align: center;
+  width: 100%;
+}
+
+.home-logo {
+  width: 140px !important;
+  height: 140px !important;
+  border-radius: 50% !important;
+  object-fit: contain;
+  background: white;
+  padding: 10px;
+  display: block;
+  margin: 0 auto;
+}
+
+
+
+.home-btn {
+  padding: 0.9rem 2rem;
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  color: #fff;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: transform 0.2s ease, opacity 0.3s ease;
+}
+
+.home-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+.home-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 500px;
+  padding: 1rem 2rem;
+  box-sizing: border-box;
+}
+
+.home-footer a {
+  color: var(--primary-color);
+  font-size: 0.95rem;
+  text-decoration: none;
+}
+
+.home-footer a:hover {
+  text-decoration: underline;
+}

@@ -1,15 +1,18 @@
-/**
- * Entry point of the application.
- * 
- * - Imports the global base CSS styles.
- * - Imports and initializes the router to handle hash-based navigation.
- */
+import home from "./views/home.html?raw";
+import login from "./views/login.html?raw";
+import register from "./views/register.html?raw";
 
-import './styles/base.css';
-import { initRouter } from './routes/route.js';
+const routes = {
+  "/home": home,
+  "/login": login,
+  "/register": register,
+};
 
-/**
- * Initialize the client-side router.
- * This sets up listeners and renders the correct view on app start.
- */
-initRouter();
+function router() {
+  const hash = window.location.hash.replace("#", "") || "/home";
+  const app = document.getElementById("app");
+  app.innerHTML = routes[hash] || "<h1>404 - Not Found</h1>";
+}
+
+window.addEventListener("hashchange", router);
+window.addEventListener("load", router);
