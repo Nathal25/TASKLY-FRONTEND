@@ -1,0 +1,63 @@
+.recover-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background: #3b0a45;
+  text-align: center;
+  color: white;
+}
+
+.recover-container h2 {
+  margin-bottom: 20px;
+}
+
+.recover-container form {
+  display: flex;
+  flex-direction: column;
+  width: 250px;
+  gap: 12px;
+}
+
+.recover-container input {
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+}
+
+.recover-container button {
+  background: #9b4de0;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.recover-container button:hover {
+  background: #7a37b5;
+}
+
+.recover-container .back {
+  margin-top: 20px;
+  color: #c9a0e6;
+  text-decoration: none;
+}
+
+.logo-circle {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+.logo-circle .logo {
+  width: 80px;
+  height: auto;
+}
