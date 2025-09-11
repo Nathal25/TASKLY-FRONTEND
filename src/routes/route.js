@@ -1,4 +1,5 @@
 import { registerUser } from '../services/userService.js';
+import { loadView } from "../services/userService.js";
 
 const app = document.getElementById('app');
 
@@ -15,6 +16,19 @@ const viewURL = (name) => new URL(`../views/${name}.html`, import.meta.url);
  * @param {string} name - The view name to load (e.g., "home", "board").
  * @throws {Error} If the view cannot be fetched.
  */
+
+const routes = {
+  "/login": "views/login.html",
+  "/register": "views/register.html",
+  "/recover-email": "views/recover-email.html",
+  "/recover-password": "views/recover-password.html",
+  "/recover-code": "views/recover-code.html",
+  "/board": "views/board.html",
+  "/tasks": "views/tasks.html"   // 👈 tu nueva vista
+};
+
+export default routes;
+
 async function loadView(name) {
   const res = await fetch(viewURL(name));
   if (!res.ok) throw new Error(`Failed to load view: ${name}`);
