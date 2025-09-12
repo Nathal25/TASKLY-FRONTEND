@@ -1,6 +1,7 @@
 // src/data/mockData.js
 
-const taskLists = [
+
+export const taskLists = [
   {
     id: 'list-1',
     title: 'Tareas del hogar',

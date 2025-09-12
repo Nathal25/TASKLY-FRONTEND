@@ -1,43 +1,43 @@
-/**
- * Entry point of the application.
- * 
- * - Imports the global base CSS styles.
- * - Imports and initializes the router to handle hash-based navigation.
- */
-
 import './styles/base.css';
 import { initRouter } from './routes/route.js';
-import { taskList } from "./data/mockData.js";
-const taskListContainer = document.getElementById("task-List");
+import taskList from "./data/mockData.js";
 
-function renderTasksList() {
-  taskListContainer.innerHTML = ""; // limpiar antes de pintar
+const board = document.getElementById("kanban-board");
+
+function renderKanban() {
+    const board = document.getElementById("kanban-board");
+  if (!board) return; // seguridad por si no existe el div todavía
+  board.innerHTML = ""; // limpiar antes de pintar
+
   taskList.forEach(list => {
-    const listDiv = document.createElement("div");
-    listDiv.classList = "task-list";
-    const title = document.createElement("h3");
-    title.textContent = list.title;
-    listDiv.appendChild(title);
+    // Crear columna
+    const column = document.createElement("div");
+    column.classList.add("kanban-column");
+    column.innerHTML = `<h3>${list.title}</h3>`;
 
-    const ul = document.createElement("ul");
+    // Contenedor de tareas
+    const tasksContainer = document.createElement("div");
+    tasksContainer.classList.add("kanban-tasks");
+
     list.tasks.forEach(task => {
-        const li = document.createElement("li");
-        li.textContent = task.text;
+      const taskCard = document.createElement("div");
+      taskCard.classList.add("kanban-task");
+      taskCard.textContent = task.text;
 
-        if (task.completed) {
-            li.style.textDecoration = "line-through";
-        }
-        ul.appendChild(li);
+      if (task.completed) {
+        taskCard.classList.add("completed");
+      }
+
+      tasksContainer.appendChild(taskCard);
     });
 
-    listDiv.appendChild(ul);
-    taskListContainer.appendChild(listDiv);
-    });
+    column.appendChild(tasksContainer);
+    board.appendChild(column);
+  });
 }
 
-renderTasksList();
-/**
- * Initialize the client-side router.
- * This sets up listeners and renders the correct view on app start.
- */
+// Espera que el DOM esté listo antes de renderizar
+document.addEventListener("DOMContentLoaded", renderKanban);
+
+// Inicializar el router
 initRouter();
