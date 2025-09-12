@@ -1,3 +1,137 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  box-sizing: border-box;
+}
+/* Layout for tasks.html wireframe */
+.tasks-layout {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  background: #f4f4f9;
+  overflow: hidden;
+  box-sizing: border-box;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  margin: 0 !important;
+}
+
+.sidebar {
+  width: 260px;
+  background: #643094;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0;
+  min-height: 100vh;
+  box-sizing: border-box;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  margin: 0 !important;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 32px;
+}
+.user-avatar {
+  margin-bottom: 8px;
+}
+.user-name {
+  font-size: 1.2em;
+  font-weight: 500;
+  border-bottom: 1px solid #fff3;
+  padding-bottom: 4px;
+  width: 100px;
+  text-align: center;
+}
+.lists-nav {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: auto;
+  align-items: center;
+}
+.list-btn {
+  width: 80%;
+  background: #444;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 0;
+  font-size: 1em;
+  margin-bottom: 4px;
+  cursor: pointer;
+  text-align: left;
+  padding-left: 16px;
+  transition: background 0.2s;
+}
+.list-btn:hover {
+  background: #f253ea;
+}
+.sidebar-bottom {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 24px 0 24px;
+  gap: 8px;
+}
+.sidebar-action {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.sidebar-action:hover {
+  color: #535bf2;
+}
+.tasks-main {
+  flex: 1;
+  padding: 40px 40px 0 40px;
+  display: flex;
+  flex-direction: column;
+  background: #f4f4f9;
+  min-width: 0;
+  height: 100vh;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+.tasks-title {
+  font-size: 2.2em;
+  font-weight: bold;
+  color: #2c3e50;
+  margin-bottom: 24px;
+}
+.kanban-section {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 32px;
+  height: 100%;
+  min-width: 0;
+  position: relative;
+}
+.add-task-form-container {
+  min-width: 320px;
+  max-width: 350px;
+  margin: 0;
+  background: #fff;
+  padding: 24px 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+  align-self: flex-start;
+}
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -208,6 +342,10 @@ button:focus-visible {
   margin-top: 30px;
   padding: 10px;
   overflow-x: auto;
+  max-width: 100%;
+  max-height: calc(100vh - 120px);
+  min-width: 0;
+  flex: 1 1 auto;
 }
 
 .kanban-column {
@@ -254,15 +392,13 @@ button:focus-visible {
   display: flex;
   justify-content: space-between; /* título a la izquierda, caja a la derecha */
   align-items: center;
-  margin: 20px;
-}
-
-/* Título */
-.tasks-header h1 {
-  font-size: 2rem;
-  font-weight: bold;
-  color: #2c3e50;
-}
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f9;
+  padding: 0;
+  overflow: hidden;
 
 /* Caja de agregar tarea */
 .add-task-form-container {

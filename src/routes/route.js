@@ -52,7 +52,7 @@ export function initRouter() {
  */
 function handleRoute() {
   const path = (location.hash.startsWith('#/') ? location.hash.slice(2) : '') || 'home';
-  const known = ['home', 'board'];
+  const known = ['home', 'board','login','register','recover-email','recover-password','recover-code','tasks'];
   const route = known.includes(path) ? path : 'home';
 
   loadView(route).catch(err => {
@@ -137,5 +137,57 @@ function initBoard() {
     if (!li) return;
     if (e.target.matches('.remove')) li.remove();
     if (e.target.matches('.check')) li.classList.toggle('completed', e.target.checked);
+  });
+}
+
+function initRegister() {
+    const form = document.getElementById('registerForm');
+    const msg = document.getElementById('registerMsg');
+
+    // Listener del botón Volver (SPA, sin recargar)
+  const volverBtn = document.getElementById('volverBtn');
+  if (volverBtn) {
+    volverBtn.addEventListener('click', () => {
+      console.log('volverBtn click → navegando a #/home');
+      // cambiar hash para que el router cargue la vista home
+      location.hash = '#/home';
+    });
+  } else {
+    // Si no existe, imprimimos aviso para depuración
+    console.warn('initRegister: volverBtn no encontrado en el DOM');
+  }
+
+    if (!form) return;
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        msg.textContent = '';
+        const formData = new FormData(form);
+        const data = {
+          firstName: formData.get('firstName').trim(),
+          lastName: formData.get('lastName').trim(),
+          age: Number(formData.get('age')),
+          email: formData.get('email').trim(),
+          password: formData.get('password').trim(),
+          confirmPassword: formData.get('confirmPassword').trim(), // agregar campo
+        };
+
+
+    // Validación básica (opcional)
+    if (!data.firstName || !data.lastName || !data.age || !data.email || !data.password) {
+      msg.textContent = 'Por favor completa todos los campos.';
+      return;
+    }
+
+    form.querySelector('button[type="submit"]').disabled = true;
+
+    try {
+      await registerUser(data);
+      msg.textContent = 'Registro exitoso';
+      setTimeout(() => (location.hash = '#/board'), 400);
+    } catch (err) {
+      msg.textContent = `No se pudo registrar: ${err.message}`;
+    } finally {
+      form.querySelector('button[type="submit"]').disabled = false;
+    }
   });
 }

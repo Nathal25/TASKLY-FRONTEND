@@ -22,6 +22,18 @@ import { http } from '../api/http.js';
  *   console.error("Registration failed:", err.message);
  * }
  */
-export async function registerUser({ username, password }) {
-  return http.post('/api/v1/users', { username, password });
+const URL='https://taskly-2h0c.onrender.com';
+export async function registerUser(data) {
+  const res = await fetch(`${URL}/api/v1/users/`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+
+  if (!res.ok) {
+    const error = await res.json().catch(() => ({}));
+    throw new Error(error.message || 'Error en el registro');
+  }
+
+  return res.json();
 }
