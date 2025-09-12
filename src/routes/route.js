@@ -1,6 +1,4 @@
 import { registerUser } from '../services/userService.js';
-import { loadView } from "../services/userService.js";
-
 const app = document.getElementById('app');
 
 /**

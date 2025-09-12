@@ -8,18 +8,21 @@
     <title>Taskly App</title>
   </head>
   <body>
+    <div id="board" class="kanban-board"></div>
      <div id="app"></div>
-      <h1>Mis Tareas</h1>
-      <ul id="taskList"></ul>
+      <h1 style="text-align: left;">Mis Tareas</h1>
+      <div id="kanban-board"></div>
 
      <div class="add-task-form-container">
-     <h2>Agregar Tarea</h2>
+     <h2 style="text-align: right;">Agregar Tarea</h2>
     <form id="addTaskForm">
       <div id="task-lists"></div>
-      <input type="text" id="taskInput" placeholder="Nombre de la nueva tarea" required>
+      <input type="text" id="taskinput" placeholder="Nombre de la nueva tarea" required>
       <button type="submit">Agregar</button>
     </form>
   </div>
+  <div id="kanban-board" class="kanban-board"></div>
+
 
     <script type="module" src="/src/main.js"></script>
   </body>
