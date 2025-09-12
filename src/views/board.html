@@ -1,9 +1,11 @@
-<div class="container">
+<div class="container"> 
   <article class="card">
     <header class="toolbar">
       <a class="link" href="#/home">← Volver</a>
     </header>
     <h1>Mis tareas</h1>
+
+    <!-- Formulario opcional para crear tareas -->
     <form id="todoForm" class="form" autocomplete="off">
       <div class="row">
         <label for="newTodo">Nueva tarea</label>
@@ -11,6 +13,29 @@
       </div>
       <button class="btn" type="submit">Agregar</button>
     </form>
-    <ul id="todoList"></ul>
+
+    <!-- Tablero Kanban -->
+    <div class="kanban-board">
+      <!-- Columna Nuevo -->
+      <div class="kanban-column" data-status="new">
+        <h3>Nuevo</h3>
+        <div class="kanban-tasks" id="new"></div>
+        <button class="add-task">+</button>
+      </div>
+
+      <!-- Columna En Progreso -->
+      <div class="kanban-column" data-status="in-progress">
+        <h3>En Progreso</h3>
+        <div class="kanban-tasks" id="in-progress"></div>
+        <button class="add-task">+</button>
+      </div>
+
+      <!-- Columna Hecho -->
+      <div class="kanban-column" data-status="done">
+        <h3>Hecho</h3>
+        <div class="kanban-tasks" id="done"></div>
+        <button class="add-task">+</button>
+      </div>
+    </div>
   </article>
 </div>

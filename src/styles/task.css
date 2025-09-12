@@ -407,3 +407,55 @@ button:focus-visible {
   border-radius: 10px;
   box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
 }
+/* Estilos del contenedor del tablero */
+#kanban-board {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  align-items: flex-start;
+}
+
+/* Cada columna */
+.kanban-column {
+  flex: 1;
+  min-width: 200px;
+  background: #f4f4f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 0.5rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Título de la columna */
+.kanban-column h3 {
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+/* Contenedor de tareas */
+.kanban-tasks {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Cada tarjeta de tarea */
+.kanban-task {
+  background: white;
+  padding: 0.5rem;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  cursor: grab;
+  transition: background 0.2s;
+}
+
+.kanban-task:hover {
+  background: #f0f8ff;
+}
+
+/* Si está completada */
+.kanban-task.completed {
+  text-decoration: line-through;
+  background: #e0e0e0;
+}
+
