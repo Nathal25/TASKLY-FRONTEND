@@ -1,4 +1,4 @@
-import './styles/base.css';
+import '../public/styles/base.css';
 import { initRouter } from './routes/route.js';
 
 
