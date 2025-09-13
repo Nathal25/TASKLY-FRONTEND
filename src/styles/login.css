@@ -1,46 +1,68 @@
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: #3b0a45;
+  font-family: Arial, sans-serif;
+}
+
 .login-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   height: 100vh;
-  background: #3b0a45;
+  background: linear-gradient(135deg, #3b0a45 0%, #6a1b9a 100%);
   color: white;
   text-align: center;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
 .logo {
-  width: 120px;
-  margin-bottom: 20px;
+  width: 130px;         /* O incluso 120px si quieres más espacio */
+  height: auto;
+  object-fit: contain;  /* Evita deformar o recortar */
 }
+
 
 h2 {
   margin-bottom: 20px;
-  font-size: 24px;
+  font-size: 28px;
+  font-weight: 700;
 }
 
 form {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  width: 280px;
+  gap: 16px;
+  width: 300px;
 }
 
 input {
-  padding: 10px;
+  padding: 12px;
   border-radius: 6px;
   border: none;
   outline: none;
+  font-size: 16px;
+  box-shadow: inset 0 0 5px rgba(0,0,0,0.3);
+  transition: box-shadow 0.3s ease;
+}
+
+input:focus {
+  box-shadow: 0 0 8px 2px #9b4de0;
 }
 
 button {
   background: #9b4de0;
   color: white;
   border: none;
-  padding: 12px;
+  padding: 14px;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 18px;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
 }
 
 button:hover {
@@ -48,19 +70,28 @@ button:hover {
 }
 
 .extras {
-  margin-top: 15px;
+  margin-top: 20px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
 }
 
 .extras a, .back {
   color: #c9a0e6;
   text-decoration: none;
   font-size: 14px;
+  transition: color 0.3s ease;
+}
+
+.extras a:hover, .back:hover {
+  color: white;
 }
 
 .back {
-  margin-top: 20px;
+  margin-top: 25px;
   display: inline-block;
+  font-weight: 500;
 }
+
+
+

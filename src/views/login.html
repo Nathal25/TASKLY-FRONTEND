@@ -4,24 +4,24 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Taskly - Login</title>
-  <link rel="stylesheet" href="../styles/base.css">
-  <link rel="stylesheet" href="../styles/login.css">
+  
+  <link rel="stylesheet" href="/src/styles/login.css">
 </head>
 <body>
   <div class="login-container">
     <img src="/taskly-logo.png" alt="Taskly Logo" class="logo">
     <h2>¡BIENVENIDO!</h2>
-    <form action="tasks.html" method="get">
+    <form id="loginForm" action="#/tasks" method="get">
 
-      <input type="text" placeholder="Usuario" required>
-      <input type="password" placeholder="Contraseña" required>
-      <button type="submit">Ingresar</button>
+      <input type="text" name="email" placeholder="Email" required>
+      <input type="password" name="password" placeholder="Contraseña" required>
+      <button id="loginMsg" type="submit">Ingresar</button>
     </form>
     <div class="extras">
-      <a href="register.html">Registro</a>
-      <a href="recover-email.html">¿Olvidaste tu contraseña?</a>
+      <a id="registerLink" href="#/register">¿No tienes una cuenta? Regístrate aquí</a>
+      <a href="#/recover-email">¿Olvidaste tu contraseña?</a>
     </div>
-    <a href="home.html" class="back">Volver</a>
+    <a href="#/home" class="back">Volver</a>
   </div>
 </body>
 </html>

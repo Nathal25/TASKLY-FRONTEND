@@ -15,17 +15,7 @@ const viewURL = (name) => new URL(`../views/${name}.html`, import.meta.url);
  * @throws {Error} If the view cannot be fetched.
  */
 
-const routes = {
-  "/login": "views/login.html",
-  "/register": "views/register.html",
-  "/recover-email": "views/recover-email.html",
-  "/recover-password": "views/recover-password.html",
-  "/recover-code": "views/recover-code.html",
-  "/board": "views/board.html",
-  "/tasks": "views/tasks.html"   // 👈 tu nueva vista
-};
 
-export default routes;
 
 async function loadView(name) {
   const res = await fetch(viewURL(name));
@@ -34,7 +24,12 @@ async function loadView(name) {
   app.innerHTML = html;
 
   if (name === 'home') initHome();
-  if (name === 'board') initBoard();
+  if (name === 'register') initRegister();
+  if (name === 'tasks') initTasks();
+  if (name === 'login') initLogin();
+  if (name === 'recover-email') initRecoverEmail();
+  if (name === 'recover-password') initRecoverPassword();
+  if (name === 'recover-code') initRecoverCode();
 }
 
 /**
@@ -52,7 +47,7 @@ export function initRouter() {
  */
 function handleRoute() {
   const path = (location.hash.startsWith('#/') ? location.hash.slice(2) : '') || 'home';
-  const known = ['home', 'board','login','register','recover-email','recover-password','recover-code','tasks'];
+  const known = ['home', 'login','register','recover-email','recover-password','recover-code','tasks'];
   const route = known.includes(path) ? path : 'home';
 
   loadView(route).catch(err => {
@@ -102,79 +97,43 @@ function initHome() {
   });
 }
 
-/**
- * Initialize the "board" view.
- * Sets up the todo form, input, and list with create/remove/toggle logic.
- */
-function initBoard() {
-  const form = document.getElementById('todoForm');
-  const input = document.getElementById('newTodo');
-  const list = document.getElementById('todoList');
-  if (!form || !input || !list) return;
+function initTasks() {
+  const taskList = document.getElementById('taskList');
+  if (!taskList) return;
 
-  // Add new todo item
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const title = input.value.trim();
-    if (!title) return;
-
-    const li = document.createElement('li');
-    li.className = 'todo';
-    li.innerHTML = `
-      <label>
-        <input type="checkbox" class="check">
-        <span>${title}</span>
-      </label>
-      <button class="link remove" type="button">Eliminar</button>
-    `;
-    list.prepend(li);
-    input.value = '';
-  });
-
-  // Handle remove and toggle completion
-  list.addEventListener('click', (e) => {
-    const li = e.target.closest('.todo');
-    if (!li) return;
-    if (e.target.matches('.remove')) li.remove();
-    if (e.target.matches('.check')) li.classList.toggle('completed', e.target.checked);
-  });
+  // Lógica para inicializar la vista de tareas
+  console.log('Tasks view initialized');
 }
 
 function initRegister() {
-    const form = document.getElementById('registerForm');
-    const msg = document.getElementById('registerMsg');
+  const form = document.getElementById('registerForm');
+  const msg = document.getElementById('registerMsg');
 
-    // Listener del botón Volver (SPA, sin recargar)
-  const volverBtn = document.getElementById('volverBtn');
-  if (volverBtn) {
-    volverBtn.addEventListener('click', () => {
-      console.log('volverBtn click → navegando a #/home');
-      // cambiar hash para que el router cargue la vista home
-      location.hash = '#/home';
-    });
-  } else {
-    // Si no existe, imprimimos aviso para depuración
-    console.warn('initRegister: volverBtn no encontrado en el DOM');
-  }
+  if (!form) return;
 
-    if (!form) return;
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        msg.textContent = '';
-        const formData = new FormData(form);
-        const data = {
-          firstName: formData.get('firstName').trim(),
-          lastName: formData.get('lastName').trim(),
-          age: Number(formData.get('age')),
-          email: formData.get('email').trim(),
-          password: formData.get('password').trim(),
-          confirmPassword: formData.get('confirmPassword').trim(), // agregar campo
-        };
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();  // Esto previene el comportamiento por defecto del formulario (que recarga la página)
+    if (msg) msg.textContent = '';
 
+    const formData = new FormData(form);
+    const data = {
+      firstName: formData.get('firstName')?.trim(),
+      lastName: formData.get('lastName')?.trim(),
+      age: Number(formData.get('age')),
+      email: formData.get('email')?.trim(),
+      password: formData.get('password')?.trim(),
+      confirmPassword: formData.get('confirmPassword')?.trim(),
+    };
 
-    // Validación básica (opcional)
-    if (!data.firstName || !data.lastName || !data.age || !data.email || !data.password) {
-      msg.textContent = 'Por favor completa todos los campos.';
+    // Validación básica
+    if (!data.firstName || !data.lastName || !data.age || !data.email || !data.password || !data.confirmPassword) {
+      if (msg) msg.textContent = 'Por favor completa todos los campos.';
+      return;
+    }
+
+    // Validar contraseñas
+    if (data.password !== data.confirmPassword) {
+      if (msg) msg.textContent = 'Las contraseñas no coinciden.';
       return;
     }
 
@@ -182,10 +141,63 @@ function initRegister() {
 
     try {
       await registerUser(data);
-      msg.textContent = 'Registro exitoso';
-      setTimeout(() => (location.hash = '#/board'), 400);
+      if (msg) msg.textContent = 'Registro exitoso ✅';
+      setTimeout(() => (location.hash = '#/login'), 400);
     } catch (err) {
-      msg.textContent = `No se pudo registrar: ${err.message}`;
+      if (msg) msg.textContent = `No se pudo registrar: ${err.message}`;
+    } finally {
+      form.querySelector('button[type="submit"]').disabled = false;
+    }
+  });
+}
+
+
+async function initLogin() {
+  const form = document.getElementById('loginForm');
+  const msg = document.getElementById('loginMsg');
+  if (!form) return;
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    msg.textContent = '';
+    const formData = new FormData(form);
+    const data = {
+      email: formData.get('email').trim(),
+      password: formData.get('password').trim(),
+    };
+    
+    if (!data.email || !data.password) {
+      msg.textContent = 'Por favor completa todos los campos.';
+      return;
+    }
+
+    form.querySelector('button[type="submit"]').disabled = true;
+
+    try {
+      const response = await fetch('https://taskly-2h0c.onrender.com/api/v1/users/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Error en login');
+      }
+
+      const responseData = await response.json();
+      console.log('Respuesta backend:', responseData);
+      msg.textContent = 'Login exitoso';
+
+      // Aquí guardar token o info si es necesario
+      // localStorage.setItem('token', responseData.token);
+
+      setTimeout(() => (location.hash = '#/tasks'), 400);
+
+    } catch (err) {
+      msg.textContent = `No se pudo iniciar sesión: ${err.message}`;
     } finally {
       form.querySelector('button[type="submit"]').disabled = false;
     }

@@ -1,6 +1,6 @@
 body {
   margin: 0;
-  height: 100vh;
+  height: 110vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -9,12 +9,20 @@ body {
   color: white;
 }
 
+label {
+  text-align: left;
+  font-size: 14px;
+  margin-bottom: 4px;
+  display: block;
+  font-family: Arial, sans-serif;
+}
+
 .register-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center; /* centra verticalmente */
-  max-height: 100vh;       /* nunca excede la pantalla */
+  max-height: 80vh;       /* nunca excede la pantalla */
   padding: 20px;
   box-sizing: border-box;
   text-align: center;
