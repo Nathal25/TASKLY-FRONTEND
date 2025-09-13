@@ -1,39 +1,21 @@
-import { http } from '../api/http.js';
-
-/**
- * Register a new user in the system.
- *
- * Sends a POST request to the backend API (`/api/v1/users`)
- * with the provided username and password.
- *
- * @async
- * @function registerUser
- * @param {Object} params - User registration data.
- * @param {string} params.username - The username of the new user.
- * @param {string} params.password - The password of the new user.
- * @returns {Promise<Object>} The created user object returned by the API.
- * @throws {Error} If the API responds with an error status or message.
- *
- * @example
- * try {
- *   const user = await registerUser({ username: "alice", password: "secret" });
- *   console.log("User created:", user);
- * } catch (err) {
- *   console.error("Registration failed:", err.message);
- * }
- */
-const URL='https://taskly-2h0c.onrender.com';
 export async function registerUser(data) {
-  const res = await fetch(`${URL}/api/v1/users/`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
-  });
+  try {
+    const res = await fetch('https://taskly-2h0c.onrender.com/api/v1/users/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
 
-  if (!res.ok) {
-    const error = await res.json().catch(() => ({}));
-    throw new Error(error.message || 'Error en el registro');
+    if (!res.ok) {
+      // Intenta capturar el error y parsearlo correctamente
+      const error = await res.text();  // Cambié a `.text()` para evitar errores si no es JSON
+      console.error('Error en el servidor:', error); // Ver qué devuelve el servidor
+      throw new Error(error || 'Error en el registro');
+    }
+
+    return res.json();  // Parsear el JSON de respuesta
+  } catch (err) {
+    console.error('Error al registrar:', err);  // Imprimir error general
+    throw err;  // Relanzar el error para que se maneje en el frontend
   }
-
-  return res.json();
 }

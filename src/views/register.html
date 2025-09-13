@@ -4,24 +4,31 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Taskly - Registro</title>
-  <link rel="stylesheet" href="../styles/base.css">
-  <link rel="stylesheet" href="../styles/register.css">
+  <link rel="stylesheet" href="/src/styles/register.css">
 </head>
 <body>
   <div class="register-container">
     <img src="/taskly-logo.png" alt="Taskly Logo" class="logo">
     <h2>INGRESA TUS DATOS</h2>
-    <form>
-      <input type="text" placeholder="Nombre" required>
-      <input type="text" placeholder="Apellidos" required>
-      <input type="number" placeholder="Edad" required>
-      <input type="email" placeholder="Email" required>
-      <input type="password" placeholder="Password" required>
-      <input type="password" placeholder="Confirm Password" required>
-      <button id="registerMsg" type="submit">Registrarse</button>
-    </form>
-    <a href="login.html" class="back">Volver</a>
+    <form id="registerForm" method="post">
+  <label for="firstName">Nombre:</label>
+  <input type="text" name="firstName" placeholder="Nombre" required>
+  <label for="lastName">Apellidos:</label>
+  <input type="text" name="lastName" placeholder="Apellidos" required>
+  <label for="age">Edad:</label>
+  <input type="number" name="age" placeholder="Edad" required>
+  <label for="email">Email:</label>
+  <input type="email" name="email" placeholder="Email" required>
+  <label for="password">Password:</label>
+  <input type="password" name="password" placeholder="Password" required>
+  <label for="confirmPassword">Confirmar Password:</label>
+  <input type="password" name="confirmPassword" placeholder="Confirm Password" required>
+  <div class="reg-btns">
+        <button type="submit" class="btn">Registrarse</button>
+        <p id="registerMsg"></p>
+      </div>
+  </form>
+     <a href="#/login" class="back">Volver a inicio</a>
   </div>
 </body>
-<script type="module" src="/src/main.js"></script>
 </html>
