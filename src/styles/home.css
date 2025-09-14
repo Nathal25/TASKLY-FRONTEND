@@ -1,0 +1,110 @@
+/* =======================
+   Home Page Styles
+   ======================= */
+
+.home-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  text-align: center;
+  padding: 20px;
+}
+
+/* Logo circular */
+.logo-circle {
+  width: clamp(120px, 25vw, 160px);
+  height: clamp(120px, 25vw, 160px);
+  border-radius: var(--radius-full);
+  background: var(--color-surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow-md);
+  position: relative;
+}
+
+.logo-circle .logo {
+  max-width: 80%;
+  max-height: 80%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Botones */
+.home-container .btn {
+  display: inline-block;
+  background: var(--color-primary);
+  color: var(--color-text);
+  padding: 12px 24px;
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  margin-top: 10px;
+  transition: background var(--transition-fast), transform var(--transition-fast);
+}
+
+.home-container .btn:hover {
+  background: var(--color-primary-hover);
+  transform: scale(1.05);
+}
+
+/* Links inferiores */
+.home-container .links {
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 30px;
+}
+
+.home-container .links a {
+  color: var(--color-subtle);
+  font-size: 0.875rem;
+  transition: color var(--transition-fast), text-decoration var(--transition-fast);
+}
+
+.home-container .links a:hover {
+  color: var(--color-text);
+  text-decoration: underline;
+}
+
+.demo-content {
+  text-align: center;
+  max-width: 600px;
+}
+
+.demo-content h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-subtle));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.demo-content p {
+  color: var(--color-subtle);
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+@media (max-width: 400px) {
+  .home-container .btn {
+    width: 100%;
+    /* Botón ocupa todo el ancho en móviles muy pequeños */
+    font-size: 0.9rem;
+  }
+
+  .home-container .links {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+  }
+}

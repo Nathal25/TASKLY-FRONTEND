@@ -11,13 +11,11 @@
 <div class="recover-page">
   <div class="recover-container">
     <img src="/taskly-logo.png" alt="Taskly Logo" class="logo">
-    <h2>NUEVA CONTRASEÑA</h2>
-    <form id="recover-password-form">
-      <input type="hidden" id="token" name="token">
-      <input type="hidden" id="email" name="email">
-      <input id="new-password" type="password" placeholder="Nueva contraseña" required>
-      <input id="confirm-password" type="password" placeholder="Confirmar contraseña" required>
-      <button type="submit">Guardar</button>
+    <h2>RECUPERAR CONTRASEÑA</h2>
+    <form id="recoverForm">
+      <input id="email" type="email" placeholder="Ingresa tu correo" required>
+      <button type="submit">Enviar código</button>
     </form>
+    <a href="#/login" class="back">Volver</a>
   </div>
 </div>

@@ -1,4 +1,9 @@
 import { registerUser } from '../services/userService.js';
+import { sendRecoveryEmail } from '../services/userService.js';
+import { resetPassword } from '../services/userService.js';
+import { loginUser } from '../services/userService.js';
+import { logoutUser } from '../services/userService.js';
+import { getTasks } from '../services/taskService.js';
 const app = document.getElementById('app');
 
 /**
@@ -14,10 +19,7 @@ const viewURL = (name) => new URL(`../views/${name}.html`, import.meta.url);
  * @param {string} name - The view name to load (e.g., "home", "board").
  * @throws {Error} If the view cannot be fetched.
  */
-
-
-
-async function loadView(name) {
+async function loadView(name, queryString) {
   const res = await fetch(viewURL(name));
   if (!res.ok) throw new Error(`Failed to load view: ${name}`);
   const html = await res.text();
@@ -26,10 +28,10 @@ async function loadView(name) {
   if (name === 'home') initHome();
   if (name === 'register') initRegister();
   if (name === 'tasks') initTasks();
-  if (name === 'login') initLogin();
-  if (name === 'recover-email') initRecoverEmail();
-  if (name === 'recover-password') initRecoverPassword();
-  if (name === 'recover-code') initRecoverCode();
+  if (name === 'login') initLogin2();
+  if (name === 'send-email') initSendEmail();
+  if (name === 'recover-password') initRecoverPassword(queryString);
+  initLogout();
 }
 
 /**
@@ -47,10 +49,11 @@ export function initRouter() {
  */
 function handleRoute() {
   const path = (location.hash.startsWith('#/') ? location.hash.slice(2) : '') || 'home';
-  const known = ['home', 'login','register','recover-email','recover-password','recover-code','tasks'];
-  const route = known.includes(path) ? path : 'home';
+  const [routeName, queryString] = path.split("?");
+  const known = ['home', 'login', 'register', 'send-email', 'recover-password', 'recover-code', 'tasks'];
+  const route = known.includes(routeName) ? routeName : 'home';
 
-  loadView(route).catch(err => {
+  loadView(route, queryString).catch(err => {
     console.error(err);
     app.innerHTML = `<p style="color:#ffb4b4">Error loading the view.</p>`;
   });
@@ -88,7 +91,7 @@ function initHome() {
       const data = await registerUser({ username, password });
       msg.textContent = 'Registro exitoso';
 
-      setTimeout(() => (location.hash = '#/board'), 400);
+      setTimeout(() => (location.hash = '#/login'), 400);
     } catch (err) {
       msg.textContent = `No se pudo registrar: ${err.message}`;
     } finally {
@@ -97,12 +100,43 @@ function initHome() {
   });
 }
 
-function initTasks() {
-  const taskList = document.getElementById('taskList');
-  if (!taskList) return;
+async function initTasks() {
+  const board = document.getElementById('kanban-board');
+  if (!board) return;
 
-  // Lógica para inicializar la vista de tareas
-  console.log('Tasks view initialized');
+  board.querySelectorAll('.kanban-tasks').forEach(container => (container.innerHTML = ''));
+
+  try {
+    const data = await getTasks();
+    if (!data) throw new Error('Error al cargar tareas desde el servidor');
+
+    data.forEach(task => {
+      let columnContainer;
+      switch (task.status) {
+        case 'Pending':
+          columnContainer = board.querySelector('.kanban-column:nth-child(1) .kanban-tasks');
+          break;
+        case 'In-progress':
+          columnContainer = board.querySelector('.kanban-column:nth-child(2) .kanban-tasks');
+          break; 
+        case 'Completed':
+          columnContainer = board.querySelector('.kanban-column:nth-child(3) .kanban-tasks');
+          break;
+        default:
+          console.warn('Estado de tarea desconocido:', task.status);
+          return; // saltar esta tarea
+      }
+
+      const taskCard = document.createElement('div');
+      taskCard.classList.add('kanban-task');
+      taskCard.textContent = task.title;
+      if (task.completed) taskCard.classList.add('completed');
+      columnContainer.appendChild(taskCard);
+    });
+  } catch (err) {
+    console.error(err);
+    board.innerHTML = `<p style="color:#ffb4b4">No se pudieron cargar las tareas.</p>`;
+  }
 }
 
 function initRegister() {
@@ -151,6 +185,38 @@ function initRegister() {
   });
 }
 
+async function initLogin2() {
+  const form = document.getElementById('loginForm');
+  const msg = document.getElementById('loginMsg');
+  if (!form) return;
+
+  const correoInput = document.getElementById('email');
+  const passInput = document.getElementById('password');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    msg.textContent = '';
+    const correo = correoInput?.value.trim();
+    const password = passInput?.value.trim();
+    if (!correo || !password) {
+      msg.textContent = 'Por favor completa todos los campos.';
+      return;
+    }
+    form.querySelector('button[type="submit"]').disabled = true;
+    try {
+      const data = await loginUser({ email: correo, password });
+      console.log('Respuesta backend:', data);
+      msg.textContent = 'Login exitoso';
+      setTimeout(() => (location.hash = '#/tasks'), 400);
+    } catch (err) {
+      // Si hubo un error (por ejemplo, la API falló), se muestra un mensaje con la razón
+      msg.textContent = `No se pudo iniciar sesión: ${err.message}`;
+    } finally {
+      // Siempre vuelve a habilitar el botón de submit al final (El bloque finally siempre se ejecuta, pase lo que pase (éxito o error)
+      form.querySelector('button[type="submit"]').disabled = false;
+    }
+  });
+}
 
 async function initLogin() {
   const form = document.getElementById('loginForm');
@@ -165,7 +231,7 @@ async function initLogin() {
       email: formData.get('email').trim(),
       password: formData.get('password').trim(),
     };
-    
+
     if (!data.email || !data.password) {
       msg.textContent = 'Por favor completa todos los campos.';
       return;
@@ -201,5 +267,99 @@ async function initLogin() {
     } finally {
       form.querySelector('button[type="submit"]').disabled = false;
     }
+  });
+}
+
+function initSendEmail() {
+  const form = document.getElementById('recoverForm');
+  const correoInput = document.getElementById('email');
+  if (!form) return;
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const correo = correoInput?.value.trim();
+    if (!correo) {
+      console.error('Correo es requerido');
+      return;
+    }
+
+    form.querySelector('button[type="submit"]').disabled = true;
+
+    try {
+      const data = await sendRecoveryEmail(correo);
+      console.log('Respuesta del servidor:', data);
+      setTimeout(() => (location.hash = '#/login'), 400);
+    } catch (err) {
+      // Si hubo un error (por ejemplo, la API falló), se muestra un mensaje con la razón
+      msg.textContent = `No se pudo registrar: ${err.message}`;
+    } finally {
+      // Siempre vuelve a habilitar el botón de submit al final (El bloque finally siempre se ejecuta, pase lo que pase (éxito o error)
+      form.querySelector('button[type="submit"]').disabled = false;
+    }
+  });
+}
+
+function initRecoverPassword(queryString) {
+  const form = document.getElementById('recover-password-form');
+
+  const params = new URLSearchParams(queryString);
+  const token = params.get("token");
+  const email = params.get("email");
+
+  const tokenInput = document.getElementById("token");
+  const emailInput = document.getElementById("email");
+  const passInput = document.getElementById("new-password");
+  const confirmInput = document.getElementById("confirm-password");
+
+  if (!form) return;
+
+  if (tokenInput) tokenInput.value = token;
+  if (emailInput) emailInput.value = email;
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const token = tokenInput?.value.trim();
+    const email = emailInput?.value.trim();
+    const password = passInput?.value.trim();
+    const confirmPassword = confirmInput?.value.trim();
+
+    if (!token || !email || !password || !confirmPassword) {
+      console.error('Por favor completa todos los campos.');
+      return;
+    }
+
+    form.querySelector('button[type="submit"]').disabled = true;
+
+    try {
+      const data = await resetPassword({ token, email, password, confirmPassword });
+      console.log('Respuesta del servidor:', data);
+      setTimeout(() => (location.hash = '#/login'), 400);
+
+    } catch (err) {
+      // Si hubo un error (por ejemplo, la API falló), se muestra un mensaje con la razón
+      msg.textContent = `No se pudo registrar: ${err.message}`;
+    } finally {
+      // Siempre vuelve a habilitar el botón de submit al final (El bloque finally siempre se ejecuta, pase lo que pase (éxito o error)
+      form.querySelector('button[type="submit"]').disabled = false;
+    }
+  });
+}
+
+function initLogout() {
+  const logoutBtn = document.getElementById('logout');
+  if (!logoutBtn) return;
+
+  logoutBtn.addEventListener('click', async (e) => {
+    e.preventDefault();
+
+    try {
+      const data = await logoutUser();
+      console.log('Respuesta del servidor:', data);
+      setTimeout(() => (location.hash = '#/home'), 400);
+    } catch (err) {
+      console.error('Error al cerrar sesión:', err);
+    }
+    
+    
   });
 }

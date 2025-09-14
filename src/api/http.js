@@ -29,6 +29,7 @@ async function request(path, { method = 'GET', headers = {}, body } = {}) {
       ...headers,
     },
     body: body ? JSON.stringify(body) : undefined,
+    credentials: 'include', // Include cookies in requests
   });
 
   const isJSON = res.headers.get('content-type')?.includes('application/json');

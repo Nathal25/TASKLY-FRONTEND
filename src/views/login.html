@@ -1,28 +1,28 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Taskly - Login</title>
-  
-  <link rel="stylesheet" href="/styles/login.css">
-</head>
-<body>
+<!-- Navbar (aparece en todas las páginas) -->
+<nav class="navbar">
+  <img src="/taskly-logo.png" alt="Taskly Logo" class="logo-nav">
+  <div class="nav-links">
+    <a href="#/">Home</a>
+    <a href="#/login">Login</a>
+    <a href="#/register">Registrarse </a>
+    <a href="#/settings">Settings</a>
+  </div>
+</nav>
+<div class="login-page">
   <div class="login-container">
     <img src="/taskly-logo.png" alt="Taskly Logo" class="logo">
     <h2>¡BIENVENIDO!</h2>
     <form id="loginForm" action="#/tasks" method="get">
-  <input type="text" name="email" placeholder="Email" required>
-  <input type="password" name="password" placeholder="Contraseña" required>
-  <button type="submit">Ingresar</button>
-  <div id="loginMsg"></div>  <!-- Mensaje justo debajo del botón -->
-</form>
+      <input type="text" id="email" name="email" placeholder="Email" required>
+      <input type="password" id="password" name="password" placeholder="Contraseña" required>
+      <button type="submit">Ingresar</button>
+      <div id="loginMsg"></div>
+    </form>
 
     <div class="extras">
       <a id="registerLink" href="#/register">¿No tienes una cuenta? Regístrate aquí</a>
-      <a href="#/recover-email">¿Olvidaste tu contraseña?</a>
+      <a href="#/send-email">¿Olvidaste tu contraseña?</a>
     </div>
     <a href="#/home" class="back">Volver</a>
   </div>
-</body>
-</html>
+</div>
