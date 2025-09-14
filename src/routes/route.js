@@ -359,7 +359,5 @@ function initLogout() {
     } catch (err) {
       console.error('Error al cerrar sesión:', err);
     }
-    
-    
   });
 }
