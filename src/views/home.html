@@ -1,11 +1,27 @@
+<!-- Navbar (aparece en todas las páginas) -->
+<nav class="navbar">
+  <img src="/taskly-logo.png" alt="Taskly Logo" class="logo-nav">
+  <div class="nav-links">
+    <a href="#/">Home</a>
+    <a href="#/login">Login</a>
+    <a href="#/register">Registrarse </a>
+    <a href="#/settings">Settings</a>
+  </div>
+</nav>
 
-<link rel="stylesheet" href="/styles/home.css">
-
+<!-- Contenido principal -->
 <div class="home-container">
+
   <div class="logo-circle">
     <img src="/taskly-logo.png" alt="Taskly Logo" class="logo">
   </div>
-  <button onclick="location.href='#/login'" class="btn">Ingresa aquí</button>
+  <div class="demo-content">
+    <h1>Bienvenido a Taskly</h1>
+    <p>Una plataforma moderna para gestionar tus tareas de manera eficiente. Organiza, planifica y alcanza tus objetivos
+      con nuestra interfaz intuitiva y poderosas herramientas de productividad.</p>
+    <button onclick="location.href='#/login'" class="btn">Ingresa aquí</button>
+    <button onclick="location.href='#/about'" class="btn btn-outline">Conoce más</button>
+  </div> 
   <div class="links">
     <a href="#/about">Conoce más</a>
     <a href="#/settings">Configuración</a>

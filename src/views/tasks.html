@@ -1,46 +1,50 @@
-<!doctype html>
-<html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="stylesheet" href="/styles/task.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Taskly App</title>
-  </head>
-  <body>
-    <div class="tasks-layout">
-      <aside class="sidebar">
-        <div class="user-info">
-          <div class="user-avatar">
-            <img src="/taskly-logo.png" alt="Usuario" style="width: 90px;height:90px;object-fit:contain;" />
-          </div>
-          <div class="user-name">Usuario</div>
-        </div>
-        <nav class="lists-nav">
-          <a class="list-btn">LISTA 1</a>
-          
-        </nav>
-        <div class="sidebar-bottom">
-          <button class="sidebar-action"><span style="font-size:1.2em;">&#43;</span> Nueva lista</button>
-          <button class="sidebar-action"><span style="font-size:1.2em;">&#9998;</span></button>
-        </div>
-      </aside>
-      <main class="tasks-main">
-        <h1 class="tasks-title">LISTA 1</h1>
-        <div class="kanban-section">
-          <div id="kanban-board" class="kanban-board"></div>
-          
-          
-        </div>
-      </main>
+<!-- Navbar (aparece en todas las páginas) -->
+<nav class="navbar">
+  <img src="/taskly-logo.png" alt="Taskly Logo" class="logo-nav">
+  <div class="nav-links">
+    <a href="#/">Home</a>
+    <a href="#/login">Login</a>
+    <a href="#/register">Registrarse </a>
+    <a id="logout" href="#/home">Cerrar sesión</a>
+  </div>
+</nav>
+<div class="tasks-layout">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="user-info">
+      <div class="user-avatar">
+        <img src="/taskly-logo.png" alt="Usuario" style="width: 90px;height:90px;object-fit:contain;" />
+      </div>
+      <div class="user-name">Usuario</div>
     </div>
-    <script type="module" src="/src/kanbanBoard.js"></script>
-    <script>
-      // Show/hide add task form
-      const showBtn = document.getElementById('showAddTaskBtn');
-      const formContainer = document.getElementById('addTaskFormContainer');
-      showBtn.addEventListener('click', () => {
-        formContainer.style.display = formContainer.style.display === 'none' ? 'block' : 'none';
-      });
-    </script>
-  </body>
-</html>
+    <nav class="lists-nav">
+      <a class="list-btn">LISTA 1</a>
+    </nav>
+    <div class="sidebar-bottom">
+      <button class="sidebar-action"><span style="font-size:1.2em;">&#43;</span> Nueva lista</button>
+      <button class="sidebar-action"><span style="font-size:1.2em;">&#9998;</span></button>
+    </div>
+  </aside>
+
+  <!-- Main content -->
+  <main class="tasks-main">
+    <h1 class="tasks-title">LISTA 1</h1>
+    <div class="kanban-section">
+      <div id="kanban-board" class="kanban-board">
+        <!-- Columnas Kanban predeterminadas -->
+        <div class="kanban-column">
+          <h3>Pendiente</h3>
+          <div class="kanban-tasks"></div>
+        </div>
+        <div class="kanban-column">
+          <h3>Haciendo</h3>
+          <div class="kanban-tasks"></div>
+        </div>
+        <div class="kanban-column">
+          <h3>Hecho</h3>
+          <div class="kanban-tasks"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

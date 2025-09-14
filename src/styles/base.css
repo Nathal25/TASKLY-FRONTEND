@@ -1,0 +1,91 @@
+/* =======================
+   Base Styles
+   ======================= */
+
+/* Variables globales */
+:root {
+  --color-bg: #3b0a45;
+  --color-primary: #9b4de0;
+  --color-primary-hover: #7a37b5;
+  --color-text: #ffffff;
+  --color-subtle: #c9a0e6;
+  --color-surface: #ffffff;
+
+  --font-family: 'Open Sans', sans-serif;
+  --font-size-base: 16px;
+  --radius-md: 8px;
+  --radius-full: 50%;
+
+  --shadow-md: 0 4px 15px rgba(0,0,0,0.3);
+  --transition-fast: 0.3s ease;
+}
+
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+/* Estilos globales para links y botones */
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: color var(--transition-fast);
+}
+
+button {
+  font-family: inherit;
+  font-size: inherit;
+  border: none;
+  cursor: pointer;
+  transition: background var(--transition-fast), transform var(--transition-fast);
+}
+
+/* =======================
+   Navbar
+   ======================= */
+.navbar {
+  width: 100%;
+  background-color: var(--color-bg);
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: var(--shadow-md);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+}
+
+.navbar .logo-nav {
+  height: 40px;
+}
+
+.navbar .nav-links {
+  display: flex;
+  gap: 20px;
+}
+
+.navbar .nav-links a {
+  color: var(--color-text);
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: var(--radius-md);
+  transition: background var(--transition-fast), transform var(--transition-fast);
+}
+
+.navbar .nav-links a:hover {
+  background-color: var(--color-primary-hover);
+  transform: scale(1.05);
+}
+

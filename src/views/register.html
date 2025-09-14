@@ -1,34 +1,58 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Taskly - Registro</title>
-  <link rel="stylesheet" href="/styles/register.css">
-</head>
-<body>
+<!-- Navbar (aparece en todas las páginas) -->
+<nav class="navbar">
+  <img src="/taskly-logo.png" alt="Taskly Logo" class="logo-nav">
+  <div class="nav-links">
+    <a href="#/">Home</a>
+    <a href="#/login">Login</a>
+    <a href="#/register">Registrarse </a>
+    <a href="#/settings">Settings</a>
+  </div>
+</nav>
+<div class="register-page">
   <div class="register-container">
     <img src="/taskly-logo.png" alt="Taskly Logo" class="logo">
     <h2>INGRESA TUS DATOS</h2>
+
     <form id="registerForm" method="post">
-  <label for="firstName">Nombre:</label>
-  <input type="text" name="firstName" placeholder="Nombre" required>
-  <label for="lastName">Apellidos:</label>
-  <input type="text" name="lastName" placeholder="Apellidos" required>
-  <label for="age">Edad:</label>
-  <input type="number" name="age" placeholder="Edad" required>
-  <label for="email">Email:</label>
-  <input type="email" name="email" placeholder="Email" required>
-  <label for="password">Password:</label>
-  <input type="password" name="password" placeholder="Password" required>
-  <label for="confirmPassword">Confirmar Password:</label>
-  <input type="password" name="confirmPassword" placeholder="Confirm Password" required>
-  <div class="reg-btns">
+      <!-- Columna izquierda -->
+      <div class="form-group">
+        <label for="firstName">Nombre:</label>
+        <input type="text" name="firstName" placeholder="Nombre" required>
+      </div>
+
+      <div class="form-group">
+        <label for="lastName">Apellidos:</label>
+        <input type="text" name="lastName" placeholder="Apellidos" required>
+      </div>
+
+      <div class="form-group">
+        <label for="age">Edad:</label>
+        <input type="number" name="age" placeholder="Edad" required>
+      </div>
+
+      <!-- Columna derecha -->
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" name="email" placeholder="Email" required>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password:</label>
+        <input type="password" name="password" placeholder="Password" required>
+      </div>
+
+      <div class="form-group">
+        <label for="confirmPassword">Confirmar Password:</label>
+        <input type="password" name="confirmPassword" placeholder="Confirm Password" required>
+      </div>
+
+      <!-- Botón ocupa ambas columnas -->
+      <div class="reg-btns">
         <button type="submit" class="btn">Registrarse</button>
         <p id="registerMsg"></p>
       </div>
-  </form>
-     <a href="#/login" class="back">Volver a inicio</a>
+    </form>
+
+    <a href="#/login" class="back">Volver a inicio</a>
   </div>
-</body>
-</html>
+</div>

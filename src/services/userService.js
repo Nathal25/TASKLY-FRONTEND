@@ -1,3 +1,21 @@
+import { http } from "../api/http.js";
+
+export async function sendRecoveryEmail(email) {
+  return http.post('/api/v1/users/forgot-password', { email });
+}
+
+export async function resetPassword({token, email, password, confirmPassword}) {
+  return http.post('/api/v1/users/reset-password', { token, email, password, confirmPassword });
+}
+
+export async function loginUser({email, password}) {
+  return http.post('/api/v1/users/login', { email, password });
+}
+
+export async function logoutUser() {
+  return http.post('/api/v1/users/logout');
+}
+
 export async function registerUser(data) {
   try {
     const res = await fetch('https://taskly-2h0c.onrender.com/api/v1/users/', {
@@ -19,3 +37,4 @@ export async function registerUser(data) {
     throw err;  // Relanzar el error para que se maneje en el frontend
   }
 }
+
