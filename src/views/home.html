@@ -1,29 +1,92 @@
-<!-- Navbar (aparece en todas las páginas) -->
-<nav class="navbar">
-  <img src="/taskly-logo.png" alt="Taskly Logo" class="logo-nav">
-  <div class="nav-links">
-    <a href="#/">Home</a>
-    <a href="#/login">Login</a>
-    <a href="#/register">Registrarse </a>
-    <a href="#/settings">Settings</a>
-  </div>
-</nav>
+<body id="top">
+  <!-- Navbar (aparece en todas las páginas) -->
+  <nav class="navbar">
+    <img src="/taskly-logo.png" alt="Taskly Logo" class="logo-nav">
+    <div class="nav-links">
+      <a href="#/">Inicio</a>
+      <a href="#/login">Iniciar Sesión</a>
+      <a href="#/register">Registrarse</a>
+    </div>
+  </nav>
 
-<!-- Contenido principal -->
-<div class="home-container">
+  <!-- Partículas (fondo global, siempre visible) -->
+  <div class="particles">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
 
-  <div class="logo-circle">
-    <img src="/taskly-logo.png" alt="Taskly Logo" class="logo">
-  </div>
-  <div class="demo-content">
-    <h1>Bienvenido a Taskly</h1>
-    <p>Una plataforma moderna para gestionar tus tareas de manera eficiente. Organiza, planifica y alcanza tus objetivos
-      con nuestra interfaz intuitiva y poderosas herramientas de productividad.</p>
-    <button onclick="location.href='#/login'" class="btn">Ingresa aquí</button>
-    <button onclick="location.href='#/about'" class="btn btn-outline">Conoce más</button>
-  </div> 
-  <div class="links">
-    <a href="#/about">Conoce más</a>
-    <a href="#/settings">Configuración</a>
-  </div>
-</div>
+  <!-- Contenido principal -->
+  <main>
+    <!-- Hero -->
+    <section class="home-container">
+      <div class="logo-circle">
+        <img src="/taskly-logo.png" alt="Taskly Logo" class="logo">
+      </div>
+      <div class="demo-content">
+        <h1>Bienvenido a Taskly</h1>
+        <p>
+          Una plataforma moderna para gestionar tus tareas de manera eficiente.  
+          Organiza, planifica y alcanza tus objetivos con nuestra interfaz intuitiva y poderosas herramientas de productividad.
+        </p>
+        <button onclick="location.href='#/register'" class="btn">Comienza aquí</button>
+        <button onclick="document.getElementById('benefits').scrollIntoView({ behavior: 'smooth' })" 
+          class="btn btn-outline">
+          Conoce más
+        </button>
+      </div>
+    </section>
+
+    <!-- Beneficios -->
+    <section id="benefits" class="benefits-section">
+      <div class="info-container">
+        <div class="info-card">
+          <h2>Beneficios de Taskly</h2>
+          <p>
+            Taskly ofrece un <strong>entorno dinámico</strong> que se adapta a tus proyectos y equipos, 
+            brindando una <strong>interfaz intuitiva</strong> que facilita la organización de tareas. 
+            Disfruta de una experiencia fluida, moderna y diseñada para mejorar tu productividad.
+          </p>
+        </div>
+
+        <!-- Kanban -->
+        <div class="info-card">
+          <h2>Modelo Kanban</h2>
+          <p>
+            Taskly utiliza el <strong>método Kanban</strong> para ayudarte a visualizar el flujo de trabajo.  
+            Con este modelo, verás como las tareas se representan como tarjetas en columnas que indican su estado. 
+            Disfruta de mayor <strong>claridad</strong>, <strong>flexibilidad</strong> y un mejor 
+            <strong>control del avance</strong> de tus proyectos.
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Botón volver arriba -->
+  <a href="#top" class="back-to-top" id="backToTop">
+    <span style="font-size:2rem;display:inline-block;line-height:1;">&#8593;</span>
+  </a>
+
+  <!-- Script para mostrar/ocultar botón -->
+  <script>
+  const backToTop = document.getElementById("backToTop");
+
+  function toggleBackToTop() {
+    if (window.scrollY > 200) {
+      backToTop.classList.add("show");
+    } else {
+      backToTop.classList.remove("show");
+    }
+  }
+
+  // Revisa al hacer scroll
+  window.addEventListener("scroll", toggleBackToTop);
+
+  // Revisa también al cargar
+  window.addEventListener("load", toggleBackToTop);
+</script>
+</body>

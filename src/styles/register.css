@@ -10,7 +10,7 @@
   background: var(--color-bg);
   padding: 1rem;
 }
-
+ 
 /* Caja del registro */
 .register-container {
   background: var(--color-surface);
@@ -20,6 +20,7 @@
   padding: 2rem;
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-md);
+  margin-top: 20px;
 
   display: flex;
   flex-direction: column;
