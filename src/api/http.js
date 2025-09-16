@@ -4,7 +4,7 @@
  * Loaded from Vite environment variables (`VITE_API_URL`).
  */
 //const BASE_URL = import.meta.env.VITE_API_URL;
-// Usa siempre la variable VITE_API_URL si existe, si no usa localhost
+// Always use the VITE_API_URL variable if it exists, otherwise use localhost
 const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8080";
 
 
