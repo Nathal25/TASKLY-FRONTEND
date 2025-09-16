@@ -1,7 +1,18 @@
 /* =======================
-   Home Page Styles
+   Global Styles
    ======================= */
+html {
+  scroll-behavior: smooth;
+}
 
+body {
+  background: linear-gradient(135deg, #2a0f21, #3a1e3b, #523355);
+  color: #fff;
+}
+
+/* =======================
+   Home Hero Section
+   ======================= */
 .home-container {
   min-height: 100vh;
   display: flex;
@@ -75,6 +86,7 @@
   text-decoration: underline;
 }
 
+/* Demo content */
 .demo-content {
   text-align: center;
   max-width: 600px;
@@ -83,22 +95,143 @@
 .demo-content h1 {
   font-size: 2.5rem;
   margin-bottom: 1rem;
-  background: linear-gradient(135deg, var(--color-primary), var(--color-subtle));
+  background: linear-gradient(90deg, #f8f8f8, #ffffff);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  font-weight: 800;
+  text-shadow: 2px 2px 8px rgba(0,0,0,0.4);
 }
 
 .demo-content p {
-  color: var(--color-subtle);
+  color: #f1f1f1;
   line-height: 1.6;
   margin-bottom: 2rem;
+  font-weight: 500;
+  text-shadow: 1px 1px 6px rgba(0,0,0,0.3);
 }
 
+/* =======================
+   Beneficios Section
+   ======================= */
+.benefits-section {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, #7d2bc0, #a044c6);
+  padding: 2rem;
+}
+
+.info-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  max-width: 1100px;
+  width: 100%;
+}
+
+.info-card {
+  background: #BFACB5;
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  padding: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  color: #172121;
+  text-align: justify;
+  line-height: 1.6;
+  font-size: 1.05rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.info-card p {
+  max-width: 100%;
+  margin: 0;
+}
+
+.info-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.4);
+}
+
+/* =======================
+   Partículas flotantes
+   ======================= */
+.particles {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.particles span {
+  position: absolute;
+  display: block;
+  width: 10px;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 50%;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+  animation: floatParticles 15s linear infinite;
+}
+
+@keyframes floatParticles {
+  0% {
+    transform: translateY(100vh) scale(0.5);
+    opacity: 0;
+  }
+  30% { opacity: 1; }
+  100% {
+    transform: translateY(-10vh) scale(1.2);
+    opacity: 0;
+  }
+}
+
+.particles span:nth-child(1) { left: 10%; animation-duration: 12s; animation-delay: 0s; }
+.particles span:nth-child(2) { left: 25%; animation-duration: 18s; animation-delay: 2s; }
+.particles span:nth-child(3) { left: 40%; animation-duration: 10s; animation-delay: 4s; }
+.particles span:nth-child(4) { left: 55%; animation-duration: 16s; animation-delay: 1s; }
+.particles span:nth-child(5) { left: 70%; animation-duration: 20s; animation-delay: 3s; }
+.particles span:nth-child(6) { left: 85%; animation-duration: 14s; animation-delay: 5s; }
+
+/* =======================
+   Botón volver arriba
+   ======================= */
+.back-to-top {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  display: none; /* oculto por defecto */
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.back-to-top img {
+  width: 60%;
+  height: auto;
+}
+
+
+.back-to-top.show {
+  display: block;
+  opacity: 1;
+}
+
+.back-to-top:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
+}
+
+/* =======================
+   Media Queries
+   ======================= */
 @media (max-width: 400px) {
   .home-container .btn {
     width: 100%;
-    /* Botón ocupa todo el ancho en móviles muy pequeños */
     font-size: 0.9rem;
   }
 
