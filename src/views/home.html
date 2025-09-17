@@ -97,12 +97,12 @@
   const navContent = document.getElementById("nav-content");
 
   navToggle.addEventListener("click", () => {
-    navContent.classList.toggle("hidden");
+    navContent.classList.toggle("active");
   });
   // Cierra el menú al hacer clic en un enlace
   navContent.querySelectorAll("a").forEach(link => {
     link.addEventListener("click", () => {
-      navContent.classList.add("hidden");
+      navContent.classList.add("active");
     });
   });
 </script>
