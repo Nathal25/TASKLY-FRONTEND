@@ -1,14 +1,17 @@
 <body id="top">
+  
   <!-- Navbar (aparece en todas las páginas) -->
-  <nav class="navbar">
-    <img src="/taskly-logo.png" alt="Taskly Logo" class="logo-nav">
-    <div class="nav-links">
-      <a href="#/">Inicio</a>
-      <a href="#/login">Iniciar Sesión</a>
-      <a href="#/register">Registrarse</a>
-    </div>
-  </nav>
-
+ <nav class="navbar">
+  <img src="/taskly-logo.png" alt="Taskly Logo" class="logo-nav">
+  <button class="nav-toggle" id="nav-toggle" aria-label="Abrir menú">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="nav-links" id="nav-content">
+    <a href="#/">Inicio</a>
+    <a href="#/login">Iniciar Sesión</a>
+    <a href="#/register">Registrarse</a>
+  </div>
+</nav>
   <!-- Partículas (fondo global, siempre visible) -->
   <div class="particles">
     <span></span>
@@ -88,5 +91,19 @@
 
   // Revisa también al cargar
   window.addEventListener("load", toggleBackToTop);
+</script>
+<script>
+  const navToggle = document.getElementById("nav-toggle");
+  const navContent = document.getElementById("nav-content");
+
+  navToggle.addEventListener("click", () => {
+    navContent.classList.toggle("hidden");
+  });
+  // Cierra el menú al hacer clic en un enlace
+  navContent.querySelectorAll("a").forEach(link => {
+    link.addEventListener("click", () => {
+      navContent.classList.add("hidden");
+    });
+  });
 </script>
 </body>
