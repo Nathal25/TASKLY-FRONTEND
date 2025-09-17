@@ -5,6 +5,7 @@ import './styles/login.css';
 import './styles/register.css';
 import './styles/recover.css';
 import './styles/task.css';   
+import './styles/navbar.css';
 import { initRouter } from './routes/route.js';
 
 
