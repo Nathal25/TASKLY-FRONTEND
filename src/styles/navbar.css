@@ -1,15 +1,33 @@
-/* Estilo general para escritorio */
-.nav-links {
-  display: flex; 
-  gap: 20px;
-  margin-left: auto;
+/* ===== Estilos generales del navbar ===== */
+.navbar {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
+  padding: 1rem;
+  background: var(--color-primary, #5e2491); /* variable o fallback */
+  position: relative;
+  z-index: 1000;
 }
 
-/* Hamburguer oculto en escritorio */
-.nav-toggle {
-  display: none;
+.logo-nav {
+  height: 40px;
 }
+
+/* ===== Links (móvil: ocultos por defecto) ===== */
+.nav-links {
+  display: none;
+  flex-direction: column;
+  gap: 18px;
+  position: absolute;
+  top: 60px;
+  right: 0;
+  background: #3a1e3b;
+  width: 180px;
+  padding: 18px 35px;
+  border-radius: 0 0 0 8px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.4);
+}
+
 .nav-links a {
   color: #fff;
   text-decoration: none;
@@ -17,49 +35,63 @@
   transition: color 0.3s;
 }
 
-/* ====== Móvil ====== */
-@media (max-width: 700px) {
-  .nav-links {
-    position: absolute;
-    top: 60px;
-    right: 0;
-    background: #3a1e3b;
-    width: 160px;
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 18px 35px;
-    gap: 18px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.4);
-    display: none;  /* Oculto por defecto */
-    z-index: 1000;
-    border-radius: 0 0 0 8px;
-  }
+.nav-links a:hover {
+  color: #d1a3ff;
+}
 
-  .nav-links.active {
-    display: flex; /* Se abre con el toggle */
+/* Menú activo (se abre en móvil) */
+.nav-links.active {
+  display: flex;
+}
+
+/* ===== Botón hamburguesa ===== */
+.nav-toggle {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  gap: 6px;
+  z-index: 1001;
+}
+
+.nav-toggle span {
+  display: block;
+  width: 25px;
+  height: 3px;
+  background: #fff;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+/* Animación hamburguesa → X */
+.nav-toggle.open span:nth-child(1) {
+  transform: rotate(45deg) translateY(8px);
+}
+.nav-toggle.open span:nth-child(2) {
+  opacity: 0;
+}
+.nav-toggle.open span:nth-child(3) {
+  transform: rotate(-45deg) translateY(-8px);
+}
+
+/* ===== Escritorio (≥700px) ===== */
+@media (min-width: 700px) {
+  .nav-links {
+    display: flex;   /* sin !important */
+    flex-direction: row;
+    position: static;
+    background: none;
+    box-shadow: none;
+    width: auto;
+    padding: 0;
+    gap: 20px;
   }
 
   .nav-toggle {
-    display: flex;
-    position: absolute;
-    top: 12px;
-    right: 20px;
-    z-index: 1001;
-    flex-direction: column;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    cursor: pointer;
-    background: none;
-    border: none;
-  }
-
-  .nav-toggle span {
-    display: block;
-    height: 4px;
-    margin: 5px 0;
-    background: #fff;
-    border-radius: 2px;
-    transition: 0.3s;
+    display: none;
   }
 }
