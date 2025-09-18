@@ -9,12 +9,26 @@
       </div>
       <div class="user-name">Usuario</div>
     </div>
+
     <nav class="lists-nav">
       <a class="list-btn">LISTA 1</a>
     </nav>
+
     <div class="sidebar-bottom">
-      <button class="sidebar-action"><span style="font-size:1.2em;">&#43;</span> Nueva lista</button>
-      <button class="sidebar-action"><span style="font-size:1.2em;">&#9998;</span></button>
+      <!-- Botón crear lista -->
+      <button class="sidebar-action">
+        <span style="font-size:1.2em;">&#43;</span> Nueva lista
+      </button>
+
+      <!-- Botón editar tarea (lleva a editar tarea) -->
+      <a href="#/edit-task" class="sidebar-action">
+        <span style="font-size:1.2em;">&#9998;</span>
+      </a>
+
+      <!-- Botón perfil de usuario -->
+      <a href="#/profile" class="sidebar-action">
+        <span style="font-size:1.2em;">👤</span> Perfil
+      </a>
     </div>
   </aside>
 

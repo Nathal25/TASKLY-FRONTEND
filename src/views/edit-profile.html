@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Editar Perfil</title>
+  <link rel="stylesheet" href="../styles/base.css">
+  <link rel="stylesheet" href="../styles/edit-profile.css">
+</head>
+<body>
+  <nav class="navbar">
+    <img src="/taskly-logo.png" alt="Taskly Logo" class="logo-nav">
+    <div class="nav-links">
+      <a href="#/">Inicio</a>
+      <a href="#/tasks">Tareas</a>
+      <a href="#/profile">Perfil</a>
+    </div>
+  </nav>
+
+  <div class="edit-profile-page">
+    <div class="edit-profile-container">
+      <h2>Editar Perfil</h2>
+      <form id="editProfileForm">
+        <input type="text" id="nombre" placeholder="Nombre" required>
+        <input type="text" id="apellido" placeholder="Apellido" required>
+        <input type="number" id="documento" placeholder="Documento" required>
+        <input type="date" id="fechaNacimiento">
+        <select id="genero">
+          <option value="M">Masculino</option>
+          <option value="F">Femenino</option>
+          <option value="O">Otro</option>
+        </select>
+        <button type="submit">Guardar cambios</button>
+      </form>
+    </div>
+  </div>
+</body>
+</html>
