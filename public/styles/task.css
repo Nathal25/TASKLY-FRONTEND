@@ -399,6 +399,7 @@ button:focus-visible {
   background-color: #f4f4f9;
   padding: 0;
   overflow: hidden;
+}
 
 /* Caja de agregar tarea */
 .add-task-form-container {

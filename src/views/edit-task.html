@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Editar Tarea</title>
+  <link rel="stylesheet" href="../styles/base.css">
+  <link rel="stylesheet" href="../styles/edit-task.css">
+</head>
+<body>
+  <nav class="navbar">
+    <img src="/taskly-logo.png" alt="Taskly Logo" class="logo-nav">
+    <div class="nav-links">
+      <a href="#/">Inicio</a>
+      <a href="#/tasks">Tareas</a>
+      <a href="#/profile">Mi perfil</a>
+    </div>
+  </nav>
+
+  <div class="edit-task-page">
+    <div class="edit-task-container">
+      <h2>Editar Tarea</h2>
+      <form id="editTaskForm">
+        <input type="text" id="titulo" placeholder="Título" required>
+        <textarea id="descripcion" placeholder="Descripción"></textarea>
+        <input type="date" id="fechaLimite">
+        <select id="prioridad">
+          <option value="baja">Baja</option>
+          <option value="media">Media</option>
+          <option value="alta">Alta</option>
+        </select>
+        <button type="submit">Guardar cambios</button>
+      </form>
+    </div>
+  </div>
+</body>
+</html>

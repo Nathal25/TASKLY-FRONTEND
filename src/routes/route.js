@@ -31,6 +31,11 @@ async function loadView(name, queryString) {
   if (name === 'login') initLogin2();
   if (name === 'send-email') initSendEmail();
   if (name === 'recover-password') initRecoverPassword(queryString);
+
+  // ✅ NUEVAS VISTAS
+  if (name === 'profile') initProfile();
+  if (name === 'edit-profile') initEditProfile();
+  if (name === 'edit-task') initEditTask();
   initLogout();
 }
 
@@ -50,7 +55,7 @@ export function initRouter() {
 function handleRoute() {
   const path = (location.hash.startsWith('#/') ? location.hash.slice(2) : '') || 'home';
   const [routeName, queryString] = path.split("?");
-  const known = ['home', 'login', 'register', 'send-email', 'recover-password', 'recover-code', 'tasks'];
+  const known = ['home', 'login', 'register', 'send-email', 'recover-password', 'recover-code', 'tasks', 'profile', 'edit-profile', 'edit-task'];
   const route = known.includes(routeName) ? routeName : 'home';
 
   loadView(route, queryString).catch(err => {
@@ -360,4 +365,16 @@ function initLogout() {
       console.error('Error al cerrar sesión:', err);
     }
   });
+}
+
+function initProfile() {
+  console.log("Vista perfil cargada ✅");
+}
+
+function initEditProfile() {
+  console.log("Vista editar perfil cargada ✅");
+}
+
+function initEditTask() {
+  console.log("Vista editar tarea cargada ✅");
 }
