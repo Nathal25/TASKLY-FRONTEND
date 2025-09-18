@@ -1,17 +1,26 @@
 <body id="top">
   
-  <!-- Navbar (aparece en todas las páginas) -->
- <nav class="navbar">
+<nav class="navbar">
+  <!-- Logo -->
   <img src="/taskly-logo.png" alt="Taskly Logo" class="logo-nav">
+
+  <!-- Botón hamburguesa -->
   <button class="nav-toggle" id="nav-toggle" aria-label="Abrir menú">
-    <span></span><span></span><span></span>
+    <span></span>
+    <span></span>
+    <span></span>
   </button>
+
+  <!-- Links -->
   <div class="nav-links" id="nav-content">
     <a href="#/">Inicio</a>
     <a href="#/login">Iniciar Sesión</a>
     <a href="#/register">Registrarse</a>
   </div>
 </nav>
+
+
+
   <!-- Partículas (fondo global, siempre visible) -->
   <div class="particles">
     <span></span>
@@ -101,9 +110,11 @@
   });
   // Cierra el menú al hacer clic en un enlace
   navContent.querySelectorAll("a").forEach(link => {
-    link.addEventListener("click", () => {
-      navContent.classList.add("active");
-    });
+  link.addEventListener("click", () => {
+    navContent.classList.remove("active");
+    navToggle.classList.remove("open"); // si usas la animación en X
   });
+});
+
 </script>
 </body>

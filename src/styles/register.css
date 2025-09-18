@@ -7,9 +7,10 @@
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background: var(--color-bg);
+  background: var(--color-bg-page); /* ahora sí usa el color de página */
   padding: 1rem;
 }
+
  
 /* Caja del registro */
 .register-container {

@@ -7,7 +7,7 @@
   align-items: center;
   justify-content: center;
   min-height: 100vh; /* altura completa */
-  background: var(--color-bg); /* el morado oscuro */
+  background: var(--color-bg-page); /* el morado oscuro */
   padding: 1rem;
 }
 
