@@ -25,10 +25,10 @@ export async function getTask(taskId) {
  * Crear una nueva tarea
  * @param {Object} taskData - Datos de la tarea
  * @param {string} taskData.title - Título de la tarea
- * @param {string} [taskData.description] - Descripción de la tarea
+ * @param {string} [taskData.details] - Descripción de la tarea
  * @param {string} [taskData.status] - Estado de la tarea (Pending, In-progress, Completed)
- * @param {string} [taskData.dueDate] - Fecha límite
- * @param {string} [taskData.priority] - Prioridad (low, medium, high)
+ * @param {string} [taskData.date] - Fecha límite
+ * @param {string} [taskData.time] - Hora de la tarea
  * @param {number} [taskData.listId] - ID de la lista asociada
  * @returns {Promise<Object>} Tarea creada
  */
@@ -88,6 +88,7 @@ export async function getTasksByStatus(status) {
  * @param {number} listId - ID de la lista
  * @returns {Promise<Array>} Tareas de la lista
  */
+
 export async function getTasksByList(listId) {
   return http.get(`/api/v1/tasks?listId=${listId}`);
 }

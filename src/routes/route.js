@@ -4,8 +4,12 @@ import { resetPassword } from '../services/userService.js';
 import { loginUser } from '../services/userService.js';
 import { logoutUser } from '../services/userService.js';
 import { getTasks } from '../services/taskService.js';
+import { getLoggedUser } from '../services/userService.js';
+import { editLoggedUser } from '../services/userService.js';
+import { createTask } from '../services/taskService.js';
 import { updateTaskStatus, deleteTask } from '../services/taskService.js';
 import { getLists, createList } from '../services/listService.js';
+import { getTask, updateTask } from '../services/taskService.js';
 const app = document.getElementById('app');
 
 /**
@@ -33,11 +37,12 @@ async function loadView(name, queryString) {
   if (name === 'login') initLogin2();
   if (name === 'send-email') initSendEmail();
   if (name === 'recover-password') initRecoverPassword(queryString);
-
-  // ✅ NUEVAS VISTAS
   if (name === 'profile') initProfile();
   if (name === 'edit-profile') initEditProfile();
   if (name === 'edit-task') initEditTask();
+  if (name === 'create-task') initCreateTask();
+  if (name === 'delete-task') initDeleteTask();
+  
   initLogout();
 }
 
@@ -57,7 +62,8 @@ export function initRouter() {
 function handleRoute() {
   const path = (location.hash.startsWith('#/') ? location.hash.slice(2) : '') || 'home';
   const [routeName, queryString] = path.split("?");
-  const known = ['home', 'login', 'register', 'send-email', 'recover-password', 'recover-code', 'tasks', 'profile', 'edit-profile', 'edit-task'];
+  const known = ['home', 'login', 'register', 'send-email', 'recover-password', 
+    'recover-code', 'tasks', 'profile', 'edit-profile', 'edit-task', 'create-task', 'delete-task'];
   const route = known.includes(routeName) ? routeName : 'home';
 
   loadView(route, queryString).catch(err => {
@@ -108,7 +114,7 @@ function initHome() {
 }
 
 // Esta función reemplaza tu initTasks() actual en route.js
-async function initTasks() {
+/* async function initTasks() {
   const board = document.getElementById('kanban-board');
   if (!board) return;
 
@@ -116,10 +122,10 @@ async function initTasks() {
   board.querySelectorAll('.kanban-tasks').forEach(container => (container.innerHTML = ''));
 
   try {
-    //const data = await getTasks();
+    const data = await getTasks();
     //if (!data) throw new Error('Error al cargar tareas desde el servidor');
 
-     const data = [
+     /* const data = [
       { id: 1, title: 'TAREA 1', description: 'Descripción de ejemplo', status: 'Pending', dueDate: '2024-01-01' },
       { id: 2, title: 'TAREA 2', description: 'En desarrollo', status: 'In-progress', dueDate: '2024-01-15' },
       { id: 3, title: 'TAREA 3', description: 'Completada', status: 'Completed', dueDate: '2024-01-10' }
@@ -185,6 +191,82 @@ async function initTasks() {
     console.error(err);
     board.innerHTML = `<p style="color:#ffb4b4">No se pudieron cargar las tareas: ${err.message}</p>`;
   }
+} */
+
+
+async function initTasks() {
+  const board = document.getElementById('kanban-board');
+  if (!board) return;
+
+  // Limpiar contenido actual
+  board.querySelectorAll('.kanban-tasks').forEach(container => (container.innerHTML = ''));
+
+  try {
+    // Obtén las tareas desde el backend
+    const tasks = await getTasks();
+    console.log('Tareas obtenidas:', tasks);
+    // Mapear las tareas a las columnas correspondientes
+    tasks.forEach(task => {
+      const columnId = getColumnIdByStatus(task.status);
+      const columnContainer = document.getElementById(columnId);
+
+      if (columnContainer) {
+        const taskCard = createTaskCard(task);
+        columnContainer.appendChild(taskCard);
+      }
+      console.log(`Asignando tarea "${task.title}" al contenedor "${columnId}"`);
+    });
+
+    // Configurar drag and drop después de cargar las tareas
+    setupDragAndDrop();
+  } catch (err) {
+    console.error('Error al cargar tareas:', err.message);
+    board.innerHTML = `<p style="color:#ffb4b4">No se pudieron cargar las tareas: ${err.message}</p>`;
+  }
+}
+
+/**
+ * Devuelve el ID del contenedor de la columna según el estado de la tarea.
+ * @param {string} status - Estado de la tarea ('Pending', 'In-progress', 'Completed').
+ * @returns {string} ID del contenedor de la columna.
+ */
+function getColumnIdByStatus(status) {
+  const statusMapping = {
+    'Pending': 'pending-tasks',
+    'In-progress': 'in-progress-tasks',
+    'Completed': 'completed-tasks',
+  };
+  return statusMapping[status];
+}
+
+/**
+ * Crea un elemento de tarjeta de tarea.
+ * @param {Object} task - Objeto de la tarea.
+ * @returns {HTMLElement} Elemento de la tarjeta de tarea.
+ */
+function createTaskCard(task) {
+  const taskCard = document.createElement('div');
+  taskCard.classList.add('kanban-task');
+  taskCard.draggable = true;
+  taskCard.dataset.taskId = task._id;
+
+  const formattedDate = task.date
+    ? new Date(task.date).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: '2-digit' })
+    : 'Sin fecha';
+
+  taskCard.innerHTML = `
+    <div class="task-actions">
+      <button class="task-action-btn" onclick="location.hash = '#/edit-task?id=${task._id}'">✏️</button>
+      <button class="task-action-btn" onclick="location.hash = '#/delete-task?id=${task._id}'">🗑️</button>
+    </div>
+    <div class="task-title">${task.title || 'Sin título'}</div>
+    <div class="task-description">${task.details || 'Sin descripción'}</div>
+    <div class="task-date">📅 ${formattedDate}</div>
+    <div class="task-time">${task.time || 'Sin hora'}</div>
+
+  `;
+
+  return taskCard;
 }
 
 // Función auxiliar para configurar drag and drop
@@ -221,7 +303,7 @@ function setupDragAndDrop() {
       const newStatus = column.dataset.status;
       const taskElement = document.querySelector(`[data-task-id="${taskId}"]`);
       
-      if (taskElement) {
+      /* if (taskElement) {
         try {
           // Mapear estados del frontend al backend
           const backendStatusMapping = {
@@ -244,10 +326,19 @@ function setupDragAndDrop() {
             taskElement.classList.add('completed');
           } else {
             taskElement.classList.remove('completed');
-          }
+          } */
           
+          
+      if (taskElement) {
+        try {
+          // Actualizar el estado de la tarea en el backend
+          await updateTaskStatus(taskId, newStatus);
+
+          // Mover la tarea visualmente
+          const tasksContainer = column.querySelector('.kanban-tasks');
+          tasksContainer.appendChild(taskElement);
         } catch (error) {
-          console.error('Error al actualizar estado de tarea:', error);
+          console.error('Error al actualizar estado de tarea:', error.message);
           // Podrías mostrar una notificación de error aquí
         }
       }
@@ -256,7 +347,7 @@ function setupDragAndDrop() {
 }
 
 // Función global para eliminar tarea desde el tablero
-window.deleteTaskFromBoard = async function(taskId) {
+/* window.deleteTaskFromBoard = async function(taskId) {
   if (confirm('¿Estás seguro de que quieres eliminar esta tarea?')) {
     try {
       await deleteTask(taskId);
@@ -270,6 +361,33 @@ window.deleteTaskFromBoard = async function(taskId) {
       console.error('Error al eliminar tarea:', error);
       alert('No se pudo eliminar la tarea. Inténtalo de nuevo.');
     }
+  }
+};
+ */
+/* window.deleteTaskFromBoard = async function(taskId) {
+  if (confirm('¿Estás seguro de que quieres eliminar esta tarea?')) {
+    try {
+      const response = await deleteTask(taskId);
+      console.log('Respuesta del backend:', response);
+
+      // Remover elemento visual
+      const taskElement = document.querySelector(`[data-task-id="${taskId}"]`);
+      if (taskElement) {
+        taskElement.remove();
+        console.log(`Tarea con ID ${taskId} eliminada del tablero.`);
+      } else {
+        console.warn(`No se encontró el elemento visual para la tarea con ID ${taskId}.`);
+      }
+    } catch (error) {
+      console.error('Error al eliminar tarea:', error.message);
+      alert('No se pudo eliminar la tarea. Inténtalo de nuevo.');
+    }
+  }
+}; */
+
+window.deleteTaskFromBoard = async function(taskId) {
+  if (confirm('¿Estás seguro de que quieres eliminar esta tarea?')) {
+    location.hash = `#/delete-task?id=${taskId}`;
   }
 };
 
@@ -502,22 +620,230 @@ function initLogout() {
   });
 }
 
-function initProfile() {
+async function initProfile() {
   console.log("Vista perfil cargada ✅");
+  const userInfoContainer = document.getElementById('profile-info');
+  const backButton = document.getElementById('backToTasks');
+  const editInfoButton = document.getElementById('editInfoBtn');
+
+    if (!userInfoContainer) return;
+
+    try {
+        // Llama al servicio getLoggedUser para obtener la información del usuario
+        const user = await getLoggedUser();
+        userInfoContainer.innerHTML = `
+            <p><strong>Nombre:</strong> ${user.firstName} ${user.lastName}</p>
+            <p><strong>Email:</strong> ${user.email}</p>
+            <p><strong>Edad:</strong> ${user.age}</p>
+        `;
+    } catch (error) {
+        console.error('Error al cargar la información del usuario:', error.message);
+        userInfoContainer.innerHTML = `<p style="color: red;">Error al cargar la información del usuario.</p>`;
+    }
+
+    // Manejar el botón para volver a las tareas
+    backButton.addEventListener('click', () => {
+        location.hash = '#/tasks';
+    });
+
+    // Manejar el botón para editar la información del usuario
+    editInfoButton.addEventListener('click', () => {
+        location.hash = '#/edit-profile';
+    });
 }
 
-function initEditProfile() {
+async function initEditProfile() {
   console.log("Vista editar perfil cargada ✅");
+
+  const form = document.getElementById('edit-profile-form');
+  const backButton = document.getElementById('backToProfile');
+
+  if (!form) return;
+
+  try {
+    // Obtén la información del usuario logueado
+    const user = await getLoggedUser();
+
+    // Rellena los campos del formulario con los valores actuales del usuario
+    form.querySelector('#firstName').value = user.firstName || '';
+    form.querySelector('#lastName').value = user.lastName || '';
+    form.querySelector('#email').value = user.email || '';
+    form.querySelector('#age').value = user.age || '';
+
+    // Manejar el envío del formulario
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const updatedUser = {
+        firstName: form.querySelector('#firstName').value.trim(),
+        lastName: form.querySelector('#lastName').value.trim(),
+        email: form.querySelector('#email').value.trim(),
+        age: Number(form.querySelector('#age').value.trim()),
+      };
+
+      try {
+        await editLoggedUser(updatedUser);
+        console.log('Perfil actualizado:', updatedUser);
+        alert('Perfil actualizado exitosamente');
+        location.hash = '#/profile'; // Redirige a la vista del perfil
+      } catch (error) {
+        console.error('Error al actualizar el perfil:', error.message);
+        alert('Error al actualizar el perfil');
+      }
+    });
+  } catch (error) {
+    console.error('Error al cargar la información del usuario:', error.message);
+    alert('Error al cargar la información del usuario');
+  }
+
+  // Manejar el botón para volver al perfil
+  backButton.addEventListener('click', () => {
+    location.hash = '#/profile';
+  });
 }
 
-function initEditTask() {
+async function initCreateTask() {
+  console.log("Vista crear tarea cargada ✅");
+
+  const form = document.getElementById('create-task-form');
+  const cancelButton = document.getElementById('cancelCreateTask');
+  const user = await getLoggedUser();
+  if (!form) return;
+
+  // Manejar el envío del formulario
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const taskData = {
+      title: form.querySelector('#title').value.trim(),
+      details: form.querySelector('#details').value.trim(),
+      date: form.querySelector('#date').value,
+      time: form.querySelector('#time').value, // Captura el valor del campo time
+      status: form.querySelector('#status').value,
+      userId: user.id // Asume que el usuario logueado tiene un ID
+    };
+
+    try {
+      await createTask(taskData); // Llama al servicio para crear la tarea
+      alert('Tarea creada exitosamente');
+      location.hash = '#/tasks'; // Redirige a la vista de tareas
+    } catch (error) {
+      console.error('Error al crear la tarea:', error.message);
+      alert('Error al crear la tarea');
+    }
+  });
+
+  // Manejar el botón de cancelar
+  cancelButton.addEventListener('click', () => {
+    location.hash = '#/tasks';
+  });
+}
+
+async function initEditTask() {
   console.log("Vista editar tarea cargada ✅");
+
+  const form = document.getElementById('edit-task-form');
+  const cancelButton = document.getElementById('cancelEditTask');
+
+  if (!form) return;
+
+  // Obtén el ID de la tarea desde la URL
+  const params = new URLSearchParams(location.hash.split('?')[1]);
+  const taskId = params.get('id');
+
+  if (!taskId) {
+    console.error('No se proporcionó un ID de tarea para editar.');
+    alert('No se pudo cargar la tarea para editar.');
+    location.hash = '#/tasks';
+    return;
+  }
+
+  try {
+    // Obtén la información de la tarea desde el backend
+    const task = await getTask(taskId);
+
+    if (!task) {
+      console.error('No se encontró la tarea con el ID proporcionado.');
+      alert('No se pudo cargar la tarea para editar.');
+      location.hash = '#/tasks';
+      return;
+    }
+
+    // Formatear la fecha al formato "yyyy-MM-dd"
+    const formattedDate = task.date ? new Date(task.date).toISOString().split('T')[0] : '';
+
+    // Rellena los campos del formulario con los valores actuales de la tarea
+    form.querySelector('#title').value = task.title || '';
+    form.querySelector('#details').value = task.details || '';
+    form.querySelector('#date').value = formattedDate; // Asignar la fecha formateada
+    form.querySelector('#time').value = task.time || '';
+    form.querySelector('#status').value = task.status || 'Pending';
+
+    // Manejar el envío del formulario
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const updatedTask = {
+        title: form.querySelector('#title').value.trim(),
+        details: form.querySelector('#details').value.trim(),
+        date: form.querySelector('#date').value,
+        time: form.querySelector('#time').value,
+        status: form.querySelector('#status').value,
+      };
+
+      try {
+        await updateTask(taskId, updatedTask);
+        console.log('Tarea actualizada:', updatedTask);
+        alert('Tarea actualizada exitosamente');
+        location.hash = '#/tasks'; // Redirige a la vista de tareas
+      } catch (error) {
+        console.error('Error al actualizar la tarea:', error.message);
+        alert('Error al actualizar la tarea');
+      }
+    });
+  } catch (error) {
+    console.error('Error al cargar la tarea:', error.message);
+    alert('Error al cargar la tarea');
+    location.hash = '#/tasks';
+  }
+
+  // Manejar el botón de cancelar
+  cancelButton.addEventListener('click', () => {
+    location.hash = '#/tasks';
+  });
+}
+ async function initDeleteTask() {
+  console.log("Eliminando tarea ✅");
+  // Obtén el ID de la tarea desde la URL
+  const params = new URLSearchParams(location.hash.split('?')[1]);
+  const taskId = params.get('id');
+  if (!taskId) {
+    console.error('No se proporcionó un ID de tarea para eliminar.');
+    alert('No se pudo eliminar la tarea.');
+    location.hash = '#/tasks';
+    return;
+  }
+
+ try {
+    // Llama a la función para eliminar la tarea
+    await deleteTask(taskId);
+    console.log(`Tarea con ID ${taskId} eliminada exitosamente.`);
+    //alert('Tarea eliminada exitosamente.');
+
+    // Recarga la vista de tareas
+    location.hash = '#/tasks';
+    initTasks(); // Llama a initTasks para actualizar el tablero
+  } catch (error) {
+    console.error('Error al eliminar la tarea:', error.message);
+    //alert('Error al eliminar la tarea.');
+    location.hash = '#/tasks'; // Redirige a la vista de tareas
+  }
 }
 
 // Agrega estas funciones al final de tu route.js, después de initTasks()
 
 // Función para abrir modal de nueva tarea
-function openTaskModal(status) {
+/* function openTaskModal(status) {
   const modal = document.getElementById('task-modal');
   if (modal) {
     document.getElementById('task-status').value = status;
@@ -532,10 +858,10 @@ function closeTaskModal() {
   if (modal) {
     modal.style.display = 'none';
   }
-}
+} */
 
 // Función para manejar envío de nueva tarea
-async function handleTaskSubmit(e) {
+/* async function handleTaskSubmit(e) {
   e.preventDefault();
   
   const formData = new FormData(e.target);
@@ -584,7 +910,7 @@ function addTaskToBoard(task) {
     'Pending': 'nuevo',
     'In-progress': 'en-progreso', 
     'Completed': 'hecho'
-  };
+  }; 
   
   const frontendStatus = statusMapping[task.status] || 'nuevo';
   const container = document.getElementById(`${frontendStatus}-tasks`);
@@ -620,3 +946,4 @@ function addTaskToBoard(task) {
     setupDragAndDrop(); // Reconfigurar drag and drop
   }
 }
+*/

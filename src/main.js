@@ -5,13 +5,17 @@ import './styles/home.css';
 import './styles/login.css';
 import './styles/register.css';
 import './styles/recover.css';
-import './styles/task.css';   
+import './styles/task.css';
+import './styles/create-task.css';
+import './styles/edit-task.css';
+import './styles/profile.css'
+import './styles/edit-profile.css'
+
 
 import { initRouter } from './routes/route.js';
 
 // Inicializar el router
 initRouter();
-
 // ===== Navbar con delegación de eventos =====
 document.addEventListener("click", (e) => {
   const navToggle = e.target.closest("#nav-toggle");
