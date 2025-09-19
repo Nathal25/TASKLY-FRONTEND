@@ -1,269 +1,83 @@
- /* Variables específicas para esta página */
-    :root {
-      --edit-task-bg: linear-gradient(135deg, #512383, #3a1e3b);
-      --form-bg: rgba(255, 255, 255, 0.95);
-      --form-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-      --input-focus: rgba(94, 36, 145, 0.3);
-      --success-color: #28a745;
-      --error-color: #dc3545;
-      --warning-color: #ffc107;
-    }
+/* =======================
+   Edit Task Styles
+   ======================= */
 
-    /* Layout principal */
-    .edit-task-page {
-      min-height: 100vh;
-      background: var(--edit-task-bg);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem 1rem;
-      position: relative;
-    }
+/* Contenedor principal */
+.edit-task-main {
+  padding: 20px;
+  font-family: var(--font-family);
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  min-height: 100vh;
+}
 
-    .edit-task-page::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
-      pointer-events: none;
-    }
+/* Título principal */
+.edit-task-main h1 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: var(--color-surface);
+  text-align: center;
+}
 
-    /* Contenedor del formulario */
-    .edit-task-container {
-      background: var(--form-bg);
-      backdrop-filter: blur(10px);
-      border-radius: 20px;
-      box-shadow: var(--form-shadow);
-      padding: 2.5rem;
-      width: 100%;
-      max-width: 600px;
-      position: relative;
-      z-index: 1;
-      animation: slideInUp 0.6s ease-out;
-    }
+/* Formulario */
+#edit-task-form {
+  background-color: var(--color-primary);
+  padding: 20px;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  max-width: 500px;
+  margin: 0 auto;
+}
 
-    @keyframes slideInUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
+#edit-task-form label {
+  display: block;
+  font-size: 16px;
+  margin-bottom: 5px;
+  color: var(--color-surface);
+}
 
-    /* Header del formulario */
-    .edit-task-header {
-      text-align: center;
-      margin-bottom: 2rem;
-      padding-bottom: 1.5rem;
-      border-bottom: 2px solid rgba(94, 36, 145, 0.1);
-    }
+#edit-task-form input,
+#edit-task-form textarea,
+#edit-task-form select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 16px;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+}
 
-    .edit-task-header h2 {
-      color: var(--color-primary);
-      font-size: 2rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-    }
+#edit-task-form textarea {
+  resize: none;
+  height: 100px;
+}
 
-    .edit-task-subtitle {
-      color: #666;
-      font-size: 1rem;
-      margin: 0;
-      opacity: 0.8;
-    }
+#edit-task-form button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  background-color: var(--color-primary-hover);
+  color: var(--color-surface);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  font-size: 16px;
+  cursor: pointer;
+}
 
-    /* Formulario */
-    .edit-task-form {
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-    }
+#edit-task-form button:hover {
+  background-color: var(--color-subtle);
+  transform: scale(1.05);
+}
 
-    /* Grupos de formulario */
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
+/* Botón de cancelar */
+#cancelEditTask {
+  background-color: var(--color-bg-page);
+  color: var(--color-surface);
+}
 
-    .form-group label {
-      font-weight: 600;
-      color: var(--color-primary);
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.95rem;
-    }
-
-    .label-icon {
-      font-size: 1.1rem;
-    }
-
-    /* Fila de formulario */
-    .form-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.5rem;
-    }
-
-    .half-width {
-      width: 100%;
-    }
-
-    /* Inputs y selects */
-    .form-group input,
-    .form-group textarea,
-    .form-group select {
-      padding: 0.875rem 1rem;
-      border: 2px solid #e1e5e9;
-      border-radius: 12px;
-      font-size: 1rem;
-      transition: all 0.3s ease;
-      background: white;
-      color: #333;
-    }
-
-    .form-group input:focus,
-    .form-group textarea:focus,
-    .form-group select:focus {
-      outline: none;
-      border-color: var(--color-primary);
-      box-shadow: 0 0 0 3px var(--input-focus);
-      transform: translateY(-1px);
-    }
-
-    .form-group textarea {
-      resize: vertical;
-      min-height: 100px;
-    }
-
-    /* Mensaje de estado */
-    .form-message {
-      padding: 1rem;
-      border-radius: 8px;
-      text-align: center;
-      font-weight: 500;
-      margin: 0.5rem 0;
-    }
-
-    .form-message.success {
-      background: rgba(40, 167, 69, 0.1);
-      color: var(--success-color);
-      border: 1px solid rgba(40, 167, 69, 0.3);
-    }
-
-    .form-message.error {
-      background: rgba(220, 53, 69, 0.1);
-      color: var(--error-color);
-      border: 1px solid rgba(220, 53, 69, 0.3);
-    }
-
-    /* Botones de acción */
-    .form-actions {
-      display: flex;
-      gap: 1rem;
-      margin-top: 1rem;
-      justify-content: flex-end;
-    }
-
-    .btn-primary,
-    .btn-secondary {
-      padding: 0.875rem 1.5rem;
-      border: none;
-      border-radius: 12px;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      min-width: 140px;
-      justify-content: center;
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, var(--color-primary), var(--color-primary-hover));
-      color: white;
-      box-shadow: 0 4px 15px rgba(94, 36, 145, 0.3);
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(94, 36, 145, 0.4);
-    }
-
-    .btn-secondary {
-      background: #f8f9fa;
-      color: #666;
-      border: 2px solid #e1e5e9;
-    }
-
-    .btn-secondary:hover {
-      background: #e9ecef;
-      transform: translateY(-1px);
-    }
-
-    .btn-icon {
-      font-size: 1.1rem;
-    }
-
-    /* Navbar brand */
-    .nav-brand {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .brand-text {
-      font-weight: 700;
-      font-size: 1.2rem;
-      color: white;
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-      .edit-task-container {
-        margin: 1rem;
-        padding: 2rem 1.5rem;
-      }
-
-      .form-row {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-      }
-
-      .form-actions {
-        flex-direction: column-reverse;
-      }
-
-      .btn-primary,
-      .btn-secondary {
-        width: 100%;
-      }
-
-      .edit-task-header h2 {
-        font-size: 1.5rem;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .edit-task-page {
-        padding: 1rem 0.5rem;
-      }
-
-      .edit-task-container {
-        padding: 1.5rem 1rem;
-      }
-    }
-  
+#cancelEditTask:hover {
+  background-color: var(--color-primary-hover);
+  color: var(--color-text);
+}

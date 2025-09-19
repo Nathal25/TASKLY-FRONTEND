@@ -8,8 +8,13 @@ export async function resetPassword({token, email, password, confirmPassword}) {
   return http.post('/api/v1/users/reset-password', { token, email, password, confirmPassword });
 }
 
-export async function loginUser({email, password}) {
-  return http.post('/api/v1/users/login', { email, password });
+export async function loginUser({ email, password }) {
+  const response = await http.post('/api/v1/users/login', { email, password });
+
+  // Guarda el token en las cookies
+  document.cookie = `token=${response.token}; path=/;`;
+
+  return response;
 }
 
 export async function logoutUser() {
@@ -19,6 +24,7 @@ export async function logoutUser() {
 export async function registerUser(data) {
   try {
     const res = await fetch('https://taskly-2h0c.onrender.com/api/v1/users/', {
+    //const res = await fetch('http://localhost:8080/api/v1/users/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
@@ -38,3 +44,10 @@ export async function registerUser(data) {
   }
 }
 
+export async function getLoggedUser() {
+  return http.get('/api/v1/users/me');
+}
+
+export async function editLoggedUser(updatedUser) {
+  return http.put('/api/v1/users/edit-me', updatedUser);
+}
