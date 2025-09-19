@@ -6,7 +6,7 @@ import './styles/login.css';
 import './styles/register.css';
 import './styles/recover.css';
 import './styles/task.css';   
-
+import './styles/kanban.css';
 import { initRouter } from './routes/route.js';
 
 // Inicializar el router

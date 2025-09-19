@@ -3,7 +3,12 @@ import { sendRecoveryEmail } from '../services/userService.js';
 import { resetPassword } from '../services/userService.js';
 import { loginUser } from '../services/userService.js';
 import { logoutUser } from '../services/userService.js';
-import { getTasks } from '../services/taskService.js';
+import { getTasks, updateTaskStatus } from '../services/taskService.js';
+import { createTask } from '../services/taskService.js';
+import { updateTask } from '../services/taskService.js';
+import { deleteTask } from '../services/taskService.js';
+import {updateTaskStatus} from '../services/taskService.js';
+
 const app = document.getElementById('app');
 
 /**
@@ -105,44 +110,333 @@ function initHome() {
   });
 }
 
+// Función initTasks actualizada para manejar listas
 async function initTasks() {
   const board = document.getElementById('kanban-board');
   if (!board) return;
 
-  board.querySelectorAll('.kanban-tasks').forEach(container => (container.innerHTML = ''));
+  // Estado de la aplicación
+  let currentTasks = [];
+  let currentTaskId = null;
+  let isEditing = false;
+  let currentListId = 1; // Lista activa (por defecto Lista 1)
 
-  try {
-    const data = await getTasks();
-    if (!data) throw new Error('Error al cargar tareas desde el servidor');
+  // Referencias a elementos DOM
+  const modal = document.getElementById('task-modal');
+  const detailModal = document.getElementById('task-detail-modal');
+  const taskForm = document.getElementById('task-form');
+  const loadingOverlay = document.getElementById('loading-overlay');
+  const taskMsg = document.getElementById('task-msg');
+  const modalTitle = document.getElementById('modal-title');
+  const currentListTitle = document.getElementById('current-list-title');
 
-    data.forEach(task => {
-      let columnContainer;
-      switch (task.status) {
-        case 'Pending':
-          columnContainer = board.querySelector('.kanban-column:nth-child(1) .kanban-tasks');
-          break;
-        case 'In-progress':
-          columnContainer = board.querySelector('.kanban-column:nth-child(2) .kanban-tasks');
-          break; 
-        case 'Completed':
-          columnContainer = board.querySelector('.kanban-column:nth-child(3) .kanban-tasks');
-          break;
-        default:
-          console.warn('Estado de tarea desconocido:', task.status);
-          return; // saltar esta tarea
+  // Inicializar la aplicación
+  await loadTasks();
+  initEventListeners();
+  initListNavigation();
+
+  // Función para cargar tareas desde el servidor
+  async function loadTasks() {
+    showLoading(true);
+    try {
+      const tasks = await getTasks();
+      // Filtrar tareas por lista actual (simulado - en real vendrá del backend)
+      currentTasks = tasks || [];
+      renderTasks();
+      updateTaskCounts();
+    } catch (error) {
+      console.error('Error al cargar tareas:', error);
+      showMessage('Error al cargar las tareas: ' + error.message, 'error');
+    } finally {
+      showLoading(false);
+    }
+  }
+
+  // Función para renderizar las tareas en el tablero
+  function renderTasks() {
+    // Limpiar columnas
+    board.querySelectorAll('.kanban-tasks').forEach(container => {
+      container.innerHTML = '';
+    });
+
+    // Renderizar cada tarea
+    currentTasks.forEach(task => {
+      const taskElement = createTaskElement(task);
+      const column = board.querySelector(`[data-status="${task.status}"] .kanban-tasks`);
+      if (column) {
+        column.appendChild(taskElement);
+      }
+    });
+  }
+
+  // Función para crear un elemento de tarea
+  function createTaskElement(task) {
+    const taskCard = document.createElement('div');
+    taskCard.classList.add('kanban-task');
+    taskCard.dataset.taskId = task.id;
+    
+    // Agregar clase de prioridad
+    if (task.priority) {
+      taskCard.classList.add(`priority-${task.priority}`);
+    }
+
+    const priorityIcon = getPriorityIcon(task.priority);
+    const dateText = task.dueDate ? formatDate(task.dueDate) : '';
+
+    taskCard.innerHTML = `
+      <div class="task-title">${escapeHtml(task.title)}</div>
+      ${task.description ? `<div class="task-description">${escapeHtml(task.description)}</div>` : ''}
+      ${dateText ? `<div class="task-date">${dateText}</div>` : ''}
+      ${priorityIcon ? `<div class="task-priority-indicator">${priorityIcon}</div>` : ''}
+    `;
+
+    // Evento click para mostrar detalles
+    taskCard.addEventListener('click', () => showTaskDetails(task));
+    
+    return taskCard;
+  }
+
+  // Función para inicializar navegación entre listas
+  function initListNavigation() {
+    const listButtons = document.querySelectorAll('.list-btn');
+    
+    listButtons.forEach(button => {
+      button.addEventListener('click', (e) => {
+        e.preventDefault();
+        
+        // Remover clase active de todos los botones
+        listButtons.forEach(btn => btn.classList.remove('active'));
+        
+        // Agregar clase active al botón clickeado
+        button.classList.add('active');
+        
+        // Cambiar lista actual
+        const listId = button.dataset.list;
+        currentListId = parseInt(listId);
+        
+        // Actualizar título
+        currentListTitle.textContent = `LISTA ${listId}`;
+        
+        // Recargar tareas para la nueva lista
+        loadTasks();
+      });
+    });
+  }
+
+  // Función para mostrar detalles de una tarea
+  function showTaskDetails(task) {
+    const taskDetails = document.getElementById('task-details');
+    taskDetails.innerHTML = `
+      <h4>Título:</h4>
+      <p>${escapeHtml(task.title)}</p>
+      
+      <h4>Estado:</h4>
+      <p>${getStatusText(task.status)}</p>
+      
+      ${task.description ? `
+        <h4>Descripción:</h4>
+        <p>${escapeHtml(task.description)}</p>
+      ` : ''}
+      
+      ${task.priority ? `
+        <h4>Prioridad:</h4>
+        <p>${getPriorityText(task.priority)} ${getPriorityIcon(task.priority)}</p>
+      ` : ''}
+      
+      ${task.dueDate ? `
+        <h4>Fecha límite:</h4>
+        <p>${formatDate(task.dueDate)}</p>
+      ` : ''}
+      
+      ${task.createdAt ? `
+        <h4>Creada:</h4>
+        <p>${formatDate(task.createdAt)}</p>
+      ` : ''}
+    `;
+
+    currentTaskId = task.id;
+    detailModal.style.display = 'block';
+  }
+
+  // Función para inicializar todos los event listeners
+  function initEventListeners() {
+    // Botones agregar en columnas
+    board.querySelectorAll('.add-task-column').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const status = e.target.dataset.status;
+        openTaskModal(null, status);
+      });
+    });
+
+    // Botón actualizar
+    const refreshBtn = document.getElementById('refresh-tasks');
+    if (refreshBtn) {
+      refreshBtn.addEventListener('click', loadTasks);
+    }
+
+    // Modal de tarea - cerrar
+    const closeModal = document.getElementById('close-modal');
+    if (closeModal) {
+      closeModal.addEventListener('click', closeTaskModal);
+    }
+
+    // Modal de tarea - cancelar
+    const cancelBtn = document.getElementById('cancel-btn');
+    if (cancelBtn) {
+      cancelBtn.addEventListener('click', closeTaskModal);
+    }
+
+    // Formulario de tarea
+    if (taskForm) {
+      taskForm.addEventListener('submit', handleTaskSubmit);
+    }
+
+    // Modal de detalles - cerrar
+    const closeDetailModal = document.getElementById('close-detail-modal');
+    if (closeDetailModal) {
+      closeDetailModal.addEventListener('click', () => {
+        detailModal.style.display = 'none';
+      });
+    }
+
+    const closeDetailBtn = document.getElementById('close-detail-btn');
+    if (closeDetailBtn) {
+      closeDetailBtn.addEventListener('click', () => {
+        detailModal.style.display = 'none';
+      });
+    }
+
+    // Modal de detalles - editar
+    const editTaskBtn = document.getElementById('edit-task-btn');
+    if (editTaskBtn) {
+      editTaskBtn.addEventListener('click', () => {
+        const task = currentTasks.find(t => t.id === currentTaskId);
+        if (task) {
+          detailModal.style.display = 'none';
+          openTaskModal(task);
+        }
+      });
+    }
+
+    // Modal de detalles - eliminar
+    const deleteTaskBtn = document.getElementById('delete-task-btn');
+    if (deleteTaskBtn) {
+      deleteTaskBtn.addEventListener('click', handleDeleteTask);
+    }
+
+    // Cerrar modales con clic fuera
+    window.addEventListener('click', (e) => {
+      if (e.target === modal) closeTaskModal();
+      if (e.target === detailModal) detailModal.style.display = 'none';
+    });
+
+    // Cerrar modales con ESC
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        if (modal.style.display === 'block') closeTaskModal();
+        if (detailModal.style.display === 'block') detailModal.style.display = 'none';
+      }
+    });
+  }
+
+  // Función para abrir el modal de tarea
+  function openTaskModal(task = null, defaultStatus = 'Pending') {
+    isEditing = !!task;
+    currentTaskId = task?.id || null;
+    
+    modalTitle.textContent = isEditing ? 'Editar Tarea' : 'Nueva Tarea';
+    
+    // Llenar formulario
+    document.getElementById('task-title').value = task?.title || '';
+    document.getElementById('task-description').value = task?.description || '';
+    document.getElementById('task-status').value = task?.status || defaultStatus;
+    document.getElementById('task-priority').value = task?.priority || 'medium';
+    
+    // Fecha límite
+    const dueDateInput = document.getElementById('task-due-date');
+    if (dueDateInput && task?.dueDate) {
+      dueDateInput.value = task.dueDate.split('T')[0]; // Formato YYYY-MM-DD
+    } else if (dueDateInput) {
+      dueDateInput.value = '';
+    }
+    
+    // Limpiar mensajes
+    taskMsg.textContent = '';
+    taskMsg.className = 'message';
+    
+    modal.style.display = 'block';
+    document.getElementById('task-title').focus();
+  }
+
+  // Función para cerrar el modal de tarea
+  function closeTaskModal() {
+    modal.style.display = 'none';
+    taskForm.reset();
+    isEditing = false;
+    currentTaskId = null;
+  }
+
+  // Función para manejar el envío del formulario
+  async function handleTaskSubmit(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(taskForm);
+    const taskData = {
+      title: formData.get('title').trim(),
+      description: formData.get('description').trim(),
+      status: formData.get('status'),
+      priority: formData.get('priority'),
+      dueDate: formData.get('dueDate') || null,
+      listId: currentListId // Asociar tarea a lista actual
+    };
+
+    // Validación
+    if (!taskData.title) {
+      showMessage('El título es requerido', 'error');
+      return;
+    }
+
+    const submitBtn = taskForm.querySelector('button[type="submit"]');
+    const originalText = submitBtn.textContent;
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Guardando...';
+
+    try {
+      if (isEditing && currentTaskId) {
+        await updateTask(currentTaskId, taskData);
+        showMessage('Tarea actualizada exitosamente ✅', 'success');
+      } else {
+        await createTask(taskData);
+        showMessage('Tarea creada exitosamente ✅', 'success');
       }
 
-      const taskCard = document.createElement('div');
-      taskCard.classList.add('kanban-task');
-      taskCard.textContent = task.title;
-      if (task.completed) taskCard.classList.add('completed');
-      columnContainer.appendChild(taskCard);
-    });
-  } catch (err) {
-    console.error(err);
-    board.innerHTML = `<p style="color:#ffb4b4">No se pudieron cargar las tareas.</p>`;
+      setTimeout(() => {
+        closeTaskModal();
+        loadTasks();
+      }, 1000);
+
+    } catch (error) {
+      console.error('Error al guardar tarea:', error);
+      showMessage('Error al guardar la tarea: ' + error.message, 'error');
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalText;
+    }
   }
-}
+
+  // Función para manejar la eliminación de tarea
+  async function handleDeleteTask() {
+    if (!currentTaskId || !confirm('¿Estás seguro de que deseas eliminar esta tarea?')) return;
+
+    try {
+      await deleteTask(currentTaskId);
+      showMessage('Tarea eliminada exitosamente ✅', 'success');
+      setTimeout(loadTasks, 1000);
+    } catch (error) {
+      console.error('Error al eliminar tarea:', error);
+      showMessage('Error al eliminar la tarea: ' + error.message, 'error');
+    }
+  }
 
 function initRegister() {
   const form = document.getElementById('registerForm');
@@ -377,4 +671,5 @@ function initEditProfile() {
 
 function initEditTask() {
   console.log("Vista editar tarea cargada ✅");
+}
 }
