@@ -18,7 +18,7 @@ export async function logoutUser() {
 
 export async function registerUser(data) {
   try {
-    const res = await fetch('https://taskly-2h0c.onrender.com/api/v1/users/', {
+    const res = await fetch('https://localhost:8080/api/v1/users/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),

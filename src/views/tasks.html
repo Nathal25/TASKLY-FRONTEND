@@ -1,5 +1,4 @@
-<!-- Navbar (aparece en todas las páginas) -->
-
+<!-- Vista de tareas mejorada siguiendo el mockup -->
 <div class="tasks-layout">
   <!-- Sidebar -->
   <aside class="sidebar">
@@ -10,47 +9,622 @@
       <div class="user-name">Usuario</div>
     </div>
 
-    <nav class="lists-nav">
-      <a class="list-btn">LISTA 1</a>
+    <nav class="lists-nav" id="lists-nav">
+      <a class="list-btn active" data-list-id="1">LISTA 1</a>
+      <a class="list-btn" data-list-id="2">LISTA 2</a>
+      <a class="list-btn" data-list-id="3">LISTA 3</a>
     </nav>
 
     <div class="sidebar-bottom">
       <!-- Botón crear lista -->
-      <button class="sidebar-action">
-        <span style="font-size:1.2em;">&#43;</span> Nueva lista
+      <button class="sidebar-action" id="new-list-btn">
+        <span style="font-size:1.2em;">⚙️</span> Nueva lista
       </button>
 
       <!-- Botón editar tarea (lleva a editar tarea) -->
       <a href="#/edit-task" class="sidebar-action">
-        <span style="font-size:1.2em;">&#9998;</span>
+        <span style="font-size:1.2em;">✏️</span>
       </a>
 
       <!-- Botón perfil de usuario -->
       <a href="#/profile" class="sidebar-action">
         <span style="font-size:1.2em;">👤</span> Perfil
       </a>
+
+      <!-- Botón logout -->
+      <button class="sidebar-action" id="logout">
+        <span style="font-size:1.2em;">🚪</span> Cerrar sesión
+      </button>
     </div>
   </aside>
 
   <!-- Main content -->
   <main class="tasks-main">
-    <h1 class="tasks-title">LISTA 1</h1>
+    <h1 class="tasks-title" id="current-list-title">LISTA 1</h1>
+    
+    <!-- Mensaje de error/loading -->
+    <div id="loading-message" style="display: none; text-align: center; color: var(--color-text); margin: 2rem 0;">
+      Cargando tareas...
+    </div>
+    <div id="error-message" style="display: none; text-align: center; color: #ffb4b4; margin: 2rem 0;"></div>
+    
     <div class="kanban-section">
       <div id="kanban-board" class="kanban-board">
-        <!-- Columnas Kanban predeterminadas -->
-        <div class="kanban-column">
-          <h3>Pendiente</h3>
-          <div class="kanban-tasks"></div>
+        <!-- Columna NUEVO -->
+        <div class="kanban-column" data-status="nuevo">
+          <h3>NUEVO</h3>
+          <div class="kanban-tasks" id="nuevo-tasks">
+            <!-- Tareas se cargarán dinámicamente aquí -->
+          </div>
+          <button class="add-task-btn" data-status="nuevo">
+            <span>+</span>
+          </button>
         </div>
-        <div class="kanban-column">
-          <h3>Haciendo</h3>
-          <div class="kanban-tasks"></div>
+
+        <!-- Columna EN PROGRESO -->
+        <div class="kanban-column" data-status="en-progreso">
+          <h3>EN PROGRESO</h3>
+          <div class="kanban-tasks" id="en-progreso-tasks">
+            <!-- Tareas se cargarán dinámicamente aquí -->
+          </div>
+     
         </div>
-        <div class="kanban-column">
-          <h3>Hecho</h3>
-          <div class="kanban-tasks"></div>
+
+        <!-- Columna HECHO -->
+        <div class="kanban-column" data-status="hecho">
+          <h3>HECHO</h3>
+          <div class="kanban-tasks" id="hecho-tasks">
+            <!-- Tareas se cargarán dinámicamente aquí -->
+          </div>
+        
         </div>
       </div>
     </div>
   </main>
 </div>
+
+<!-- Modal para agregar nueva tarea -->
+<div id="task-modal" class="task-modal">
+  <div class="task-modal-content">
+    <span class="task-modal-close">&times;</span>
+    <h3>Nueva Tarea</h3>
+    <form id="new-task-form">
+      <div class="form-group">
+        <label for="task-title">Título:</label>
+        <input type="text" id="task-title" name="title" placeholder="TAREA 1" required>
+      </div>
+      <div class="form-group">
+        <label for="task-description">Descripción:</label>
+        <textarea id="task-description" name="description" placeholder="Descripción de la tarea"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="task-date">Fecha:</label>
+        <input type="date" id="task-date" name="date">
+      </div>
+      <input type="hidden" id="task-status" name="status">
+      <div class="form-buttons">
+        <button type="submit" class="btn-primary">Agregar Tarea</button>
+        <button type="button" class="btn-secondary" id="cancel-task">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal para crear nueva lista -->
+<div id="list-modal" class="task-modal">
+  <div class="task-modal-content">
+    <span class="list-modal-close">&times;</span>
+    <h3>Nueva Lista</h3>
+    <form id="new-list-form">
+      <div class="form-group">
+        <label for="list-name">Nombre de la lista:</label>
+        <input type="text" id="list-name" name="name" placeholder="LISTA 4" required>
+      </div>
+      <div class="form-buttons">
+        <button type="submit" class="btn-primary">Crear Lista</button>
+        <button type="button" class="btn-secondary" id="cancel-list">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<style>
+/* Estilos adicionales para la funcionalidad Kanban */
+.list-btn.active {
+  background: var(--color-primary-hover);
+  font-weight: bold;
+}
+
+.add-task-btn {
+  width: 100%;
+  padding: 10px;
+  background: var(--color-bg);
+  color: var(--color-text);
+  border: 2px dashed var(--color-primary);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  font-size: 1.2em;
+  margin-top: 10px;
+}
+
+.add-task-btn:hover {
+  background: var(--color-primary-hover);
+  border-color: var(--color-surface);
+}
+
+/* Estilos de las tareas */
+.kanban-task {
+  background: var(--color-primary);
+  color: var(--color-text);
+  padding: 15px;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  cursor: grab;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.kanban-task:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.35);
+}
+
+.kanban-task .task-title {
+  font-weight: bold;
+  margin-bottom: 5px;
+  font-size: 1em;
+}
+
+.kanban-task .task-description {
+  font-size: 0.9em;
+  opacity: 0.9;
+  margin-bottom: 8px;
+}
+
+.kanban-task .task-date {
+  font-size: 0.8em;
+  opacity: 0.7;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.kanban-task .task-actions {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  display: none;
+}
+
+.kanban-task:hover .task-actions {
+  display: block;
+}
+
+.task-action-btn {
+  background: rgba(255,255,255,0.2);
+  border: none;
+  color: white;
+  padding: 3px 6px;
+  border-radius: 3px;
+  cursor: pointer;
+  margin-left: 2px;
+}
+
+.task-action-btn:hover {
+  background: rgba(255,255,255,0.4);
+}
+
+/* Modal styles */
+.task-modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  backdrop-filter: blur(3px);
+}
+
+.task-modal-content {
+  background-color: var(--color-surface);
+  margin: 10% auto;
+  padding: 20px;
+  border-radius: var(--radius-md);
+  width: 90%;
+  max-width: 500px;
+  box-shadow: var(--shadow-md);
+  color: #333;
+}
+
+.task-modal-close, .list-modal-close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.task-modal-close:hover, .list-modal-close:hover {
+  color: var(--color-primary);
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: var(--color-primary);
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: var(--radius-md);
+  font-size: 1em;
+}
+
+.form-group textarea {
+  resize: vertical;
+  height: 60px;
+}
+
+.form-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.btn-primary {
+  background: var(--color-primary);
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.btn-primary:hover {
+  background: var(--color-primary-hover);
+}
+
+.btn-secondary {
+  background: #ccc;
+  color: #333;
+  padding: 10px 20px;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.btn-secondary:hover {
+  background: #bbb;
+}
+
+/* Drag and drop styles */
+.kanban-task.dragging {
+  opacity: 0.5;
+  transform: rotate(5deg);
+}
+
+.kanban-column.drag-over {
+  background: rgba(94, 36, 145, 0.1);
+  border: 2px dashed var(--color-primary);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .task-modal-content {
+    width: 95%;
+    margin: 5% auto;
+    padding: 15px;
+  }
+  
+  .form-buttons {
+    flex-direction: column;
+  }
+  
+  .btn-primary, .btn-secondary {
+    width: 100%;
+  }
+}
+</style>
+
+<script>
+// Funcionalidad Kanban mejorada
+document.addEventListener('DOMContentLoaded', function() {
+  const taskModal = document.getElementById('task-modal');
+  const listModal = document.getElementById('list-modal');
+  const newTaskForm = document.getElementById('new-task-form');
+  const newListForm = document.getElementById('new-list-form');
+  const listsNav = document.getElementById('lists-nav');
+  const currentListTitle = document.getElementById('current-list-title');
+  
+  let currentListId = 1;
+  let taskIdCounter = 1;
+  let listIdCounter = 4;
+  
+  // Datos simulados de tareas
+  const tasksData = {
+    1: [
+      { id: 1, title: 'TAREA 1', description: 'Descripción', date: '01/01/aa', status: 'nuevo' },
+      { id: 2, title: 'TAREA 2', description: 'Descripción', date: '01/01/aa', status: 'en-progreso' },
+      { id: 3, title: 'TAREA 2', description: 'Descripción', date: '01/01/aa', status: 'hecho' }
+    ],
+    2: [],
+    3: []
+  };
+
+  // Inicializar la vista
+  function init() {
+    loadTasks(currentListId);
+    setupEventListeners();
+  }
+
+  // Configurar event listeners
+  function setupEventListeners() {
+    // Botones de agregar tarea
+    document.querySelectorAll('.add-task-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const status = e.target.closest('.add-task-btn').dataset.status;
+        openTaskModal(status);
+      });
+    });
+
+    // Cambiar de lista
+    listsNav.addEventListener('click', (e) => {
+      if (e.target.classList.contains('list-btn')) {
+        const listId = parseInt(e.target.dataset.listId);
+        switchToList(listId);
+      }
+    });
+
+    // Nueva lista
+    document.getElementById('new-list-btn').addEventListener('click', () => {
+      openListModal();
+    });
+
+    // Modal eventos
+    document.querySelector('.task-modal-close').addEventListener('click', closeTaskModal);
+    document.querySelector('.list-modal-close').addEventListener('click', closeListModal);
+    document.getElementById('cancel-task').addEventListener('click', closeTaskModal);
+    document.getElementById('cancel-list').addEventListener('click', closeListModal);
+
+    // Cerrar modal al hacer clic fuera
+    window.addEventListener('click', (e) => {
+      if (e.target === taskModal) closeTaskModal();
+      if (e.target === listModal) closeListModal();
+    });
+
+    // Formularios
+    newTaskForm.addEventListener('submit', handleTaskSubmit);
+    newListForm.addEventListener('submit', handleListSubmit);
+  }
+
+  // Cargar tareas para una lista específica
+  function loadTasks(listId) {
+    clearAllTasks();
+    const tasks = tasksData[listId] || [];
+    
+    tasks.forEach(task => {
+      const taskElement = createTaskElement(task);
+      const container = document.getElementById(`${task.status}-tasks`);
+      if (container) {
+        container.appendChild(taskElement);
+      }
+    });
+
+    setupDragAndDrop();
+  }
+
+  // Limpiar todas las tareas del tablero
+  function clearAllTasks() {
+    document.querySelectorAll('.kanban-tasks').forEach(container => {
+      container.innerHTML = '';
+    });
+  }
+
+  // Crear elemento de tarea
+  function createTaskElement(task) {
+    const taskDiv = document.createElement('div');
+    taskDiv.className = 'kanban-task';
+    taskDiv.draggable = true;
+    taskDiv.dataset.taskId = task.id;
+    
+    taskDiv.innerHTML = `
+      <div class="task-actions">
+        <button class="task-action-btn" onclick="editTask(${task.id})">✏️</button>
+        <button class="task-action-btn" onclick="deleteTask(${task.id})">🗑️</button>
+      </div>
+      <div class="task-title">${task.title}</div>
+      <div class="task-description">${task.description}</div>
+      <div class="task-date">📅 ${task.date}</div>
+    `;
+
+    return taskDiv;
+  }
+
+  // Cambiar a una lista específica
+  function switchToList(listId) {
+    currentListId = listId;
+    
+    // Actualizar UI
+    document.querySelectorAll('.list-btn').forEach(btn => {
+      btn.classList.remove('active');
+    });
+    document.querySelector(`[data-list-id="${listId}"]`).classList.add('active');
+    currentListTitle.textContent = `LISTA ${listId}`;
+    
+    // Cargar tareas de la lista
+    loadTasks(listId);
+  }
+
+  // Abrir modal de nueva tarea
+  function openTaskModal(status) {
+    document.getElementById('task-status').value = status;
+    document.getElementById('new-task-form').reset();
+    taskModal.style.display = 'block';
+  }
+
+  // Cerrar modal de tarea
+  function closeTaskModal() {
+    taskModal.style.display = 'none';
+  }
+
+  // Abrir modal de nueva lista
+  function openListModal() {
+    document.getElementById('new-list-form').reset();
+    listModal.style.display = 'block';
+  }
+
+  // Cerrar modal de lista
+  function closeListModal() {
+    listModal.style.display = 'none';
+  }
+
+  // Manejar envío del formulario de tarea
+  function handleTaskSubmit(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(newTaskForm);
+    const task = {
+      id: ++taskIdCounter,
+      title: formData.get('title'),
+      description: formData.get('description'),
+      date: formatDate(formData.get('date')),
+      status: formData.get('status')
+    };
+
+    // Agregar tarea a los datos
+    if (!tasksData[currentListId]) {
+      tasksData[currentListId] = [];
+    }
+    tasksData[currentListId].push(task);
+
+    // Crear y agregar elemento visual
+    const taskElement = createTaskElement(task);
+    const container = document.getElementById(`${task.status}-tasks`);
+    container.appendChild(taskElement);
+
+    setupDragAndDrop();
+    closeTaskModal();
+  }
+
+  // Manejar envío del formulario de lista
+  function handleListSubmit(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(newListForm);
+    const listName = formData.get('name');
+    const listId = ++listIdCounter;
+
+    // Crear botón de lista
+    const listBtn = document.createElement('a');
+    listBtn.className = 'list-btn';
+    listBtn.dataset.listId = listId;
+    listBtn.textContent = listName;
+    
+    listsNav.appendChild(listBtn);
+    tasksData[listId] = [];
+
+    closeListModal();
+  }
+
+  // Formatear fecha
+  function formatDate(dateString) {
+    if (!dateString) return 'dd/mm/aa';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('es-ES', { 
+      day: '2-digit', 
+      month: '2-digit', 
+      year: '2-digit' 
+    });
+  }
+
+  // Configurar drag and drop
+  function setupDragAndDrop() {
+    const tasks = document.querySelectorAll('.kanban-task');
+    const columns = document.querySelectorAll('.kanban-column');
+
+    tasks.forEach(task => {
+      task.addEventListener('dragstart', (e) => {
+        e.dataTransfer.setData('text/plain', task.dataset.taskId);
+        task.classList.add('dragging');
+      });
+
+      task.addEventListener('dragend', () => {
+        task.classList.remove('dragging');
+      });
+    });
+
+    columns.forEach(column => {
+      column.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        column.classList.add('drag-over');
+      });
+
+      column.addEventListener('dragleave', () => {
+        column.classList.remove('drag-over');
+      });
+
+      column.addEventListener('drop', (e) => {
+        e.preventDefault();
+        column.classList.remove('drag-over');
+        
+        const taskId = parseInt(e.dataTransfer.getData('text/plain'));
+        const newStatus = column.dataset.status;
+        const taskElement = document.querySelector(`[data-task-id="${taskId}"]`);
+        
+        if (taskElement) {
+          // Actualizar datos
+          const task = tasksData[currentListId].find(t => t.id === taskId);
+          if (task) {
+            task.status = newStatus;
+          }
+          
+          // Mover elemento visualmente
+          const tasksContainer = column.querySelector('.kanban-tasks');
+          tasksContainer.appendChild(taskElement);
+        }
+      });
+    });
+  }
+
+  // Funciones globales para los botones de acción
+  window.editTask = function(taskId) {
+    console.log('Editar tarea:', taskId);
+    // Implementar lógica de edición
+  };
+
+  window.deleteTask = function(taskId) {
+    if (confirm('¿Estás seguro de que quieres eliminar esta tarea?')) {
+      // Remover de datos
+      const taskIndex = tasksData[currentListId].findIndex(t => t.id === taskId);
+      if (taskIndex > -1) {
+        tasksData[currentListId].splice(taskIndex, 1);
+      }
+      
+      // Remover elemento visual
+      const taskElement = document.querySelector(`[data-task-id="${taskId}"]`);
+      if (taskElement) {
+        taskElement.remove();
+      }
+    }
+  };
+
+  // Inicializar cuando el DOM esté listo
+  init();
+});
+</script>

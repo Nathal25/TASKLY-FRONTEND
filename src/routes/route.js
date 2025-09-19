@@ -4,6 +4,8 @@ import { resetPassword } from '../services/userService.js';
 import { loginUser } from '../services/userService.js';
 import { logoutUser } from '../services/userService.js';
 import { getTasks } from '../services/taskService.js';
+import { updateTaskStatus, deleteTask } from '../services/taskService.js';
+import { getLists, createList } from '../services/listService.js';
 const app = document.getElementById('app');
 
 /**
@@ -105,44 +107,177 @@ function initHome() {
   });
 }
 
+// Esta función reemplaza tu initTasks() actual en route.js
 async function initTasks() {
   const board = document.getElementById('kanban-board');
   if (!board) return;
 
+  // Limpiar contenido actual
   board.querySelectorAll('.kanban-tasks').forEach(container => (container.innerHTML = ''));
 
   try {
-    const data = await getTasks();
-    if (!data) throw new Error('Error al cargar tareas desde el servidor');
+    //const data = await getTasks();
+    //if (!data) throw new Error('Error al cargar tareas desde el servidor');
+
+     const data = [
+      { id: 1, title: 'TAREA 1', description: 'Descripción de ejemplo', status: 'Pending', dueDate: '2024-01-01' },
+      { id: 2, title: 'TAREA 2', description: 'En desarrollo', status: 'In-progress', dueDate: '2024-01-15' },
+      { id: 3, title: 'TAREA 3', description: 'Completada', status: 'Completed', dueDate: '2024-01-10' }
+    ];
+
+    // Mapear estados del backend a estados del frontend
+    const statusMapping = {
+      'Pending': 'nuevo',
+      'In-progress': 'en-progreso', 
+      'Completed': 'hecho'
+    };
 
     data.forEach(task => {
       let columnContainer;
-      switch (task.status) {
-        case 'Pending':
-          columnContainer = board.querySelector('.kanban-column:nth-child(1) .kanban-tasks');
-          break;
-        case 'In-progress':
-          columnContainer = board.querySelector('.kanban-column:nth-child(2) .kanban-tasks');
-          break; 
-        case 'Completed':
-          columnContainer = board.querySelector('.kanban-column:nth-child(3) .kanban-tasks');
-          break;
-        default:
-          console.warn('Estado de tarea desconocido:', task.status);
-          return; // saltar esta tarea
+      const frontendStatus = statusMapping[task.status] || 'nuevo';
+      
+      // Buscar el contenedor correcto por el data-status
+      const column = board.querySelector(`[data-status="${frontendStatus}"]`);
+      if (column) {
+        columnContainer = column.querySelector('.kanban-tasks');
       }
 
+      if (!columnContainer) {
+        console.warn('No se encontró contenedor para estado:', task.status);
+        return;
+      }
+
+      // Crear elemento de tarea mejorado
       const taskCard = document.createElement('div');
       taskCard.classList.add('kanban-task');
-      taskCard.textContent = task.title;
-      if (task.completed) taskCard.classList.add('completed');
+      taskCard.draggable = true;
+      taskCard.dataset.taskId = task.id;
+      
+      // Formatear fecha si existe
+      const formattedDate = task.dueDate ? 
+        new Date(task.dueDate).toLocaleDateString('es-ES', { 
+          day: '2-digit', 
+          month: '2-digit', 
+          year: '2-digit' 
+        }) : 'dd/mm/aa';
+
+      taskCard.innerHTML = `
+        <div class="task-actions">
+          <button class="task-action-btn" onclick="editTask(${task.id})">✏️</button>
+          <button class="task-action-btn" onclick="deleteTaskFromBoard(${task.id})">🗑️</button>
+        </div>
+        <div class="task-title">${task.title || 'Sin título'}</div>
+        <div class="task-description">${task.description || 'Sin descripción'}</div>
+        <div class="task-date">📅 ${formattedDate}</div>
+      `;
+
+      if (task.completed || task.status === 'Completed') {
+        taskCard.classList.add('completed');
+      }
+      
       columnContainer.appendChild(taskCard);
     });
+
+    // Configurar drag and drop después de cargar las tareas
+    setupDragAndDrop();
+    
   } catch (err) {
     console.error(err);
-    board.innerHTML = `<p style="color:#ffb4b4">No se pudieron cargar las tareas.</p>`;
+    board.innerHTML = `<p style="color:#ffb4b4">No se pudieron cargar las tareas: ${err.message}</p>`;
   }
 }
+
+// Función auxiliar para configurar drag and drop
+function setupDragAndDrop() {
+  const tasks = document.querySelectorAll('.kanban-task');
+  const columns = document.querySelectorAll('.kanban-column');
+
+  tasks.forEach(task => {
+    task.addEventListener('dragstart', (e) => {
+      e.dataTransfer.setData('text/plain', task.dataset.taskId);
+      task.classList.add('dragging');
+    });
+
+    task.addEventListener('dragend', () => {
+      task.classList.remove('dragging');
+    });
+  });
+
+  columns.forEach(column => {
+    column.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      column.classList.add('drag-over');
+    });
+
+    column.addEventListener('dragleave', () => {
+      column.classList.remove('drag-over');
+    });
+
+    column.addEventListener('drop', async (e) => {
+      e.preventDefault();
+      column.classList.remove('drag-over');
+      
+      const taskId = parseInt(e.dataTransfer.getData('text/plain'));
+      const newStatus = column.dataset.status;
+      const taskElement = document.querySelector(`[data-task-id="${taskId}"]`);
+      
+      if (taskElement) {
+        try {
+          // Mapear estados del frontend al backend
+          const backendStatusMapping = {
+            'nuevo': 'Pending',
+            'en-progreso': 'In-progress',
+            'hecho': 'Completed'
+          };
+          
+          const backendStatus = backendStatusMapping[newStatus];
+          
+          // Actualizar en el servidor
+          await updateTaskStatus(taskId, backendStatus);
+          
+          // Mover elemento visualmente
+          const tasksContainer = column.querySelector('.kanban-tasks');
+          tasksContainer.appendChild(taskElement);
+          
+          // Actualizar clase si se completó
+          if (backendStatus === 'Completed') {
+            taskElement.classList.add('completed');
+          } else {
+            taskElement.classList.remove('completed');
+          }
+          
+        } catch (error) {
+          console.error('Error al actualizar estado de tarea:', error);
+          // Podrías mostrar una notificación de error aquí
+        }
+      }
+    });
+  });
+}
+
+// Función global para eliminar tarea desde el tablero
+window.deleteTaskFromBoard = async function(taskId) {
+  if (confirm('¿Estás seguro de que quieres eliminar esta tarea?')) {
+    try {
+      await deleteTask(taskId);
+      
+      // Remover elemento visual
+      const taskElement = document.querySelector(`[data-task-id="${taskId}"]`);
+      if (taskElement) {
+        taskElement.remove();
+      }
+    } catch (error) {
+      console.error('Error al eliminar tarea:', error);
+      alert('No se pudo eliminar la tarea. Inténtalo de nuevo.');
+    }
+  }
+};
+
+// Función global para editar tarea
+window.editTask = function(taskId) {
+  // Redirigir a la página de edición con el ID de la tarea
+  location.hash = `#/edit-task?id=${taskId}`;
+};
 
 function initRegister() {
   const form = document.getElementById('registerForm');
@@ -377,4 +512,111 @@ function initEditProfile() {
 
 function initEditTask() {
   console.log("Vista editar tarea cargada ✅");
+}
+
+// Agrega estas funciones al final de tu route.js, después de initTasks()
+
+// Función para abrir modal de nueva tarea
+function openTaskModal(status) {
+  const modal = document.getElementById('task-modal');
+  if (modal) {
+    document.getElementById('task-status').value = status;
+    document.getElementById('new-task-form').reset();
+    modal.style.display = 'block';
+  }
+}
+
+// Función para cerrar modal de tarea
+function closeTaskModal() {
+  const modal = document.getElementById('task-modal');
+  if (modal) {
+    modal.style.display = 'none';
+  }
+}
+
+// Función para manejar envío de nueva tarea
+async function handleTaskSubmit(e) {
+  e.preventDefault();
+  
+  const formData = new FormData(e.target);
+  const taskData = {
+    title: formData.get('title'),
+    description: formData.get('description'),
+    dueDate: formData.get('date'),
+    status: formData.get('status')
+  };
+
+  // Mapear estado del frontend al backend
+  const backendStatusMapping = {
+    'nuevo': 'Pending',
+    'en-progreso': 'In-progress',
+    'hecho': 'Completed'
+  };
+  
+  taskData.status = backendStatusMapping[taskData.status] || 'Pending';
+
+  try {
+    // Intentar crear tarea en el servidor
+    // const newTask = await createTask(taskData);
+    
+    // Por ahora, crear tarea localmente
+    const newTask = {
+      id: Date.now(), // ID temporal
+      title: taskData.title,
+      description: taskData.description,
+      dueDate: taskData.dueDate,
+      status: taskData.status
+    };
+
+    // Agregar tarea al tablero visualmente
+    addTaskToBoard(newTask);
+    closeTaskModal();
+    
+  } catch (error) {
+    console.error('Error creando tarea:', error);
+    alert('No se pudo crear la tarea. Inténtalo de nuevo.');
+  }
+}
+
+// Función para agregar tarea al tablero visualmente
+function addTaskToBoard(task) {
+  const statusMapping = {
+    'Pending': 'nuevo',
+    'In-progress': 'en-progreso', 
+    'Completed': 'hecho'
+  };
+  
+  const frontendStatus = statusMapping[task.status] || 'nuevo';
+  const container = document.getElementById(`${frontendStatus}-tasks`);
+  
+  if (container) {
+    const taskCard = document.createElement('div');
+    taskCard.classList.add('kanban-task');
+    taskCard.draggable = true;
+    taskCard.dataset.taskId = task.id;
+    
+    const formattedDate = task.dueDate ? 
+      new Date(task.dueDate).toLocaleDateString('es-ES', { 
+        day: '2-digit', 
+        month: '2-digit', 
+        year: '2-digit' 
+      }) : 'dd/mm/aa';
+
+    taskCard.innerHTML = `
+      <div class="task-actions">
+        <button class="task-action-btn" onclick="editTask(${task.id})">✏️</button>
+        <button class="task-action-btn" onclick="deleteTaskFromBoard(${task.id})">🗑️</button>
+      </div>
+      <div class="task-title">${task.title || 'Sin título'}</div>
+      <div class="task-description">${task.description || 'Sin descripción'}</div>
+      <div class="task-date">📅 ${formattedDate}</div>
+    `;
+
+    if (task.status === 'Completed') {
+      taskCard.classList.add('completed');
+    }
+    
+    container.appendChild(taskCard);
+    setupDragAndDrop(); // Reconfigurar drag and drop
+  }
 }
