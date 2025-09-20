@@ -3,6 +3,7 @@ import { sendRecoveryEmail } from '../services/userService.js';
 import { resetPassword } from '../services/userService.js';
 import { loginUser } from '../services/userService.js';
 import { logoutUser } from '../services/userService.js';
+import { getLoggedUser } from '../services/userService.js';
 import { getTasks } from '../services/taskService.js';
 const app = document.getElementById('app');
 
@@ -123,7 +124,7 @@ async function initTasks() {
           break;
         case 'In-progress':
           columnContainer = board.querySelector('.kanban-column:nth-child(2) .kanban-tasks');
-          break; 
+          break;
         case 'Completed':
           columnContainer = board.querySelector('.kanban-column:nth-child(3) .kanban-tasks');
           break;
@@ -367,8 +368,29 @@ function initLogout() {
   });
 }
 
-function initProfile() {
-  console.log("Vista perfil cargada ✅");
+async function initProfile() {
+  const userInfoContainer = document.getElementById('user-info');
+  const backButton = document.getElementById('backToTasks');
+
+  if (!userInfoContainer) return;
+
+  try {
+    // Llama al servicio getLoggedUser para obtener la información del usuario
+    const user = await getLoggedUser();
+    userInfoContainer.innerHTML = `
+      <p><strong>Nombre:</strong> ${user.firstName} ${user.lastName}</p>
+      <p><strong>Email:</strong> ${user.email}</p>
+      <p><strong>Edad:</strong> ${user.age}</p>
+    `;
+  } catch (error) {
+    console.error('Error al cargar la información del usuario:', error.message);
+    userInfoContainer.innerHTML = `<p style="color: red;">Error al cargar la información del usuario.</p>`;
+  }
+
+  // Manejar el botón para volver a las tareas
+  backButton.addEventListener('click', () => {
+    location.hash = '#/tasks';
+  });
 }
 
 function initEditProfile() {

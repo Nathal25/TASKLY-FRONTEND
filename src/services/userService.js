@@ -16,6 +16,10 @@ export async function logoutUser() {
   return http.post('/api/v1/users/logout');
 }
 
+export async function getLoggedUser() {
+  return http.get('/api/v1/users/me');
+}
+
 export async function registerUser(data) {
   try {
     const res = await fetch('https://taskly-2h0c.onrender.com/api/v1/users/', {
