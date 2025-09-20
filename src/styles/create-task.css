@@ -1,9 +1,9 @@
 /* =======================
-   Edit Profile Styles
+   Create Task Styles
    ======================= */
 
 /* Contenedor principal */
-.edit-profile-main {
+.create-task-main {
   padding: 20px;
   font-family: var(--font-family);
   color: var(--color-text);
@@ -12,7 +12,7 @@
 }
 
 /* Título principal */
-.edit-profile-main h1 {
+.create-task-main h1 {
   font-size: 24px;
   font-weight: 700;
   margin-bottom: 20px;
@@ -21,7 +21,7 @@
 }
 
 /* Formulario */
-#edit-profile-form {
+#create-task-form {
   background-color: var(--color-primary);
   padding: 20px;
   border-radius: var(--radius-md);
@@ -30,14 +30,15 @@
   margin: 0 auto;
 }
 
-#edit-profile-form label {
+
+#create-task-form label {
   display: block;
   font-size: 16px;
   margin-bottom: 5px;
   color: var(--color-surface);
 }
 
-#edit-profile-form input {
+#create-task-form input[type="time"] {
   width: 100%;
   padding: 10px;
   margin-bottom: 15px;
@@ -47,7 +48,24 @@
   box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-#edit-profile-form button {
+#create-task-form input,
+#create-task-form textarea,
+#create-task-form select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 16px;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+#create-task-form textarea {
+  resize: none;
+  height: 100px;
+}
+
+#create-task-form button {
   width: 100%;
   padding: 10px;
   margin-top: 10px;
@@ -59,18 +77,18 @@
   cursor: pointer;
 }
 
-#edit-profile-form button:hover {
+#create-task-form button:hover {
   background-color: var(--color-subtle);
   transform: scale(1.05);
 }
 
 /* Botón de cancelar */
-#backToProfile {
+#cancelCreateTask {
   background-color: var(--color-bg-page);
   color: var(--color-surface);
 }
 
-#backToProfile:hover {
+#cancelCreateTask:hover {
   background-color: var(--color-primary-hover);
   color: var(--color-text);
 }
