@@ -5,8 +5,8 @@ import { loginUser } from '../services/userService.js';
 import { logoutUser } from '../services/userService.js';
 import { getLoggedUser } from '../services/userService.js';
 import { getTasks } from '../services/taskService.js';
-import { getLoggedUser } from '../services/userService.js';
 import { editLoggedUser } from '../services/userService.js';
+import { checkIfTokenIsValid } from '../services/userService.js';
 import { createTask } from '../services/taskService.js';
 import { updateTaskStatus, deleteTask } from '../services/taskService.js';
 import { getLists, createList } from '../services/listService.js';
@@ -19,6 +19,57 @@ const app = document.getElementById('app');
  * @returns {URL} The resolved URL for the view HTML file.
  */
 const viewURL = (name) => new URL(`../views/${name}.html`, import.meta.url);
+
+
+/**
+ * Initialize the hash-based router.
+ * Attaches an event listener for URL changes and triggers the first render.
+ */
+export function initRouter() {
+  window.addEventListener('hashchange', handleRoute);
+  handleRoute(); // first render
+}
+
+/**
+ * Handle the current route based on the location hash.
+ * Fallback to 'home' if the route is unknown.
+ */
+async function handleRoute() {
+  const path = (location.hash.startsWith('#/') ? location.hash.slice(2) : '') || 'home';
+  const [routeName, queryString] = path.split("?");
+  const known = ['home', 'login', 'register', 'send-email', 'recover-password',
+    'recover-code', 'tasks', 'profile', 'edit-profile', 'edit-task', 'create-task', 'delete-task'];
+  const privateRoutes = ['tasks', 'profile', 'edit-profile', 'edit-task', 'create-task', 'delete-task'];
+  const route = known.includes(routeName) ? routeName : 'home';
+
+  try {
+    // Verificar si la ruta es privada
+    if (privateRoutes.includes(route)) {
+      const isLoggedIn = await checkAuth();
+      if (!isLoggedIn) {
+        location.hash = '#/login'; // redirige a login si no está autenticado
+        return;
+      }
+    }
+
+    // Cargar la vista
+    await loadView(route, queryString);
+
+  } catch (err) {
+    console.error(err);
+    app.innerHTML = `<p style="color:#ffb4b4">Error loading the view.</p>`;
+  }
+}
+
+async function checkAuth() {
+  try {
+    const res = await checkIfTokenIsValid();
+    if (!res == "Token valido") return false; // no autorizado
+    return true;
+  } catch {
+    return false;
+  }
+}
 
 /**
  * Load an HTML fragment by view name and initialize its corresponding logic.
@@ -35,7 +86,7 @@ async function loadView(name, queryString) {
   if (name === 'home') initHome();
   if (name === 'register') initRegister();
   if (name === 'tasks') initTasks();
-  if (name === 'login') initLogin2();
+  if (name === 'login') initLogin();
   if (name === 'send-email') initSendEmail();
   if (name === 'recover-password') initRecoverPassword(queryString);
   if (name === 'profile') initProfile();
@@ -43,34 +94,8 @@ async function loadView(name, queryString) {
   if (name === 'edit-task') initEditTask();
   if (name === 'create-task') initCreateTask();
   if (name === 'delete-task') initDeleteTask();
-  
+
   initLogout();
-}
-
-/**
- * Initialize the hash-based router.
- * Attaches an event listener for URL changes and triggers the first render.
- */
-export function initRouter() {
-  window.addEventListener('hashchange', handleRoute);
-  handleRoute(); // first render
-}
-
-/**
- * Handle the current route based on the location hash.
- * Fallback to 'home' if the route is unknown.
- */
-function handleRoute() {
-  const path = (location.hash.startsWith('#/') ? location.hash.slice(2) : '') || 'home';
-  const [routeName, queryString] = path.split("?");
-  const known = ['home', 'login', 'register', 'send-email', 'recover-password', 
-    'recover-code', 'tasks', 'profile', 'edit-profile', 'edit-task', 'create-task', 'delete-task'];
-  const route = known.includes(routeName) ? routeName : 'home';
-
-  loadView(route, queryString).catch(err => {
-    console.error(err);
-    app.innerHTML = `<p style="color:#ffb4b4">Error loading the view.</p>`;
-  });
 }
 
 /* ---- View-specific logic ---- */
@@ -80,148 +105,476 @@ function handleRoute() {
  * Attaches a submit handler to the register form to navigate to the board.
  */
 function initHome() {
+  console.log("Vista home cargada");
+}
+
+// Función para inicializar la vista de registro
+function initRegister() {
+  console.log("Vista register cargada");
+
+  // Tomamos referencias al formulario, mensaje y botón de submit
   const form = document.getElementById('registerForm');
-  const userInput = document.getElementById('username');
+  const submitButton = form?.querySelector('button[type="submit"]');
+
+  // Se verifica que el formulario y el botón existan
+  if (!form || !submitButton) return;
+
+  // Expresión regular para validar la contraseña
+  const passwordRegex1 = /^(?=.*[A-Z])/;
+  const passwordRegex2 = /^(?=.*\d)/;
+  const passwordRegex3 = /^(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])/;
+  const passwordRegex4 = /^[A-Za-z\d!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{8,}$/;
+
+  // Referencias a los elementos del DOM relacionados con la contraseña
+  const passwordInput = document.getElementById("password");
+  const passwordTip1 = document.getElementById("password-tip1");
+  const passwordTip2 = document.getElementById("password-tip2");
+  const passwordTip3 = document.getElementById("password-tip3");
+  const passwordTip4 = document.getElementById("password-tip4");
+
+  // Configuramos atributos de accesibilidad para el mensaje de la contraseña
+  passwordTip1.setAttribute("role", "tooltip"); // Indica que es un tooltip (mensaje informativo flotante para usuarios con lectores de pantalla)
+  passwordTip1.setAttribute("aria-live", "polite"); // Indica que los cambios en este elemento deben ser anunciados de forma no intrusiva
+  passwordTip2.setAttribute("role", "tooltip");
+  passwordTip2.setAttribute("aria-live", "polite");
+  passwordTip3.setAttribute("role", "tooltip");
+  passwordTip3.setAttribute("aria-live", "polite");
+  passwordTip4.setAttribute("role", "tooltip");
+  passwordTip4.setAttribute("aria-live", "polite");
+
+  // Escuchar el evento de entrada en el campo de contraseña para validar en tiempo real (manejo de mensajes)
+  passwordInput.addEventListener("input", () => {
+    if (!passwordRegex4.test(passwordInput.value)) {
+      passwordTip4.classList.add("show");
+      passwordTip1.classList.remove("show");
+      passwordTip2.classList.remove("show");
+      passwordTip3.classList.remove("show");
+    } else if (!passwordRegex2.test(passwordInput.value)) {
+      passwordTip2.classList.add("show");
+      passwordTip1.classList.remove("show");
+      passwordTip3.classList.remove("show");
+      passwordTip4.classList.remove("show");
+    } else if (!passwordRegex3.test(passwordInput.value)) {
+      passwordTip3.classList.add("show");
+      passwordTip1.classList.remove("show");
+      passwordTip2.classList.remove("show");
+      passwordTip4.classList.remove("show");
+    } else if (!passwordRegex1.test(passwordInput.value)) {
+      passwordTip1.classList.add("show");
+      passwordTip2.classList.remove("show");
+      passwordTip3.classList.remove("show");
+      passwordTip4.classList.remove("show");
+    } else {
+      passwordTip1.classList.remove("show");
+      passwordTip2.classList.remove("show");
+      passwordTip3.classList.remove("show");
+      passwordTip4.classList.remove("show");
+    }
+  });
+
+  // Referencias a los elementos del DOM relacionados con la edad (input, mensaje)
+  const ageInput = document.getElementById("age");
+  const ageTip = document.getElementById("age-tip");
+
+  // Configuramos atributos de accesibilidad para el mensaje de la edad
+  ageTip.setAttribute("role", "tooltip");
+  ageTip.setAttribute("aria-live", "polite");
+
+  // Escuchar el evento de entrada en el campo de edad para validar en tiempo real (manejo de mensajes)
+  ageInput.addEventListener("input", () => {
+    if (!/^\d+$/.test(ageInput.value) || Number(ageInput.value) < 13) {
+      ageTip.classList.add("show");
+    } else {
+      ageTip.classList.remove("show");
+    }
+  });
+
+  // Referencias a los elementos del DOM relacionados con la confirmación de la contraseña
+  const confirmInput = document.getElementById("confirmPassword");
+  const passwordConfirmTip = document.getElementById("passwordConfirm-tip");
+
+  // Configuramos atributos de accesibilidad para el mensaje de confirmación de contraseña
+  passwordConfirmTip.setAttribute("role", "tooltip");
+  passwordConfirmTip.setAttribute("aria-live", "polite");
+
+  // Escuchar el evento de entrada en el campo de confirmación de contraseña para validar en tiempo real (manejo de mensajes)
+  confirmInput.addEventListener("input", () => {
+    if (confirmInput.value !== passwordInput.value) {
+      passwordConfirmTip.classList.add("show");
+    } else {
+      passwordConfirmTip.classList.remove("show");
+    }
+  });
+
+  document.getElementById("togglePassword").addEventListener("click", function () {
+    const passwordInput = document.getElementById("password");
+    const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
+    passwordInput.setAttribute("type", type);
+
+    this.classList.toggle("fa-eye");
+    this.classList.toggle("fa-eye-slash");
+  });
+
+  document.getElementById("togglePassword2").addEventListener("click", function () {
+    const passwordInput = document.getElementById("confirmPassword");
+    const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
+    passwordInput.setAttribute("type", type);
+
+    this.classList.toggle("fa-eye");
+    this.classList.toggle("fa-eye-slash");
+  });
+
+  // Función para validar todos los campos del formulario
+  function validateForm(data) {
+    const errors = [];
+
+    // Validar nombre y apellido (no vacíos)
+    if (!data.firstName || data.firstName.length === 0) {
+      errors.push("El nombre es obligatorio");
+    }
+    if (!data.lastName || data.lastName.length === 0) {
+      errors.push("El apellido es obligatorio");
+    }
+
+    // Validar edad
+    if (!data.age || data.age < 13) {
+      errors.push("La edad debe ser mayor o igual a 13 años");
+    }
+
+    // Validar email (formato básico)
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!data.email || !emailRegex.test(data.email)) {
+      errors.push("El email debe tener un formato válido");
+    }
+
+    // Validar contraseña con todas las reglas
+    if (!passwordRegex1.test(data.password)) {
+      errors.push("La contraseña debe contener al menos una letra mayúscula");
+    }
+    if (!passwordRegex2.test(data.password)) {
+      errors.push("La contraseña debe contener al menos un número");
+    }
+    if (!passwordRegex3.test(data.password)) {
+      errors.push("La contraseña debe contener al menos un carácter especial");
+    }
+    if (!passwordRegex4.test(data.password)) {
+      errors.push("La contraseña debe tener al menos 8 caracteres");
+    }
+
+    // Validar confirmación de contraseña
+    if (data.password !== data.confirmPassword) {
+      errors.push("Las contraseñas no coinciden");
+    }
+
+    return errors;
+  }
+
+  // Manejar el envío del formulario
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();  // Esto previene el comportamiento por defecto del formulario (que recarga la página)
+
+    // Extraer datos del formulario
+    const formData = new FormData(form);
+    const data = {
+      firstName: formData.get('firstName')?.trim(),
+      lastName: formData.get('lastName')?.trim(),
+      age: Number(formData.get('age')),
+      email: formData.get('email')?.trim(),
+      password: formData.get('password')?.trim(),
+      confirmPassword: formData.get('confirmPassword')?.trim(),
+    };
+
+    // Validar todos los campos antes de enviar
+    const validationErrors = validateForm(data);
+
+    if (validationErrors.length > 0) {
+      // Si hay errores, mostrar el primer error y no enviar el formulario
+      showToast(validationErrors[0], "error");
+      return; // Detener la ejecución aquí
+    }
+
+    // Si llegamos aquí, todas las validaciones pasaron
+    submitButton.disabled = true;
+
+    // Mostrar spinner en el botón (máx 3s)
+    submitButton.innerHTML = `<span class="spinner"></span>`;
+
+    // Llamar al servicio registerUser para registrar el usuario
+    try {
+      await registerUser(data);
+      showToast("Cuenta creada con éxito", "success");
+      setTimeout(() => (location.hash = '#/login'), 400);
+    } catch (err) {
+      showToast(err.message || "Error al registrar", "error");
+    } finally {
+      setTimeout(() => {
+        submitButton.disabled = false;
+        submitButton.innerHTML = "Registrarse";
+      }, 3000); // spinner máx 3s
+    }
+  });
+}
+
+// Función para mostrar mensajes tipo toast
+function showToast(message, type) {
+  const toast = document.createElement("div");
+  toast.className = `toast ${type}`;
+  toast.textContent = message;
+  document.body.appendChild(toast);
+
+  setTimeout(() => {
+    toast.classList.add("show");
+  }, 50);
+
+  setTimeout(() => {
+    toast.classList.remove("show");
+    setTimeout(() => toast.remove(), 500);
+  }, 2000);
+}
+
+// Función para mostrar mensajes tipo toast mas cortos
+function showToast2(message, type = "success") {
+  const toast = document.createElement("div");
+  toast.className = `toast ${type}`;
+  toast.textContent = message;
+  document.body.appendChild(toast);
+
+  setTimeout(() => {
+    toast.classList.add("show");
+  }, 50);
+
+  setTimeout(() => {
+    toast.classList.remove("show");
+    setTimeout(() => toast.remove(), 500);
+  }, 900);
+}
+
+// Función para inicializar la vista de login
+async function initLogin() {
+  // Obtenemos referencias al formulario y al contenedor de mensajes
+  const form = document.getElementById('loginForm');
+  const msg = document.getElementById('loginMsg');
+  if (!form) return;
+
+  // Configuramos atributos de accesibilidad para el mensaje de login
+  msg.setAttribute("role", "tooltip"); // Indica que es un tooltip (mensaje informativo flotante para usuarios con lectores de pantalla)
+  msg.setAttribute("aria-live", "polite"); // Indica que los cambios en este elemento deben ser anunciados de forma no intrusiva
+
+  // Referencias a los inputs
+  const correoInput = document.getElementById('email');
   const passInput = document.getElementById('password');
-  const msg = document.getElementById('registerMsg');
+
+  // Tomamos el evento submit del formulario
+  form.addEventListener('submit', async (e) => {
+    // Prevenimos el comportamiento por defecto del formulario (que recarga la página)
+    e.preventDefault();
+
+    // Limpiamos mensajes previos
+    msg.textContent = '';
+
+    // Extraemos los valores de los inputs
+    const correo = correoInput?.value.trim();
+    const password = passInput?.value.trim();
+
+    // Validamos que no estén vacíos
+    if (!correo || !password) {
+      msg.textContent = 'Por favor completa todos los campos.';
+      return;
+    }
+
+    // Deshabilitamos el botón de submit para evitar múltiples envíos
+    form.querySelector('button[type="submit"]').disabled = true;
+
+    // Mostrar spinner en el botón (máx 3s)
+    form.querySelector('button[type="submit"]').innerHTML = `<span class="spinner"></span>`;
+
+    // Llamamos al servicio loginUser para iniciar sesión
+    try {
+      const data = await loginUser({ email: correo, password });
+      setTimeout(() => (location.hash = '#/tasks'), 400);
+    } catch (err) {
+      // Si hubo un error (por ejemplo, la API falló), se muestra un mensaje con la razón
+      msg.textContent = `No se pudo iniciar sesión: ${err.message}`;
+    } finally {
+      // Siempre vuelve a habilitar el botón de submit al final (El bloque finally siempre se ejecuta, pase lo que pase (éxito o error)
+      setTimeout(() => {
+        form.querySelector('button[type="submit"]').disabled = false;
+        form.querySelector('button[type="submit"]').innerHTML = "Iniciar sesión";
+      }, 2000); // spinner máx 2s
+    }
+  });
+}
+
+function initLogout() {
+  const logoutBtn = document.getElementById('logout');
+  if (!logoutBtn) return;
+
+  logoutBtn.addEventListener('click', async (e) => {
+    e.preventDefault();
+
+    try {
+      await logoutUser();
+      showToast2("Sesión cerrada correctamente", "success");
+      setTimeout(() => (location.hash = '#/home'), 400);
+    } catch (err) {
+      console.error('Error al cerrar sesión:', err);
+    }
+  });
+}
+
+function initSendEmail() {
+  const form = document.getElementById('recoverForm');
+  const correoInput = document.getElementById('email');
+  if (!form) return;
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const correo = correoInput?.value.trim();
+    if (!correo) {
+      console.error('Correo es requerido');
+      return;
+    }
+
+    form.querySelector('button[type="submit"]').disabled = true;
+
+    // Mostrar spinner en el botón (máx 3s)
+    form.querySelector('button[type="submit"]').innerHTML = `<span class="spinner"></span>`;
+
+    try {
+      const data = await sendRecoveryEmail(correo);
+      showToast("Revisa tu correo para continuar", "success");
+      setTimeout(() => (location.hash = '#/login'), 400);
+    } catch (err) {
+      // Si hubo un error (por ejemplo, la API falló), se muestra un mensaje con la razón
+      msg.textContent = `No se pudo registrar: ${err.message}`;
+    } finally {
+      // Siempre vuelve a habilitar el botón de submit al final (El bloque finally siempre se ejecuta, pase lo que pase (éxito o error)
+      setTimeout(() => {
+        form.querySelector('button[type="submit"]').disabled = false;
+        form.querySelector('button[type="submit"]').innerHTML = "Iniciar sesión";
+      }, 2000); // spinner máx 2s
+    }
+  });
+}
+
+function initRecoverPassword(queryString) {
+  const form = document.getElementById('recover-password-form');
+
+  const params = new URLSearchParams(queryString);
+  const token = params.get("token");
+  const email = params.get("email");
+
+  const tokenInput = document.getElementById("token");
+  const emailInput = document.getElementById("email");
+  const passInput = document.getElementById("new-password");
+  const confirmInput = document.getElementById("confirm-password");
 
   if (!form) return;
 
+  if (tokenInput) tokenInput.value = token;
+  if (emailInput) emailInput.value = email;
+
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    msg.textContent = '';
 
-    const username = userInput?.value.trim();
+    const token = tokenInput?.value.trim();
+    const email = emailInput?.value.trim();
     const password = passInput?.value.trim();
+    const confirmPassword = confirmInput?.value.trim();
 
-    if (!username || !password) {
-      msg.textContent = 'Por favor completa usuario y contraseña.';
+    if (!token || !email) {
+      console.error('Token y email son requeridos');
+      return;
+    }
+
+    if (!password || !confirmPassword) {
+      showToast("Por favor completa todos los campos.", "error");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      showToast("Las contraseñas no coinciden.", "error");
       return;
     }
 
     form.querySelector('button[type="submit"]').disabled = true;
 
     try {
-      const data = await registerUser({ username, password });
-      msg.textContent = 'Registro exitoso';
-
+      const data = await resetPassword({ token, email, password, confirmPassword });
+      showToast("Contraseña actualizada con éxito", "success");
       setTimeout(() => (location.hash = '#/login'), 400);
     } catch (err) {
-      msg.textContent = `No se pudo registrar: ${err.message}`;
+      // Si hubo un error (por ejemplo, la API falló), se muestra un mensaje con la razón
+      showToast("Token invalido o expirado, por favor solicita uno nuevo.", "error");
+      setTimeout(() => (location.hash = '#/send-email'), 400);
     } finally {
+      // Siempre vuelve a habilitar el botón de submit al final (El bloque finally siempre se ejecuta, pase lo que pase (éxito o error)
       form.querySelector('button[type="submit"]').disabled = false;
     }
   });
 }
 
-// Esta función reemplaza tu initTasks() actual en route.js
-/* async function initTasks() {
-  const board = document.getElementById('kanban-board');
-  if (!board) return;
+async function initProfile() {
+  console.log("Vista perfil cargada ✅");
+  const userInfoContainer = document.getElementById('profile-info');
+  const backButton = document.getElementById('backToTasks');
+  const editInfoButton = document.getElementById('editInfoBtn');
+  const deleteAccountButton = document.getElementById('deleteAccountBtn');
 
-  // Limpiar contenido actual
-  board.querySelectorAll('.kanban-tasks').forEach(container => (container.innerHTML = ''));
+  if (!userInfoContainer) return;
 
   try {
-    const data = await getTasks();
-    //if (!data) throw new Error('Error al cargar tareas desde el servidor');
-
-     /* const data = [
-      { id: 1, title: 'TAREA 1', description: 'Descripción de ejemplo', status: 'Pending', dueDate: '2024-01-01' },
-      { id: 2, title: 'TAREA 2', description: 'En desarrollo', status: 'In-progress', dueDate: '2024-01-15' },
-      { id: 3, title: 'TAREA 3', description: 'Completada', status: 'Completed', dueDate: '2024-01-10' }
-    ];
-
-    // Mapear estados del backend a estados del frontend
-    const statusMapping = {
-      'Pending': 'nuevo',
-      'In-progress': 'en-progreso', 
-      'Completed': 'hecho'
-    };
-
-    data.forEach(task => {
-      let columnContainer;
-<<<<<<< HEAD
-      switch (task.status) {
-        case 'Pending':
-          columnContainer = board.querySelector('.kanban-column:nth-child(1) .kanban-tasks');
-          break;
-        case 'In-progress':
-          columnContainer = board.querySelector('.kanban-column:nth-child(2) .kanban-tasks');
-          break;
-        case 'Completed':
-          columnContainer = board.querySelector('.kanban-column:nth-child(3) .kanban-tasks');
-          break;
-        default:
-          console.warn('Estado de tarea desconocido:', task.status);
-          return; // saltar esta tarea
-=======
-      const frontendStatus = statusMapping[task.status] || 'nuevo';
-      
-      // Buscar el contenedor correcto por el data-status
-      const column = board.querySelector(`[data-status="${frontendStatus}"]`);
-      if (column) {
-        columnContainer = column.querySelector('.kanban-tasks');
->>>>>>> a8cad8609e881f53b6245acdea7938b0077a49d6
-      }
-
-      if (!columnContainer) {
-        console.warn('No se encontró contenedor para estado:', task.status);
-        return;
-      }
-
-      // Crear elemento de tarea mejorado
-      const taskCard = document.createElement('div');
-      taskCard.classList.add('kanban-task');
-      taskCard.draggable = true;
-      taskCard.dataset.taskId = task.id;
-      
-      // Formatear fecha si existe
-      const formattedDate = task.dueDate ? 
-        new Date(task.dueDate).toLocaleDateString('es-ES', { 
-          day: '2-digit', 
-          month: '2-digit', 
-          year: '2-digit' 
-        }) : 'dd/mm/aa';
-
-      taskCard.innerHTML = `
-        <div class="task-actions">
-          <button class="task-action-btn" onclick="editTask(${task.id})">✏️</button>
-          <button class="task-action-btn" onclick="deleteTaskFromBoard(${task.id})">🗑️</button>
-        </div>
-        <div class="task-title">${task.title || 'Sin título'}</div>
-        <div class="task-description">${task.description || 'Sin descripción'}</div>
-        <div class="task-date">📅 ${formattedDate}</div>
-      `;
-
-      if (task.completed || task.status === 'Completed') {
-        taskCard.classList.add('completed');
-      }
-      
-      columnContainer.appendChild(taskCard);
+    // Llama al servicio getLoggedUser para obtener la información del usuario
+    const user = await getLoggedUser();
+    const fecha = new Date(user.createdAt).toLocaleDateString('es-ES', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
     });
-
-    // Configurar drag and drop después de cargar las tareas
-    setupDragAndDrop();
-    
-  } catch (err) {
-    console.error(err);
-    board.innerHTML = `<p style="color:#ffb4b4">No se pudieron cargar las tareas: ${err.message}</p>`;
+    userInfoContainer.innerHTML = `
+            <p><strong>Nombre:</strong> ${user.firstName} ${user.lastName}</p>
+            <p><strong>Email:</strong> ${user.email}</p>
+            <p><strong>Edad:</strong> ${user.age}</p>
+            <p><strong>Miembro desde:</strong> ${fecha}</p>
+        `;
+  } catch (error) {
+    console.error('Error al cargar la información del usuario:', error.message);
+    userInfoContainer.innerHTML = `<p style="color: red;">Error al cargar la información del usuario.</p>`;
   }
-} */
 
+  // Manejar el botón para volver a las tareas
+  backButton.addEventListener('click', () => {
+    location.hash = '#/tasks';
+  });
 
+  // Manejar el botón para editar la información del usuario
+  editInfoButton.addEventListener('click', () => {
+    location.hash = '#/edit-profile';
+  });
+
+  deleteAccountButton.addEventListener('click', () => {
+  });
+}
+
+// Función para inicializar la vista de tareas
 async function initTasks() {
+  // Obtenemos referencias al tablero y al nombre de usuario
   const board = document.getElementById('kanban-board');
+  const userNameDisplay = document.getElementById('user-name');
   if (!board) return;
 
   // Limpiar contenido actual
   board.querySelectorAll('.kanban-tasks').forEach(container => (container.innerHTML = ''));
 
   try {
-    // Obtén las tareas desde el backend
+    // Obtenemos el usuario logueado para mostrar su nombre
+    const user = await getLoggedUser();
+    if (userNameDisplay) {
+      userNameDisplay.textContent = `¡Hola, ${user.firstName}!`;
+    }
+
+    // Obtenemos las tareas desde el backend
     const tasks = await getTasks();
-    console.log('Tareas obtenidas:', tasks);
+
     // Mapear las tareas a las columnas correspondientes
     tasks.forEach(task => {
       const columnId = getColumnIdByStatus(task.status);
@@ -315,11 +668,11 @@ function setupDragAndDrop() {
     column.addEventListener('drop', async (e) => {
       e.preventDefault();
       column.classList.remove('drag-over');
-      
+
       const taskId = parseInt(e.dataTransfer.getData('text/plain'));
       const newStatus = column.dataset.status;
       const taskElement = document.querySelector(`[data-task-id="${taskId}"]`);
-      
+
       /* if (taskElement) {
         try {
           // Mapear estados del frontend al backend
@@ -344,8 +697,8 @@ function setupDragAndDrop() {
           } else {
             taskElement.classList.remove('completed');
           } */
-          
-          
+
+
       if (taskElement) {
         try {
           // Actualizar el estado de la tarea en el backend
@@ -402,272 +755,20 @@ function setupDragAndDrop() {
   }
 }; */
 
-window.deleteTaskFromBoard = async function(taskId) {
+window.deleteTaskFromBoard = async function (taskId) {
   if (confirm('¿Estás seguro de que quieres eliminar esta tarea?')) {
     location.hash = `#/delete-task?id=${taskId}`;
   }
 };
 
 // Función global para editar tarea
-window.editTask = function(taskId) {
+window.editTask = function (taskId) {
   // Redirigir a la página de edición con el ID de la tarea
   location.hash = `#/edit-task?id=${taskId}`;
 };
 
-function initRegister() {
-  const form = document.getElementById('registerForm');
-  const msg = document.getElementById('registerMsg');
 
-  if (!form) return;
 
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();  // Esto previene el comportamiento por defecto del formulario (que recarga la página)
-    if (msg) msg.textContent = '';
-
-    const formData = new FormData(form);
-    const data = {
-      firstName: formData.get('firstName')?.trim(),
-      lastName: formData.get('lastName')?.trim(),
-      age: Number(formData.get('age')),
-      email: formData.get('email')?.trim(),
-      password: formData.get('password')?.trim(),
-      confirmPassword: formData.get('confirmPassword')?.trim(),
-    };
-
-    // Validación básica
-    if (!data.firstName || !data.lastName || !data.age || !data.email || !data.password || !data.confirmPassword) {
-      if (msg) msg.textContent = 'Por favor completa todos los campos.';
-      return;
-    }
-
-    // Validar contraseñas
-    if (data.password !== data.confirmPassword) {
-      if (msg) msg.textContent = 'Las contraseñas no coinciden.';
-      return;
-    }
-
-    form.querySelector('button[type="submit"]').disabled = true;
-
-    try {
-      await registerUser(data);
-      if (msg) msg.textContent = 'Registro exitoso ✅';
-      setTimeout(() => (location.hash = '#/login'), 400);
-    } catch (err) {
-      if (msg) msg.textContent = `No se pudo registrar: ${err.message}`;
-    } finally {
-      form.querySelector('button[type="submit"]').disabled = false;
-    }
-  });
-}
-
-async function initLogin2() {
-  const form = document.getElementById('loginForm');
-  const msg = document.getElementById('loginMsg');
-  if (!form) return;
-
-  const correoInput = document.getElementById('email');
-  const passInput = document.getElementById('password');
-
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    msg.textContent = '';
-    const correo = correoInput?.value.trim();
-    const password = passInput?.value.trim();
-    if (!correo || !password) {
-      msg.textContent = 'Por favor completa todos los campos.';
-      return;
-    }
-    form.querySelector('button[type="submit"]').disabled = true;
-    try {
-      const data = await loginUser({ email: correo, password });
-      console.log('Respuesta backend:', data);
-      msg.textContent = 'Login exitoso';
-      setTimeout(() => (location.hash = '#/tasks'), 400);
-    } catch (err) {
-      // Si hubo un error (por ejemplo, la API falló), se muestra un mensaje con la razón
-      msg.textContent = `No se pudo iniciar sesión: ${err.message}`;
-    } finally {
-      // Siempre vuelve a habilitar el botón de submit al final (El bloque finally siempre se ejecuta, pase lo que pase (éxito o error)
-      form.querySelector('button[type="submit"]').disabled = false;
-    }
-  });
-}
-
-async function initLogin() {
-  const form = document.getElementById('loginForm');
-  const msg = document.getElementById('loginMsg');
-  if (!form) return;
-
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    msg.textContent = '';
-    const formData = new FormData(form);
-    const data = {
-      email: formData.get('email').trim(),
-      password: formData.get('password').trim(),
-    };
-
-    if (!data.email || !data.password) {
-      msg.textContent = 'Por favor completa todos los campos.';
-      return;
-    }
-
-    form.querySelector('button[type="submit"]').disabled = true;
-
-    try {
-      const response = await fetch('https://taskly-2h0c.onrender.com/api/v1/users/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Error en login');
-      }
-
-      const responseData = await response.json();
-      console.log('Respuesta backend:', responseData);
-      msg.textContent = 'Login exitoso';
-
-      // Aquí guardar token o info si es necesario
-      // localStorage.setItem('token', responseData.token);
-
-      setTimeout(() => (location.hash = '#/tasks'), 400);
-
-    } catch (err) {
-      msg.textContent = `No se pudo iniciar sesión: ${err.message}`;
-    } finally {
-      form.querySelector('button[type="submit"]').disabled = false;
-    }
-  });
-}
-
-function initSendEmail() {
-  const form = document.getElementById('recoverForm');
-  const correoInput = document.getElementById('email');
-  if (!form) return;
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const correo = correoInput?.value.trim();
-    if (!correo) {
-      console.error('Correo es requerido');
-      return;
-    }
-
-    form.querySelector('button[type="submit"]').disabled = true;
-
-    try {
-      const data = await sendRecoveryEmail(correo);
-      console.log('Respuesta del servidor:', data);
-      setTimeout(() => (location.hash = '#/login'), 400);
-    } catch (err) {
-      // Si hubo un error (por ejemplo, la API falló), se muestra un mensaje con la razón
-      msg.textContent = `No se pudo registrar: ${err.message}`;
-    } finally {
-      // Siempre vuelve a habilitar el botón de submit al final (El bloque finally siempre se ejecuta, pase lo que pase (éxito o error)
-      form.querySelector('button[type="submit"]').disabled = false;
-    }
-  });
-}
-
-function initRecoverPassword(queryString) {
-  const form = document.getElementById('recover-password-form');
-
-  const params = new URLSearchParams(queryString);
-  const token = params.get("token");
-  const email = params.get("email");
-
-  const tokenInput = document.getElementById("token");
-  const emailInput = document.getElementById("email");
-  const passInput = document.getElementById("new-password");
-  const confirmInput = document.getElementById("confirm-password");
-
-  if (!form) return;
-
-  if (tokenInput) tokenInput.value = token;
-  if (emailInput) emailInput.value = email;
-
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    const token = tokenInput?.value.trim();
-    const email = emailInput?.value.trim();
-    const password = passInput?.value.trim();
-    const confirmPassword = confirmInput?.value.trim();
-
-    if (!token || !email || !password || !confirmPassword) {
-      console.error('Por favor completa todos los campos.');
-      return;
-    }
-
-    form.querySelector('button[type="submit"]').disabled = true;
-
-    try {
-      const data = await resetPassword({ token, email, password, confirmPassword });
-      console.log('Respuesta del servidor:', data);
-      setTimeout(() => (location.hash = '#/login'), 400);
-
-    } catch (err) {
-      // Si hubo un error (por ejemplo, la API falló), se muestra un mensaje con la razón
-      msg.textContent = `No se pudo registrar: ${err.message}`;
-    } finally {
-      // Siempre vuelve a habilitar el botón de submit al final (El bloque finally siempre se ejecuta, pase lo que pase (éxito o error)
-      form.querySelector('button[type="submit"]').disabled = false;
-    }
-  });
-}
-
-function initLogout() {
-  const logoutBtn = document.getElementById('logout');
-  if (!logoutBtn) return;
-
-  logoutBtn.addEventListener('click', async (e) => {
-    e.preventDefault();
-
-    try {
-      const data = await logoutUser();
-      console.log('Respuesta del servidor:', data);
-      setTimeout(() => (location.hash = '#/home'), 400);
-    } catch (err) {
-      console.error('Error al cerrar sesión:', err);
-    }
-  });
-}
-
-async function initProfile() {
-  console.log("Vista perfil cargada ✅");
-  const userInfoContainer = document.getElementById('profile-info');
-  const backButton = document.getElementById('backToTasks');
-  const editInfoButton = document.getElementById('editInfoBtn');
-
-    if (!userInfoContainer) return;
-
-    try {
-        // Llama al servicio getLoggedUser para obtener la información del usuario
-        const user = await getLoggedUser();
-        userInfoContainer.innerHTML = `
-            <p><strong>Nombre:</strong> ${user.firstName} ${user.lastName}</p>
-            <p><strong>Email:</strong> ${user.email}</p>
-            <p><strong>Edad:</strong> ${user.age}</p>
-        `;
-    } catch (error) {
-        console.error('Error al cargar la información del usuario:', error.message);
-        userInfoContainer.innerHTML = `<p style="color: red;">Error al cargar la información del usuario.</p>`;
-    }
-
-    // Manejar el botón para volver a las tareas
-    backButton.addEventListener('click', () => {
-        location.hash = '#/tasks';
-    });
-
-    // Manejar el botón para editar la información del usuario
-    editInfoButton.addEventListener('click', () => {
-        location.hash = '#/edit-profile';
-    });
-}
 
 async function initEditProfile() {
   console.log("Vista editar perfil cargada ✅");
@@ -829,7 +930,7 @@ async function initEditTask() {
     location.hash = '#/tasks';
   });
 }
- async function initDeleteTask() {
+async function initDeleteTask() {
   console.log("Eliminando tarea ✅");
   // Obtén el ID de la tarea desde la URL
   const params = new URLSearchParams(location.hash.split('?')[1]);
@@ -841,7 +942,7 @@ async function initEditTask() {
     return;
   }
 
- try {
+  try {
     // Llama a la función para eliminar la tarea
     await deleteTask(taskId);
     console.log(`Tarea con ID ${taskId} eliminada exitosamente.`);

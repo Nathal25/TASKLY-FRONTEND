@@ -4,15 +4,16 @@
 
 .login-page {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   min-height: 100vh; /* altura completa */
   background: var(--color-bg-page); /* el morado oscuro */
-  padding: 1rem;
+  padding: 2rem;
 }
 
 /* Caja del login */
 .login-container {
+  margin-top: 3rem;
   background: var(--color-surface);
   color: #333;
   width: 100%;
@@ -139,4 +140,30 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* Contenedor relativo */
+.input-wrapper2 {
+  position: relative;
+  width: 100%;
+}
+
+/* Input sigue ocupando todo el ancho */
+.input-wrapper2 input {
+  width: 100%;
+  padding-right: 2.5rem; /* espacio para que no se tape con el ojito */
+}
+
+/* Ojito dentro del input */
+.input-wrapper2 .toggle-icon {
+  position: absolute;
+  right: 0.8rem;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #888;
+}
+
+.input-wrapper2 .toggle-icon:hover {
+  color: var(--color-primary);
 }
