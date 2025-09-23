@@ -37,7 +37,10 @@
 
       <div class="form-group">
         <label for="age">Edad:</label>
-        <input type="number" name="age" placeholder="Edad" required>
+        <input type="number" id="age" name="age" placeholder="Edad" aria-describedby="age-tip" required>
+        <span id="age-tip" role="tooltip" class="tooltip">
+          Debes tener al menos 13 años.
+        </span>
       </div>
 
       <!-- Columna derecha -->
@@ -47,13 +50,37 @@
       </div>
 
       <div class="form-group">
-        <label for="password">Password:</label>
-        <input type="password" name="password" placeholder="Password" required>
+        <label for="password">Contraseña:</label>
+        <div class="input-wrapper">
+          <input type="password" id="password" name="password" placeholder="Contraseña" aria-describedby="password-tip"
+            required>
+          <i id="togglePassword" class="fa-solid fa-eye toggle-icon"></i>
+        </div>
+
+        <span id="password-tip1" role="tooltip" class="tooltip">
+          Debe tener una mayúscula.
+        </span>
+        <span id="password-tip2" role="tooltip" class="tooltip">
+          Debe tener un número.
+        </span>
+        <span id="password-tip3" role="tooltip" class="tooltip">
+          Debe tener un caracter especial.
+        </span>
+        <span id="password-tip4" role="tooltip" class="tooltip">
+          Debe tener al menos 8 caracteres.
+        </span>
       </div>
 
       <div class="form-group">
-        <label for="confirmPassword">Confirmar Password:</label>
-        <input type="password" name="confirmPassword" placeholder="Confirm Password" required>
+        <label for="confirmPassword">Confirmar contraseña:</label>
+        <div class="input-wrapper">
+          <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirmar contraseña"
+            aria-describedby="passwordConfirm-tip" required>
+          <i id="togglePassword2" class="fa-solid fa-eye toggle-icon" aria-label="Mostrar u ocultar contraseña"></i>
+        </div>
+        <span id="passwordConfirm-tip" role="tooltip" class="tooltip">
+          La contraseña no coincide.
+        </span>
       </div>
 
       <!-- Botón ocupa ambas columnas -->
@@ -63,6 +90,6 @@
       </div>
     </form>
 
-    <a href="#/login" class="back">Volver a inicio</a>
+    <a href="#/home" class="back">Volver a inicio</a>
   </div>
 </div>
