@@ -36,3 +36,7 @@ export async function editLoggedUser(updatedUser) {
 export async function checkIfTokenIsValid() {
   return http.get('/api/v1/users/check-token');
 }
+
+export async function deleteLoggedUser(password) {
+  return http.del('/api/v1/users/me', { password });
+}

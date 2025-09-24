@@ -7,6 +7,7 @@ import { getLoggedUser } from '../services/userService.js';
 import { getTasks } from '../services/taskService.js';
 import { editLoggedUser } from '../services/userService.js';
 import { checkIfTokenIsValid } from '../services/userService.js';
+import { deleteLoggedUser } from '../services/userService.js';
 import { createTask } from '../services/taskService.js';
 import { updateTaskStatus, deleteTask } from '../services/taskService.js';
 import { getLists, createList } from '../services/listService.js';
@@ -518,7 +519,7 @@ async function initProfile() {
   const userInfoContainer = document.getElementById('profile-info');
   const backButton = document.getElementById('backToTasks');
   const editInfoButton = document.getElementById('editInfoBtn');
-  const deleteAccountButton = document.getElementById('deleteAccountBtn');
+
 
   if (!userInfoContainer) return;
 
@@ -551,7 +552,49 @@ async function initProfile() {
     location.hash = '#/edit-profile';
   });
 
-  deleteAccountButton.addEventListener('click', () => {
+  const deleteAccountButton = document.getElementById('deleteAccountBtn');
+  const confirmDelete = document.getElementById('confirmDelete');
+  const cancelDelete = document.getElementById('cancelDelete');
+  const confirmText = document.getElementById('confirmText');
+  const passwordInput = document.getElementById('password');
+  const deleteModal = document.getElementById('deleteModal');
+
+  deleteAccountButton.addEventListener('click', async () => {
+    deleteModal.classList.remove('hidden');
+  });
+
+  cancelDelete.addEventListener('click', () => {
+    deleteModal.classList.add('hidden');
+    confirmText.value = '';
+    passwordInput.value = '';
+  });
+
+  confirmDelete.addEventListener('click', async () => {
+    const text = confirmText.value.trim();
+    const password = passwordInput.value.trim();
+
+    if (text !== 'ELIMINAR') {
+      showToast("Debes escribir exactamente 'ELIMINAR'", "error");
+      return;
+    }
+
+    if (!password) {
+      showToast("Debes ingresar tu contraseña", "error");
+      return;
+    }
+
+    try {
+      const response = await deleteLoggedUser(password);
+      showToast("Cuenta eliminada con éxito", "success");
+      setTimeout(() => (location.hash = '#/home'), 400);
+      console.log(response);
+    } catch (err) {
+      showToast(err.message || "No se pudo eliminar la cuenta", "error");
+    } finally {
+      deleteModal.classList.add('hidden');
+      confirmText.value = '';
+      passwordInput.value = '';
+    }
   });
 }
 
