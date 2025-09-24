@@ -557,6 +557,7 @@ async function initProfile() {
   const cancelDelete = document.getElementById('cancelDelete');
   const confirmText = document.getElementById('confirmText');
   const passwordInput = document.getElementById('password');
+  const deleteModal = document.getElementById('deleteModal');
 
   deleteAccountButton.addEventListener('click', async () => {
     deleteModal.classList.remove('hidden');
