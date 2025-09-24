@@ -565,7 +565,7 @@ async function initProfile() {
 
   cancelDelete.addEventListener('click', () => {
     deleteModal.classList.add('hidden');
-    confirmText.textContent = '';
+    confirmText.value = '';
     passwordInput.value = '';
   });
 
