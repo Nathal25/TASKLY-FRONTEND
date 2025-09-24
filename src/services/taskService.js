@@ -64,31 +64,3 @@ export async function updateTaskStatus(taskId, newStatus) {
 export async function deleteTask(taskId) {
   return http.del(`/api/v1/tasks/${taskId}`);
 }
-
-/**
- * Marcar una tarea como completada
- * @param {number} taskId - ID de la tarea
- * @returns {Promise<Object>} Tarea actualizada
- */
-export async function completeTask(taskId) {
-  return updateTaskStatus(taskId, 'Completed');
-}
-
-/**
- * Obtener tareas filtradas por estado
- * @param {string} status - Estado a filtrar (Pending, In-progress, Completed)
- * @returns {Promise<Array>} Tareas filtradas
- */
-export async function getTasksByStatus(status) {
-  return http.get(`/api/v1/tasks?status=${encodeURIComponent(status)}`);
-}
-
-/**
- * Obtener tareas de una lista específica
- * @param {number} listId - ID de la lista
- * @returns {Promise<Array>} Tareas de la lista
- */
-
-export async function getTasksByList(listId) {
-  return http.get(`/api/v1/tasks?listId=${listId}`);
-}
