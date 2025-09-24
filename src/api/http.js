@@ -75,7 +75,8 @@ export const http = {
   /**
    * Perform a DELETE request.
    * @param {string} path - API path.
+   * @param {Object} body - Request body.
    * @param {Object} [opts] - Optional fetch options.
    */
-  del: (path, opts) => request(path, { method: 'DELETE', ...opts }),
+  del: (path, body, opts) => request(path, { method: 'DELETE', body, ...opts }),
 };

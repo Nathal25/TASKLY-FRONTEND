@@ -14,4 +14,20 @@
   <button id="editInfoBtn">Editar perfil</button>
   <button id="backToTasks">Volver a Tareas</button>
   <button id="deleteAccountBtn">Eliminar cuenta</button>
+
+  <!-- Modal de confirmación para eliminar cuenta -->
+  <div id="deleteModal" class="modal hidden">
+  <div class="modal-content">
+    <h2>Eliminar cuenta</h2>
+    <p>Para confirmar escribe <strong>ELIMINAR</strong> y tu contraseña.</p>
+
+    <input id="confirmText" type="text" placeholder="Escribe ELIMINAR" />
+    <input id="password" type="password" placeholder="Contraseña" />
+
+    <div class="modal-actions">
+      <button id="cancelDelete" class="secondary">Cancelar</button>
+      <button id="confirmDelete" class="danger">Eliminar</button>
+    </div>
+  </div>
+</div>
 </main>
