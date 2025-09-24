@@ -8,7 +8,6 @@ import { getLoggedUser } from '../services/userService.js';
 import { editLoggedUser } from '../services/userService.js';
 import { createTask } from '../services/taskService.js';
 import { updateTaskStatus, deleteTask } from '../services/taskService.js';
-import { getLists, createList } from '../services/listService.js';
 import { getTask, updateTask } from '../services/taskService.js';
 const app = document.getElementById('app');
 
@@ -41,7 +40,6 @@ async function loadView(name, queryString) {
   if (name === 'edit-profile') initEditProfile();
   if (name === 'edit-task') initEditTask();
   if (name === 'create-task') initCreateTask();
-  if (name === 'delete-task') initDeleteTask();
   
   initLogout();
 }
@@ -63,7 +61,7 @@ function handleRoute() {
   const path = (location.hash.startsWith('#/') ? location.hash.slice(2) : '') || 'home';
   const [routeName, queryString] = path.split("?");
   const known = ['home', 'login', 'register', 'send-email', 'recover-password', 
-    'recover-code', 'tasks', 'profile', 'edit-profile', 'edit-task', 'create-task', 'delete-task'];
+    'recover-code', 'tasks', 'profile', 'edit-profile', 'edit-task', 'create-task'];
   const route = known.includes(routeName) ? routeName : 'home';
 
   loadView(route, queryString).catch(err => {
@@ -113,87 +111,10 @@ function initHome() {
   });
 }
 
-// Esta función reemplaza tu initTasks() actual en route.js
-/* async function initTasks() {
-  const board = document.getElementById('kanban-board');
-  if (!board) return;
-
-  // Limpiar contenido actual
-  board.querySelectorAll('.kanban-tasks').forEach(container => (container.innerHTML = ''));
-
-  try {
-    const data = await getTasks();
-    //if (!data) throw new Error('Error al cargar tareas desde el servidor');
-
-     /* const data = [
-      { id: 1, title: 'TAREA 1', description: 'Descripción de ejemplo', status: 'Pending', dueDate: '2024-01-01' },
-      { id: 2, title: 'TAREA 2', description: 'En desarrollo', status: 'In-progress', dueDate: '2024-01-15' },
-      { id: 3, title: 'TAREA 3', description: 'Completada', status: 'Completed', dueDate: '2024-01-10' }
-    ];
-
-    // Mapear estados del backend a estados del frontend
-    const statusMapping = {
-      'Pending': 'nuevo',
-      'In-progress': 'en-progreso', 
-      'Completed': 'hecho'
-    };
-
-    data.forEach(task => {
-      let columnContainer;
-      const frontendStatus = statusMapping[task.status] || 'nuevo';
-      
-      // Buscar el contenedor correcto por el data-status
-      const column = board.querySelector(`[data-status="${frontendStatus}"]`);
-      if (column) {
-        columnContainer = column.querySelector('.kanban-tasks');
-      }
-
-      if (!columnContainer) {
-        console.warn('No se encontró contenedor para estado:', task.status);
-        return;
-      }
-
-      // Crear elemento de tarea mejorado
-      const taskCard = document.createElement('div');
-      taskCard.classList.add('kanban-task');
-      taskCard.draggable = true;
-      taskCard.dataset.taskId = task.id;
-      
-      // Formatear fecha si existe
-      const formattedDate = task.dueDate ? 
-        new Date(task.dueDate).toLocaleDateString('es-ES', { 
-          day: '2-digit', 
-          month: '2-digit', 
-          year: '2-digit' 
-        }) : 'dd/mm/aa';
-
-      taskCard.innerHTML = `
-        <div class="task-actions">
-          <button class="task-action-btn" onclick="editTask(${task.id})">✏️</button>
-          <button class="task-action-btn" onclick="deleteTaskFromBoard(${task.id})">🗑️</button>
-        </div>
-        <div class="task-title">${task.title || 'Sin título'}</div>
-        <div class="task-description">${task.description || 'Sin descripción'}</div>
-        <div class="task-date">📅 ${formattedDate}</div>
-      `;
-
-      if (task.completed || task.status === 'Completed') {
-        taskCard.classList.add('completed');
-      }
-      
-      columnContainer.appendChild(taskCard);
-    });
-
-    // Configurar drag and drop después de cargar las tareas
-    setupDragAndDrop();
-    
-  } catch (err) {
-    console.error(err);
-    board.innerHTML = `<p style="color:#ffb4b4">No se pudieron cargar las tareas: ${err.message}</p>`;
-  }
-} */
-
-
+/** * Initialize the "tasks" view.
+ * Fetches tasks from the backend and populates the Kanban board.
+ * Sets up drag-and-drop functionality for task cards.
+ */
 async function initTasks() {
   const board = document.getElementById('kanban-board');
   if (!board) return;
@@ -204,7 +125,6 @@ async function initTasks() {
   try {
     // Obtén las tareas desde el backend
     const tasks = await getTasks();
-    console.log('Tareas obtenidas:', tasks);
     // Mapear las tareas a las columnas correspondientes
     tasks.forEach(task => {
       const columnId = getColumnIdByStatus(task.status);
@@ -213,12 +133,14 @@ async function initTasks() {
       if (columnContainer) {
         const taskCard = createTaskCard(task);
         columnContainer.appendChild(taskCard);
+      } else {
+        console.warn(`Contenedor de columna no encontrado: ${columnId}`);
       }
-      console.log(`Asignando tarea "${task.title}" al contenedor "${columnId}"`);
     });
 
     // Configurar drag and drop después de cargar las tareas
     setupDragAndDrop();
+
   } catch (err) {
     console.error('Error al cargar tareas:', err.message);
     board.innerHTML = `<p style="color:#ffb4b4">No se pudieron cargar las tareas: ${err.message}</p>`;
@@ -250,14 +172,15 @@ function createTaskCard(task) {
   taskCard.draggable = true;
   taskCard.dataset.taskId = task._id;
 
-  const formattedDate = task.date
-    ? new Date(task.date).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: '2-digit' })
-    : 'Sin fecha';
+  const adjustedDate = new Date(task.date);
+  adjustedDate.setDate(adjustedDate.getDate() + 1);
+  const formattedDate = adjustedDate.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: '2-digit' });
 
   taskCard.innerHTML = `
     <div class="task-actions">
-      <button class="task-action-btn" onclick="location.hash = '#/edit-task?id=${task._id}'">✏️</button>
-      <button class="task-action-btn" onclick="location.hash = '#/delete-task?id=${task._id}'">🗑️</button>
+      <button class="task-action-btn" onclick="handleEditTask('${task._id}')">✏️</button>
+      <button class="task-action-btn" onclick="initDeleteTask('${task._id}')">🗑️</button>
+      
     </div>
     <div class="task-title">${task.title || 'Sin título'}</div>
     <div class="task-description">${task.details || 'Sin descripción'}</div>
@@ -269,66 +192,44 @@ function createTaskCard(task) {
   return taskCard;
 }
 
-// Función auxiliar para configurar drag and drop
+/** Configura la funcionalidad de arrastrar y soltar para las tarjetas de tareas.
+ * Permite mover tareas entre columnas y actualiza su estado en el backend.
+ */
 function setupDragAndDrop() {
   const tasks = document.querySelectorAll('.kanban-task');
   const columns = document.querySelectorAll('.kanban-column');
 
+  // Configurar eventos para las tareas
   tasks.forEach(task => {
     task.addEventListener('dragstart', (e) => {
-      e.dataTransfer.setData('text/plain', task.dataset.taskId);
-      task.classList.add('dragging');
+      e.dataTransfer.setData('text/plain', task.dataset.taskId); // Guardar el ID de la tarea
+      task.classList.add('dragging'); // Agregar clase para estilo visual
     });
 
     task.addEventListener('dragend', () => {
-      task.classList.remove('dragging');
+      task.classList.remove('dragging'); // Remover clase al finalizar el drag
     });
   });
 
+  // Configurar eventos para las columnas
   columns.forEach(column => {
     column.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      column.classList.add('drag-over');
+      e.preventDefault(); // Permitir el drop
+      column.classList.add('drag-over'); // Agregar clase para estilo visual
     });
 
     column.addEventListener('dragleave', () => {
-      column.classList.remove('drag-over');
+      column.classList.remove('drag-over'); // Remover clase al salir del área
     });
 
     column.addEventListener('drop', async (e) => {
       e.preventDefault();
-      column.classList.remove('drag-over');
-      
-      const taskId = parseInt(e.dataTransfer.getData('text/plain'));
-      const newStatus = column.dataset.status;
+      column.classList.remove('drag-over'); // Remover clase al soltar
+
+      const taskId = e.dataTransfer.getData('text/plain'); // Obtener el ID de la tarea
+      const newStatus = column.dataset.status; // Obtener el nuevo estado desde la columna
       const taskElement = document.querySelector(`[data-task-id="${taskId}"]`);
-      
-      /* if (taskElement) {
-        try {
-          // Mapear estados del frontend al backend
-          const backendStatusMapping = {
-            'nuevo': 'Pending',
-            'en-progreso': 'In-progress',
-            'hecho': 'Completed'
-          };
-          
-          const backendStatus = backendStatusMapping[newStatus];
-          
-          // Actualizar en el servidor
-          await updateTaskStatus(taskId, backendStatus);
-          
-          // Mover elemento visualmente
-          const tasksContainer = column.querySelector('.kanban-tasks');
-          tasksContainer.appendChild(taskElement);
-          
-          // Actualizar clase si se completó
-          if (backendStatus === 'Completed') {
-            taskElement.classList.add('completed');
-          } else {
-            taskElement.classList.remove('completed');
-          } */
-          
-          
+
       if (taskElement) {
         try {
           // Actualizar el estado de la tarea en el backend
@@ -338,65 +239,18 @@ function setupDragAndDrop() {
           const tasksContainer = column.querySelector('.kanban-tasks');
           tasksContainer.appendChild(taskElement);
         } catch (error) {
-          console.error('Error al actualizar estado de tarea:', error.message);
-          // Podrías mostrar una notificación de error aquí
+          alert('No se pudo mover la tarea. Inténtalo de nuevo.');
         }
+      } else {
+        console.warn(`No se encontró el elemento visual para la tarea con ID ${taskId}.`);
       }
     });
   });
 }
 
-// Función global para eliminar tarea desde el tablero
-/* window.deleteTaskFromBoard = async function(taskId) {
-  if (confirm('¿Estás seguro de que quieres eliminar esta tarea?')) {
-    try {
-      await deleteTask(taskId);
-      
-      // Remover elemento visual
-      const taskElement = document.querySelector(`[data-task-id="${taskId}"]`);
-      if (taskElement) {
-        taskElement.remove();
-      }
-    } catch (error) {
-      console.error('Error al eliminar tarea:', error);
-      alert('No se pudo eliminar la tarea. Inténtalo de nuevo.');
-    }
-  }
-};
+/** Initialize the "register" view.
+ * Attaches a submit handler to the registration form to create a new user.
  */
-/* window.deleteTaskFromBoard = async function(taskId) {
-  if (confirm('¿Estás seguro de que quieres eliminar esta tarea?')) {
-    try {
-      const response = await deleteTask(taskId);
-      console.log('Respuesta del backend:', response);
-
-      // Remover elemento visual
-      const taskElement = document.querySelector(`[data-task-id="${taskId}"]`);
-      if (taskElement) {
-        taskElement.remove();
-        console.log(`Tarea con ID ${taskId} eliminada del tablero.`);
-      } else {
-        console.warn(`No se encontró el elemento visual para la tarea con ID ${taskId}.`);
-      }
-    } catch (error) {
-      console.error('Error al eliminar tarea:', error.message);
-      alert('No se pudo eliminar la tarea. Inténtalo de nuevo.');
-    }
-  }
-}; */
-
-window.deleteTaskFromBoard = async function(taskId) {
-  if (confirm('¿Estás seguro de que quieres eliminar esta tarea?')) {
-    location.hash = `#/delete-task?id=${taskId}`;
-  }
-};
-
-// Función global para editar tarea
-window.editTask = function(taskId) {
-  // Redirigir a la página de edición con el ID de la tarea
-  location.hash = `#/edit-task?id=${taskId}`;
-};
-
 function initRegister() {
   const form = document.getElementById('registerForm');
   const msg = document.getElementById('registerMsg');
@@ -443,6 +297,10 @@ function initRegister() {
   });
 }
 
+/**
+ * Initialize the "login" view.
+ * Attaches a submit handler to the login form to authenticate the user.
+ */
 async function initLogin2() {
   const form = document.getElementById('loginForm');
   const msg = document.getElementById('loginMsg');
@@ -528,6 +386,9 @@ async function initLogin() {
   });
 }
 
+/** Initialize the "send-email" view.
+ * Attaches a submit handler to the email form to send a recovery email.
+ */
 function initSendEmail() {
   const form = document.getElementById('recoverForm');
   const correoInput = document.getElementById('email');
@@ -556,6 +417,10 @@ function initSendEmail() {
   });
 }
 
+/** Initialize the "recover-password" view.
+ * Attaches a submit handler to the password reset form to reset the user's password.
+ * Extracts token and email from the query string and pre-fills the form.
+ */
 function initRecoverPassword(queryString) {
   const form = document.getElementById('recover-password-form');
 
@@ -603,6 +468,9 @@ function initRecoverPassword(queryString) {
   });
 }
 
+/** Initialize the logout button functionality.
+ * Attaches a click handler to the logout button to log out the user.
+ */
 function initLogout() {
   const logoutBtn = document.getElementById('logout');
   if (!logoutBtn) return;
@@ -620,8 +488,11 @@ function initLogout() {
   });
 }
 
+/** Initialize the "profile" view.
+ * Fetches and displays the logged-in user's profile information.
+ * Attaches handlers for editing profile and navigating back to tasks.
+ */
 async function initProfile() {
-  console.log("Vista perfil cargada ✅");
   const userInfoContainer = document.getElementById('profile-info');
   const backButton = document.getElementById('backToTasks');
   const editInfoButton = document.getElementById('editInfoBtn');
@@ -629,32 +500,35 @@ async function initProfile() {
     if (!userInfoContainer) return;
 
     try {
-        // Llama al servicio getLoggedUser para obtener la información del usuario
-        const user = await getLoggedUser();
-        userInfoContainer.innerHTML = `
-            <p><strong>Nombre:</strong> ${user.firstName} ${user.lastName}</p>
-            <p><strong>Email:</strong> ${user.email}</p>
-            <p><strong>Edad:</strong> ${user.age}</p>
-        `;
+      // Llama al servicio getLoggedUser para obtener la información del usuario
+      const user = await getLoggedUser();
+      userInfoContainer.innerHTML = `
+        <p><strong>Nombre:</strong> ${user.firstName} ${user.lastName}</p>
+        <p><strong>Email:</strong> ${user.email}</p>
+        <p><strong>Edad:</strong> ${user.age}</p>
+      `;
     } catch (error) {
-        console.error('Error al cargar la información del usuario:', error.message);
-        userInfoContainer.innerHTML = `<p style="color: red;">Error al cargar la información del usuario.</p>`;
+      console.error('Error al cargar la información del usuario:', error.message);
+      userInfoContainer.innerHTML = `<p style="color: red;">Error al cargar la información del usuario.</p>`;
     }
 
     // Manejar el botón para volver a las tareas
     backButton.addEventListener('click', () => {
-        location.hash = '#/tasks';
+      location.hash = '#/tasks';
     });
 
     // Manejar el botón para editar la información del usuario
     editInfoButton.addEventListener('click', () => {
-        location.hash = '#/edit-profile';
+      location.hash = '#/edit-profile';
     });
 }
 
+/** Initialize the "edit-profile" view.
+ * Fetches the logged-in user's information and pre-fills the edit form.
+ * Attaches a submit handler to update the user's profile.
+ * Attaches a handler to navigate back to the profile view.
+ */
 async function initEditProfile() {
-  console.log("Vista editar perfil cargada ✅");
-
   const form = document.getElementById('edit-profile-form');
   const backButton = document.getElementById('backToProfile');
 
@@ -683,16 +557,13 @@ async function initEditProfile() {
 
       try {
         await editLoggedUser(updatedUser);
-        console.log('Perfil actualizado:', updatedUser);
         alert('Perfil actualizado exitosamente');
         location.hash = '#/profile'; // Redirige a la vista del perfil
       } catch (error) {
-        console.error('Error al actualizar el perfil:', error.message);
         alert('Error al actualizar el perfil');
       }
     });
-  } catch (error) {
-    console.error('Error al cargar la información del usuario:', error.message);
+  } catch (error) {;
     alert('Error al cargar la información del usuario');
   }
 
@@ -702,9 +573,11 @@ async function initEditProfile() {
   });
 }
 
+/** Initialize the "create-task" view.
+ * Attaches a submit handler to the create task form to create a new task.
+ * Attaches a handler to navigate back to the tasks view.
+ */
 async function initCreateTask() {
-  console.log("Vista crear tarea cargada ✅");
-
   const form = document.getElementById('create-task-form');
   const cancelButton = document.getElementById('cancelCreateTask');
   const user = await getLoggedUser();
@@ -728,7 +601,6 @@ async function initCreateTask() {
       alert('Tarea creada exitosamente');
       location.hash = '#/tasks'; // Redirige a la vista de tareas
     } catch (error) {
-      console.error('Error al crear la tarea:', error.message);
       alert('Error al crear la tarea');
     }
   });
@@ -739,20 +611,19 @@ async function initCreateTask() {
   });
 }
 
+/** Initialize the "edit-task" view.
+ * Fetches the task information and pre-fills the edit form.
+ * Attaches a submit handler to update the task.
+ * Attaches a handler to navigate back to the tasks view.
+ */
 async function initEditTask() {
-  console.log("Vista editar tarea cargada ✅");
-
   const form = document.getElementById('edit-task-form');
   const cancelButton = document.getElementById('cancelEditTask');
 
   if (!form) return;
-
-  // Obtén el ID de la tarea desde la URL
-  const params = new URLSearchParams(location.hash.split('?')[1]);
-  const taskId = params.get('id');
-
+  // Obtener el ID de la tarea desde localStorage
+  const taskId = localStorage.getItem('editTaskId');
   if (!taskId) {
-    console.error('No se proporcionó un ID de tarea para editar.');
     alert('No se pudo cargar la tarea para editar.');
     location.hash = '#/tasks';
     return;
@@ -763,7 +634,6 @@ async function initEditTask() {
     const task = await getTask(taskId);
 
     if (!task) {
-      console.error('No se encontró la tarea con el ID proporcionado.');
       alert('No se pudo cargar la tarea para editar.');
       location.hash = '#/tasks';
       return;
@@ -793,157 +663,70 @@ async function initEditTask() {
 
       try {
         await updateTask(taskId, updatedTask);
-        console.log('Tarea actualizada:', updatedTask);
         alert('Tarea actualizada exitosamente');
         location.hash = '#/tasks'; // Redirige a la vista de tareas
       } catch (error) {
-        console.error('Error al actualizar la tarea:', error.message);
         alert('Error al actualizar la tarea');
       }
     });
   } catch (error) {
-    console.error('Error al cargar la tarea:', error.message);
     alert('Error al cargar la tarea');
     location.hash = '#/tasks';
   }
 
   // Manejar el botón de cancelar
   cancelButton.addEventListener('click', () => {
-    location.hash = '#/tasks';
-  });
+  localStorage.removeItem('editTaskId'); // Eliminar el ID de localStorage
+  location.hash = '#/tasks';
+});
 }
- async function initDeleteTask() {
-  console.log("Eliminando tarea ✅");
-  // Obtén el ID de la tarea desde la URL
-  const params = new URLSearchParams(location.hash.split('?')[1]);
-  const taskId = params.get('id');
+
+/** Handle editing a task.
+ * Saves the task ID to localStorage and navigates to the edit task view.
+ * @param {string} taskId - The ID of the task to edit.
+ */
+window.handleEditTask = async function(taskId) {
   if (!taskId) {
-    console.error('No se proporcionó un ID de tarea para eliminar.');
-    alert('No se pudo eliminar la tarea.');
-    location.hash = '#/tasks';
+    console.error('No se proporcionó un ID de tarea para editar.');
     return;
   }
 
- try {
+  // Guardar el ID de la tarea en localStorage
+  localStorage.setItem('editTaskId', taskId);
+
+  // Redirigir a la vista de edición
+  location.hash = '#/edit-task';
+}
+
+/** Handle deleting a task.
+ * Prompts for confirmation, deletes the task via the service, and removes it from the UI.
+ * @param {string} taskId - The ID of the task to delete.
+ */
+window.initDeleteTask = async function(taskId) {
+  if (!taskId) {
+    console.error('No se proporcionó un ID de tarea para eliminar.');
+    alert('No se pudo eliminar la tarea.');
+    return;
+  }
+
+  const confirmDelete = window.confirm('¿Estás seguro de que quieres eliminar esta tarea?');
+    if (!confirmDelete) {
+      // Eliminar el ID de la tarea de localStorage
+      localStorage.removeItem('editTaskId');
+      return;
+    }
+  try {
     // Llama a la función para eliminar la tarea
     await deleteTask(taskId);
-    console.log(`Tarea con ID ${taskId} eliminada exitosamente.`);
-    //alert('Tarea eliminada exitosamente.');
 
-    // Recarga la vista de tareas
-    location.hash = '#/tasks';
-    initTasks(); // Llama a initTasks para actualizar el tablero
-  } catch (error) {
-    console.error('Error al eliminar la tarea:', error.message);
-    //alert('Error al eliminar la tarea.');
-    location.hash = '#/tasks'; // Redirige a la vista de tareas
-  }
-}
-
-// Agrega estas funciones al final de tu route.js, después de initTasks()
-
-// Función para abrir modal de nueva tarea
-/* function openTaskModal(status) {
-  const modal = document.getElementById('task-modal');
-  if (modal) {
-    document.getElementById('task-status').value = status;
-    document.getElementById('new-task-form').reset();
-    modal.style.display = 'block';
-  }
-}
-
-// Función para cerrar modal de tarea
-function closeTaskModal() {
-  const modal = document.getElementById('task-modal');
-  if (modal) {
-    modal.style.display = 'none';
-  }
-} */
-
-// Función para manejar envío de nueva tarea
-/* async function handleTaskSubmit(e) {
-  e.preventDefault();
-  
-  const formData = new FormData(e.target);
-  const taskData = {
-    title: formData.get('title'),
-    description: formData.get('description'),
-    dueDate: formData.get('date'),
-    status: formData.get('status')
-  };
-
-  // Mapear estado del frontend al backend
-  const backendStatusMapping = {
-    'nuevo': 'Pending',
-    'en-progreso': 'In-progress',
-    'hecho': 'Completed'
-  };
-  
-  taskData.status = backendStatusMapping[taskData.status] || 'Pending';
-
-  try {
-    // Intentar crear tarea en el servidor
-    // const newTask = await createTask(taskData);
-    
-    // Por ahora, crear tarea localmente
-    const newTask = {
-      id: Date.now(), // ID temporal
-      title: taskData.title,
-      description: taskData.description,
-      dueDate: taskData.dueDate,
-      status: taskData.status
-    };
-
-    // Agregar tarea al tablero visualmente
-    addTaskToBoard(newTask);
-    closeTaskModal();
-    
-  } catch (error) {
-    console.error('Error creando tarea:', error);
-    alert('No se pudo crear la tarea. Inténtalo de nuevo.');
-  }
-}
-
-// Función para agregar tarea al tablero visualmente
-function addTaskToBoard(task) {
-  const statusMapping = {
-    'Pending': 'nuevo',
-    'In-progress': 'en-progreso', 
-    'Completed': 'hecho'
-  }; 
-  
-  const frontendStatus = statusMapping[task.status] || 'nuevo';
-  const container = document.getElementById(`${frontendStatus}-tasks`);
-  
-  if (container) {
-    const taskCard = document.createElement('div');
-    taskCard.classList.add('kanban-task');
-    taskCard.draggable = true;
-    taskCard.dataset.taskId = task.id;
-    
-    const formattedDate = task.dueDate ? 
-      new Date(task.dueDate).toLocaleDateString('es-ES', { 
-        day: '2-digit', 
-        month: '2-digit', 
-        year: '2-digit' 
-      }) : 'dd/mm/aa';
-
-    taskCard.innerHTML = `
-      <div class="task-actions">
-        <button class="task-action-btn" onclick="editTask(${task.id})">✏️</button>
-        <button class="task-action-btn" onclick="deleteTaskFromBoard(${task.id})">🗑️</button>
-      </div>
-      <div class="task-title">${task.title || 'Sin título'}</div>
-      <div class="task-description">${task.description || 'Sin descripción'}</div>
-      <div class="task-date">📅 ${formattedDate}</div>
-    `;
-
-    if (task.status === 'Completed') {
-      taskCard.classList.add('completed');
+    // Remover elemento visual
+    const taskElement = document.querySelector(`[data-task-id="${taskId}"]`);
+    if (taskElement) {
+      taskElement.remove();
+    } else {
+      console.warn(`No se encontró el elemento visual para la tarea con ID ${taskId}.`);
     }
-    
-    container.appendChild(taskCard);
-    setupDragAndDrop(); // Reconfigurar drag and drop
+  } catch (error) {
+    alert('Error al eliminar la tarea.');
   }
 }
-*/
