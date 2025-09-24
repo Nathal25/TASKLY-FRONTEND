@@ -563,7 +563,7 @@ async function initEditProfile() {
         alert('Error al actualizar el perfil');
       }
     });
-  } catch (error) {;
+  } catch (error) {
     alert('Error al cargar la información del usuario');
   }
 
