@@ -432,9 +432,11 @@ function initLogout() {
  * @returns {void}
  */
 function initSendEmail() {
+  console.log("Vista send-email cargada");
   const form = document.getElementById('recoverForm');
   const correoInput = document.getElementById('email');
   if (!form) return;
+  
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const correo = correoInput?.value.trim();
@@ -454,7 +456,7 @@ function initSendEmail() {
       setTimeout(() => (location.hash = '#/login'), 400);
     } catch (err) {
       // Si hubo un error (por ejemplo, la API falló), se muestra un mensaje con la razón
-      msg.textContent = `No se pudo registrar: ${err.message}`;
+      console.log(err);
     } finally {
       // Siempre vuelve a habilitar el botón de submit al final (El bloque finally siempre se ejecuta, pase lo que pase (éxito o error)
       setTimeout(() => {
