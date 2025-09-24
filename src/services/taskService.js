@@ -53,13 +53,7 @@ export async function updateTask(taskId, taskData) {
  * @returns {Promise<Object>} Tarea actualizada
  */
 export async function updateTaskStatus(taskId, newStatus) {
-  try {
-    const response = await http.put(`/api/v1/tasks/${taskId}/status`, { status: newStatus });
-    return response;
-  } catch (error) {
-    console.error(`Error al actualizar el estado de la tarea con ID ${taskId}:`, error.message);
-    throw error;
-  }
+  return http.put(`/api/v1/tasks/${taskId}/status`, { status: newStatus });
 }
 
 /**
