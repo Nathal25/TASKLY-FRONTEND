@@ -711,8 +711,6 @@ window.initDeleteTask = async function(taskId) {
 
   const confirmDelete = window.confirm('¿Estás seguro de que quieres eliminar esta tarea?');
     if (!confirmDelete) {
-      // Eliminar el ID de la tarea de localStorage
-      localStorage.removeItem('editTaskId');
       return;
     }
   try {
