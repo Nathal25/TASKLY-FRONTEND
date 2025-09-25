@@ -1,16 +1,16 @@
 /* =======================
-   Base Styles
+   Base Styles (estable)
    ======================= */
 
 /* Variables globales */
 :root {
-  --color-bg: #8149c5;
-  --color-bg-page: #512383;     /* fondo de las páginas */
-  --color-primary: #5e2491;
-  --color-primary-hover: #af7add;
-  --color-text: #ffffff;  
-  --color-subtle: #c9a0e6;
-  --color-surface: #ffffff;
+  --color-bg: #6b21a8;            /* Fondo principal */
+  --color-bg-page: #344d70;       /* Fondo de páginas */
+  --color-primary: #6a2aa1;       /* Botones, títulos */
+  --color-primary-hover: #af7add; /* Hover de botones/links */
+  --color-text: #ffffff;          /* Texto blanco */
+  --color-subtle: #c9a0e6;        /* Texto más suave */
+  --color-surface: #e4d9d9;       /* Fondos claros (tarjetas, navbar) */
 
   --font-family: 'Open Sans', sans-serif;
   --font-size-base: 16px;
@@ -32,17 +32,18 @@ html, body {
   height: 100%;
   font-family: var(--font-family);
   font-size: var(--font-size-base);
-  background: var(--color-bg-page); /* fondo global */
+  background: var(--color-bg-page); /* Fondo global */
   color: var(--color-text);
 }
 
-/* Estilos globales para links y botones */
+/* Links */
 a {
   text-decoration: none;
   color: inherit;
   transition: color var(--transition-fast);
 }
 
+/* Botones (estilo general) */
 button {
   font-family: inherit;
   font-size: inherit;

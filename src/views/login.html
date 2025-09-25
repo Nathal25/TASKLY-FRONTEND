@@ -1,15 +1,11 @@
+<!-- Navbar -->
 <nav class="navbar">
-  <!-- Logo -->
   <img src="/taskly-logo.png" alt="Taskly Logo" class="logo-nav">
-
-  <!-- Botón hamburguesa -->
   <button class="nav-toggle" id="nav-toggle" aria-label="Abrir menú">
     <span></span>
     <span></span>
     <span></span>
   </button>
-
-  <!-- Links -->
   <div class="nav-links" id="nav-content">
     <a href="#/">Inicio</a>
     <a href="#/login">Iniciar Sesión</a>
@@ -21,17 +17,40 @@
   <div class="login-container">
     <img src="/taskly-logo.png" alt="Taskly Logo" class="logo">
     <h2>¡BIENVENIDO!</h2>
+
     <form id="loginForm" action="#/tasks" method="get">
       <input type="text" id="email" name="email" placeholder="Email" required>
-      <input type="password" id="password" name="password" placeholder="Contraseña" required>
-      <button type="submit">Ingresar</button>
+
+      <!-- Campo de contraseña con ojito -->
+      <div class="input-wrapper-login">
+        <input
+          type="password"
+          id="password"
+          name="password"
+          placeholder="Contraseña"
+          required
+        />
+        <i
+          class="fa-solid fa-eye toggle-icon"
+          data-target="#password"
+          aria-label="Mostrar u ocultar contraseña"
+          role="button"
+          tabindex="0"
+        ></i>
+      </div>
+
+      <!-- Botón principal -->
+      <button type="submit" class="btn-primary">Ingresar</button>
       <div id="loginMsg"></div>
     </form>
 
-    <div class="extras">
-      <a id="registerLink" href="#/register">¿No tienes una cuenta? Regístrate aquí</a>
-      <a href="#/send-email">¿Olvidaste tu contraseña?</a>
-    </div>
+    <!-- Botón secundario -->
+    <a href="#/register" class="btn-secondary">Registrarse</a>
+
+    <!-- Botón link -->
+    <a href="#/send-email" class="btn-link">Recuperar contraseña</a>
+
+    <!-- Volver -->
     <a href="#/home" class="back">Volver</a>
   </div>
 </div>

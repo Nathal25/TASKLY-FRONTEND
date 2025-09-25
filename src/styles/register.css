@@ -92,38 +92,52 @@
   margin-top: 0.5rem;
 }
 
+/* Botón principal (Registrarse en registro) */
 .register-container .btn {
+  display: block;
   width: 100%;
+  max-width: 320px;      /* mismo ancho que en login */
+  margin: 0 auto;
   padding: 0.9rem;
   border-radius: var(--radius-md);
-  background: var(--color-primary);
-  color: var(--color-surface);
+  background: #5e2491;   /* morado base sólido */
+  color: #ffffff;        /* letras blancas fijas */
   font-weight: bold;
-  transition: background var(--transition-fast), transform var(--transition-fast);
+  text-align: center;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
 }
 
-.register-container .btn:hover {
-  background: var(--color-primary-hover);
+.register-container .btn:hover,
+.register-container .btn:focus {
+  background: #4a148c !important; /* morado oscuro fijo */
+  color: #ffffff !important;      /* letras siempre blancas */
   transform: translateY(-2px);
 }
+
 
 #registerMsg {
   font-size: 0.9rem;
   color: red;
 }
 
-/* Botón de volver */
+/* Botón de volver (Registro) */
 .register-container .back {
   display: block;
   margin: 0 auto;
   text-align: center;
-  font-size: 0.9rem;
-  color: var(--color-subtle);
+  font-size: 1rem;           /* tamaño legible */
+  font-weight: 600;          /* más grueso */
+  color: #2a0f50;            /* morado oscuro, fuerte y visible */
+  transition: color 0.3s ease, text-decoration 0.3s ease;
 }
 
 .register-container .back:hover {
-  color: var(--color-primary);
+  color: #5e2491;            /* morado fuerte en hover */
+  text-decoration: underline;
 }
+
 
 /* Responsividad: en móvil se apilan */
 @media (max-width: 600px) {
@@ -228,23 +242,35 @@
   background: #e74c3c; /* rojo */
 }
 
-.input-wrapper {
+/* =======================
+   Wrappers de Inputs con Ojito
+   ======================= */
+
+/* Wrapper general */
+.input-wrapper-login,
+.input-wrapper-register {
   position: relative;
   width: 100%;
 }
 
-.input-wrapper input {
-  width: 100%;
-  padding-right: 2.5rem; /* deja espacio para el ícono */
-  box-sizing: border-box;
+.input-wrapper-register,
+.input-wrapper-login {
+  position: relative;
 }
 
-.input-wrapper .toggle-icon {
+.input-wrapper-register input,
+.input-wrapper-login input {
+  position: relative;
+  z-index: 1;
+  padding-right: 2.5rem; /* espacio para el ojito */
+}
+
+.input-wrapper-register .toggle-icon,
+.input-wrapper-login .toggle-icon {
   position: absolute;
-  right: 10px;
+  right: 12px;
   top: 50%;
   transform: translateY(-50%);
+  z-index: 2;  /* asegura que quede arriba del input */
   cursor: pointer;
-  font-size: 1.2rem;
-  user-select: none;
 }

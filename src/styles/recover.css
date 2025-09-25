@@ -65,19 +65,27 @@
   box-shadow: 0 0 0 3px rgba(155, 77, 224, 0.2);
 }
 
-/* Botón */
+/* Botón principal (Guardar) */
 .recover-container button {
+  display: block;
   width: 100%;
+  max-width: 320px;   /* 👈 mismo ancho que login y registro */
+  margin: 0 auto;
   padding: 0.9rem;
   border-radius: var(--radius-md);
-  background: var(--color-primary);
-  color: var(--color-surface);
+  background: #5e2491;   /* morado base */
+  color: #ffffff;        /* letras blancas fijas */
   font-weight: bold;
-  transition: background var(--transition-fast), transform var(--transition-fast);
+  text-align: center;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
 }
 
-.recover-container button:hover {
-  background: var(--color-primary-hover);
+.recover-container button:hover,
+.recover-container button:focus {
+  background: #4a148c !important; /* morado oscuro fijo */
+  color: #ffffff !important;      /* letras siempre blancas */
   transform: translateY(-2px);
 }
 
@@ -85,13 +93,21 @@
 .recover-container .back {
   margin-top: 1rem;
   display: inline-block;
-  font-size: 0.9rem;
-  color: var(--color-subtle);
-  transition: color var(--transition-fast);
+  font-size: 1rem;
+  font-weight: 600;
+  color: #2a0f50; /* morado fuerte */
+  transition: color var(--transition-fast), text-decoration var(--transition-fast);
 }
 
 .recover-container .back:hover {
-  color: var(--color-primary);
+  color: #5e2491;
+  text-decoration: underline;
+}
+
+/* Mensaje */
+#recoverMsg {
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
 }
 
 /* Responsividad */

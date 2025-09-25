@@ -1,15 +1,11 @@
+<!-- Navbar -->
 <nav class="navbar">
-  <!-- Logo -->
   <img src="/taskly-logo.png" alt="Taskly Logo" class="logo-nav">
-
-  <!-- Botón hamburguesa -->
   <button class="nav-toggle" id="nav-toggle" aria-label="Abrir menú">
     <span></span>
     <span></span>
     <span></span>
   </button>
-
-  <!-- Links -->
   <div class="nav-links" id="nav-content">
     <a href="#/">Inicio</a>
     <a href="#/login">Iniciar Sesión</a>
@@ -17,79 +13,122 @@
   </div>
 </nav>
 
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Taskly - Registro</title>
 
-<div class="register-page">
-  <div class="register-container">
-    <img src="/taskly-logo.png" alt="Taskly Logo" class="logo">
-    <h2>INGRESA TUS DATOS</h2>
+  <!-- Font Awesome (para los ojitos 👀) -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+  />
+</head>
+<body>
+  <div class="register-page">
+    <div class="register-container">
+      <img src="/taskly-logo.png" alt="Taskly Logo" class="logo" />
+      <h2>INGRESA TUS DATOS</h2>
 
-    <form id="registerForm" method="post">
-      <!-- Columna izquierda -->
-      <div class="form-group">
-        <label for="firstName">Nombre:</label>
-        <input type="text" name="firstName" placeholder="Nombre" required>
-      </div>
-
-      <div class="form-group">
-        <label for="lastName">Apellidos:</label>
-        <input type="text" name="lastName" placeholder="Apellidos" required>
-      </div>
-
-      <div class="form-group">
-        <label for="age">Edad:</label>
-        <input type="number" id="age" name="age" placeholder="Edad" aria-describedby="age-tip" required>
-        <span id="age-tip" role="tooltip" class="tooltip">
-          Debes tener al menos 13 años.
-        </span>
-      </div>
-
-      <!-- Columna derecha -->
-      <div class="form-group">
-        <label for="email">Email:</label>
-        <input type="email" name="email" placeholder="Email" required>
-      </div>
-
-      <div class="form-group">
-        <label for="password">Contraseña:</label>
-        <div class="input-wrapper">
-          <input type="password" id="password" name="password" placeholder="Contraseña" aria-describedby="password-tip"
-            required>
-          <i id="togglePassword" class="fa-solid fa-eye toggle-icon"></i>
+      <form id="registerForm" method="post">
+        <!-- Columna izquierda -->
+        <div class="form-group">
+          <label for="firstName">Nombre:</label>
+          <input type="text" name="firstName" placeholder="Nombre" required />
         </div>
 
-        <span id="password-tip1" role="tooltip" class="tooltip">
-          Debe tener una mayúscula.
-        </span>
-        <span id="password-tip2" role="tooltip" class="tooltip">
-          Debe tener un número.
-        </span>
-        <span id="password-tip3" role="tooltip" class="tooltip">
-          Debe tener un caracter especial.
-        </span>
-        <span id="password-tip4" role="tooltip" class="tooltip">
-          Debe tener al menos 8 caracteres.
-        </span>
-      </div>
-
-      <div class="form-group">
-        <label for="confirmPassword">Confirmar contraseña:</label>
-        <div class="input-wrapper">
-          <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirmar contraseña"
-            aria-describedby="passwordConfirm-tip" required>
-          <i id="togglePassword2" class="fa-solid fa-eye toggle-icon" aria-label="Mostrar u ocultar contraseña"></i>
+        <div class="form-group">
+          <label for="lastName">Apellidos:</label>
+          <input type="text" name="lastName" placeholder="Apellidos" required />
         </div>
-        <span id="passwordConfirm-tip" role="tooltip" class="tooltip">
-          La contraseña no coincide.
-        </span>
-      </div>
 
-      <!-- Botón ocupa ambas columnas -->
-      <div class="reg-btns">
-        <button type="submit" class="btn">Registrarse</button>
-        <p id="registerMsg"></p>
-      </div>
-    </form>
+        <div class="form-group">
+          <label for="age">Edad:</label>
+          <input
+            type="number"
+            id="age"
+            name="age"
+            placeholder="Edad"
+            aria-describedby="age-tip"
+            required
+          />
+          <span id="age-tip" role="tooltip" class="tooltip">
+            Debes tener al menos 13 años.
+          </span>
+        </div>
 
-    <a href="#/home" class="back">Volver a inicio</a>
+        <!-- Columna derecha -->
+        <div class="form-group">
+          <label for="email">Email:</label>
+          <input type="email" name="email" placeholder="Email" required />
+        </div>
+
+        <!-- Contraseña -->
+        <div class="form-group">
+          <label for="password">Contraseña:</label>
+          <div class="input-wrapper-register">
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Contraseña"
+              aria-describedby="password-tip"
+              required
+            />
+            <i
+              class="fa-solid fa-eye toggle-icon"
+              data-target="#password"
+              aria-label="Mostrar u ocultar contraseña"
+              role="button"
+              tabindex="0"
+            ></i>
+          </div>
+
+          <span id="password-tip1" role="tooltip" class="tooltip">Debe tener una mayúscula.</span>
+          <span id="password-tip2" role="tooltip" class="tooltip">Debe tener un número.</span>
+          <span id="password-tip3" role="tooltip" class="tooltip">Debe tener un caracter especial.</span>
+          <span id="password-tip4" role="tooltip" class="tooltip">Debe tener al menos 8 caracteres.</span>
+        </div>
+
+        <!-- Confirmar contraseña -->
+        <div class="form-group">
+          <label for="confirmPassword">Confirmar contraseña:</label>
+          <div class="input-wrapper-register">
+            <input
+              type="password"
+              id="confirmPassword"
+              name="confirmPassword"
+              placeholder="Confirmar contraseña"
+              aria-describedby="passwordConfirm-tip"
+              required
+            />
+            <i
+              class="fa-solid fa-eye toggle-icon"
+              data-target="#confirmPassword"
+              aria-label="Mostrar u ocultar contraseña"
+              role="button"
+              tabindex="0"
+            ></i>
+          </div>
+          <span id="passwordConfirm-tip" role="tooltip" class="tooltip">
+            La contraseña no coincide.
+          </span>
+        </div>
+
+        <!-- Botón ocupa ambas columnas -->
+        <div class="reg-btns">
+          <button type="submit" class="btn">Registrarse</button>
+          <p id="registerMsg"></p>
+        </div>
+      </form>
+
+      <a href="#/login" class="back">Volver al login</a>
+    </div>
   </div>
-</div>
+
+  <!-- Cargar tu main.js al final para evitar errores -->
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
