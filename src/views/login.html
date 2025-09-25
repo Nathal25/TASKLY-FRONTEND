@@ -21,9 +21,16 @@
   <div class="login-container">
     <img src="/taskly-logo.png" alt="Taskly Logo" class="logo">
     <h2>¡BIENVENIDO!</h2>
+
     <form id="loginForm" action="#/tasks" method="get">
       <input type="text" id="email" name="email" placeholder="Email" required>
-      <input type="password" id="password" name="password" placeholder="Contraseña" required>
+
+      <!-- Campo de contraseña con ojito -->
+      <div class="input-wrapper">
+        <input type="password" id="password" name="password" placeholder="Contraseña" required>
+        <i id="togglePasswordLogin" class="fa-solid fa-eye toggle-icon"></i>
+      </div>
+
       <button type="submit">Ingresar</button>
       <div id="loginMsg"></div>
     </form>

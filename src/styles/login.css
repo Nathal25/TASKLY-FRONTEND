@@ -142,28 +142,38 @@
   }
 }
 
-/* Contenedor relativo */
-.input-wrapper2 {
+/* Wrapper genérico para inputs con icono a la derecha */
+.input-wrapper {
   position: relative;
   width: 100%;
 }
 
-/* Input sigue ocupando todo el ancho */
-.input-wrapper2 input {
+.input-wrapper input {
   width: 100%;
-  padding-right: 2.5rem; /* espacio para que no se tape con el ojito */
+  height: 44px;              /* altura consistente */
+  line-height: 44px;         /* ayuda al centrado vertical */
+  padding: 0.8rem 2.5rem 0.8rem 0.8rem; /* espacio para el ojito a la derecha */
+  box-sizing: border-box;
 }
 
-/* Ojito dentro del input */
-.input-wrapper2 .toggle-icon {
+/* Icono ojito centrado verticalmente */
+.input-wrapper .toggle-icon {
   position: absolute;
-  right: 0.8rem;
+  right: 12px;
   top: 50%;
   transform: translateY(-50%);
-  cursor: pointer;
+  margin-top: -7px; /* súbelo lo que necesites */
+  font-size: 1.15rem;
   color: #888;
+  cursor: pointer;
 }
 
-.input-wrapper2 .toggle-icon:hover {
+
+
+.input-wrapper .toggle-icon:hover {
   color: var(--color-primary);
+}
+
+.input-wrapper .toggle-icon:active {
+  transform: translateY(-50%) scale(0.96);
 }
