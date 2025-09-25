@@ -1,13 +1,12 @@
 /* =======================
    Login Page Styles
    ======================= */
-
 .login-page {
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  min-height: 100vh; /* altura completa */
-  background: var(--color-bg-page); /* el morado oscuro */
+  min-height: 100vh;
+  background: var(--color-bg-page);
   padding: 2rem;
 }
 
@@ -26,7 +25,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1.2rem;
 
   animation: fadeIn 0.8s ease-in-out;
 }
@@ -58,7 +57,7 @@
   font-size: 1rem;
   outline: none;
   transition: border var(--transition-fast), box-shadow var(--transition-fast);
-  margin-bottom: 1rem; /* Separación entre inputs */
+  margin-bottom: 1rem;
 }
 
 .login-container input:focus {
@@ -66,20 +65,73 @@
   box-shadow: 0 0 0 3px rgba(155, 77, 224, 0.2);
 }
 
-/* Botón */
-.login-container button {
+/* Agrupación de botones */
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+/* Botón principal (Ingresar) */
+.btn-primary {
   width: 100%;
   padding: 0.9rem;
   border-radius: var(--radius-md);
   background: var(--color-primary);
   color: var(--color-surface);
   font-weight: bold;
-  transition: background var(--transition-fast), transform var(--transition-fast);
+  text-align: center;
+  border: none;
+  transition: background 0.3s ease, transform 0.2s ease;
 }
 
-.login-container button:hover {
+.btn-primary:hover {
   background: var(--color-primary-hover);
   transform: translateY(-2px);
+}
+
+/* Botón secundario (Registrarse) */
+.btn-secondary {
+  display: inline-block;
+  width: 100%;
+  padding: 0.9rem;
+  border: 2px solid var(--color-primary);
+  border-radius: var(--radius-md);
+  color: var(--color-primary);
+  font-weight: bold;
+  text-align: center;
+  background: #f3f0ff;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+.btn-secondary:hover {
+  background: var(--color-primary);
+  color: var(--color-surface);
+  transform: translateY(-2px);
+}
+
+/* Botón estilo link (recuperar contraseña y volver) */
+.btn-link,
+.login-container .back {
+  display: block;
+  width: 100%;
+  text-align: center;
+  font-size: 0.95rem;
+  color: #4a358c;
+  font-weight: 500;
+  padding: 0.4rem;
+  transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-link:hover,
+.login-container .back:hover {
+  color: var(--color-primary-hover);
+  transform: translateY(-1px);
+  text-decoration: underline;
 }
 
 #loginMsg {
@@ -88,39 +140,41 @@
   color: red;
 }
 
-/* Extras */
-.login-container .extras {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  margin-top: 1rem;
+/* Wrappers de inputs con ojito */
+.input-wrapper-login,
+.input-wrapper-register {
+  position: relative;
+  width: 100%;
 }
 
-.login-container .extras a {
-  font-size: 0.9rem;
-  color: var(--color-primary);
-  transition: color var(--transition-fast);
+.input-wrapper-login input,
+.input-wrapper-register input {
+  width: 100%;
+  height: 42px;
+  padding: 0 2.5rem 0 0.8rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  box-sizing: border-box;
 }
 
-.login-container .extras a:hover {
-  color: var(--color-primary-hover);
+/* Ojito (ajustado) */
+.input-wrapper-login .toggle-icon,
+.input-wrapper-register .toggle-icon {
+  position: absolute;
+  right: 12px;
+  top: 14px !important;   /* 👈 súbelo/bájalo cambiando px */
+  transform: none !important;
+  cursor: pointer;
+  font-size: 18px;
+  color: #555;
+  line-height: 1;
 }
 
-/* Botón de volver */
-.login-container .back {
-  margin-top: 1rem;
-  display: inline-block;
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: var(--color-primary);   /* desde el inicio morado principal */
-  transition: color var(--transition-fast), text-decoration var(--transition-fast);
+.input-wrapper-login .toggle-icon:hover,
+.input-wrapper-register .toggle-icon:hover {
+  color: #5e2491;
 }
-
-.login-container .back:hover {
-  color: var(--color-primary-hover); /* se aclara suavemente */
-  text-decoration: underline;        /* cambio sutil en hover */
-}
-
 
 /* Responsividad */
 @media (max-width: 480px) {
@@ -144,38 +198,4 @@
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-/* Wrappers de inputs con ojito */
-.input-wrapper-login,
-.input-wrapper-register {
-  position: relative;
-  width: 100%;
-}
-
-/* Input estilizado */
-.input-wrapper-login input,
-.input-wrapper-register input {
-  width: 100%;
-  height: 42px;               /* altura uniforme */
-  padding: 0 2.5rem 0 0.8rem; /* 👈 quitamos padding vertical */
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 1rem;
-  line-height: 42px;          /* 👈 texto centrado verticalmente */
-  box-sizing: border-box;
-}
-
-/* Ojito */
-.input-wrapper-login .toggle-icon {
-  position: absolute;
-  right: 12px;
-  top: 14px !important;   /* 👈 lo sube fijo, y el !important rompe cualquier override */
-  transform: none !important;
-}
-
-
-.input-wrapper-login .toggle-icon:hover,
-.input-wrapper-register .toggle-icon:hover {
-  color: #5e2491; /* tu color primario */
 }
