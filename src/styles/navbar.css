@@ -10,12 +10,11 @@
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2); /* sutil sombra para separación */
 }
 
-/* === Logo con resplandor mejorado === */
+/* === Logo sin resplandor === */
 .logo-nav {
   height: 40px;
-  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 1))
-          drop-shadow(0 0 15px rgba(255, 255, 255, 0.8));
 }
+
 
 /* ===== Links (móvil: ocultos por defecto) ===== */
 .nav-links {

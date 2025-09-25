@@ -4,13 +4,13 @@
 
 /* Variables globales */
 :root {
-  --color-bg: #aeb0b1;            /* Fondo principal */
-  --color-bg-page: #532783;       /* Fondo de páginas */
+  --color-bg: #6b21a8;            /* Fondo principal */
+  --color-bg-page: #344d70;       /* Fondo de páginas */
   --color-primary: #6a2aa1;       /* Botones, títulos */
   --color-primary-hover: #af7add; /* Hover de botones/links */
   --color-text: #ffffff;          /* Texto blanco */
   --color-subtle: #c9a0e6;        /* Texto más suave */
-  --color-surface: #ebebeb;       /* Fondos claros (tarjetas, navbar) */
+  --color-surface: #e4d9d9;       /* Fondos claros (tarjetas, navbar) */
 
   --font-family: 'Open Sans', sans-serif;
   --font-size-base: 16px;
