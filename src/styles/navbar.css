@@ -10,8 +10,11 @@
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2); /* sutil sombra para separación */
 }
 
+/* === Logo con resplandor mejorado === */
 .logo-nav {
   height: 40px;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 1))
+          drop-shadow(0 0 15px rgba(255, 255, 255, 0.8));
 }
 
 /* ===== Links (móvil: ocultos por defecto) ===== */
@@ -29,15 +32,17 @@
   box-shadow: 0 2px 12px rgba(0,0,0,0.4);
 }
 
+/* === Links con más contraste === */
 .nav-links a {
-  color: var(--color-text); /* blanco para que combine con el logo */
+  color: #ffffff; /* blanco puro para que resalte más */
   text-decoration: none;
-  font-weight: 500;
-  transition: color 0.3s;
+  font-weight: 600;
+  transition: color 0.3s ease, text-shadow 0.3s ease;
 }
 
 .nav-links a:hover {
-  color: var(--color-subtle); /* gris lila para hover */
+  color: var(--color-primary-hover); /* morado claro */
+  text-shadow: 0 0 6px rgba(255, 255, 255, 0.7); /* resplandor sutil */
 }
 
 /* Menú activo (se abre en móvil) */
