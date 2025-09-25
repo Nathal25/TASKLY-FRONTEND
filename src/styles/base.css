@@ -4,9 +4,9 @@
 
 /* Variables globales */
 :root {
-  --color-bg: #8149c5;            /* Fondo principal */
-  --color-bg-page: #512383;       /* Fondo de páginas */
-  --color-primary: #5e2491;       /* Botones, títulos */
+  --color-bg: #aeb0b1;            /* Fondo principal */
+  --color-bg-page: #532783;       /* Fondo de páginas */
+  --color-primary: #6a2aa1;       /* Botones, títulos */
   --color-primary-hover: #af7add; /* Hover de botones/links */
   --color-text: #ffffff;          /* Texto blanco */
   --color-subtle: #c9a0e6;        /* Texto más suave */

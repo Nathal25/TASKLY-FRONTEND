@@ -76,41 +76,49 @@
 
 /* Botón principal (Ingresar) */
 .btn-primary {
+  display: block;
   width: 100%;
+  margin: 0 auto;
   padding: 0.9rem;
   border-radius: var(--radius-md);
-  background: var(--color-primary);
-  color: var(--color-surface);
+  background: #5e2491;
+  color: #ffffff;
   font-weight: bold;
   text-align: center;
   border: none;
   transition: background 0.3s ease, transform 0.2s ease;
 }
 
-.btn-primary:hover {
-  background: var(--color-primary-hover);
+.btn-primary:hover,
+.btn-primary:focus {
+  background: #4a148c !important;
+  color: #ffffff !important;
   transform: translateY(-2px);
 }
 
 /* Botón secundario (Registrarse) */
 .btn-secondary {
-  display: inline-block;
+  display: block;
   width: 100%;
+  margin: 0 auto;
   padding: 0.9rem;
-  border: 2px solid var(--color-primary);
+  border: 1px solid var(--color-primary);
   border-radius: var(--radius-md);
-  color: var(--color-primary);
+  background: #f3f0ff;
+  color: #000000;
+  font-size: 1rem;
   font-weight: bold;
   text-align: center;
-  background: #f3f0ff;
-  transition: all 0.3s ease;
-  box-sizing: border-box;
+  text-decoration: none;
   cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+  box-sizing: border-box;
 }
 
-.btn-secondary:hover {
-  background: var(--color-primary);
-  color: var(--color-surface);
+.btn-secondary:hover,
+.btn-secondary:focus {
+  background: #e0d7ff;
+  color: #000000 !important;
   transform: translateY(-2px);
 }
 
@@ -121,18 +129,19 @@
   width: 100%;
   text-align: center;
   font-size: 0.95rem;
-  color: #4a358c;
-  font-weight: 500;
+  color: #2a0f50;        /* 👈 un morado oscuro más intenso */
+  font-weight: 600;      /* 👈 un poco más gruesa la fuente */
   padding: 0.4rem;
   transition: color 0.3s ease, transform 0.2s ease;
 }
 
 .btn-link:hover,
 .login-container .back:hover {
-  color: var(--color-primary-hover);
+  color: #5e2491;        /* 👈 morado fuerte, visible */
   transform: translateY(-1px);
   text-decoration: underline;
 }
+
 
 #loginMsg {
   margin-top: 0.5rem;
@@ -158,12 +167,12 @@
   box-sizing: border-box;
 }
 
-/* Ojito (ajustado) */
+/* Ojito */
 .input-wrapper-login .toggle-icon,
 .input-wrapper-register .toggle-icon {
   position: absolute;
   right: 12px;
-  top: 14px !important;   /* 👈 súbelo/bájalo cambiando px */
+  top: 14px !important;
   transform: none !important;
   cursor: pointer;
   font-size: 18px;
