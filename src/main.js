@@ -25,56 +25,42 @@ document.addEventListener("click", (e) => {
   if (navToggle && navContent) {
     navContent.classList.toggle("active");
     navToggle.classList.toggle("open");
+    return; // evita que siga al resto
   }
 
   // Si se hizo clic en un enlace dentro del menú
   if (e.target.closest("#nav-content a")) {
-    navContent.classList.remove("active");
+    navContent?.classList.remove("active");
     document.getElementById("nav-toggle")?.classList.remove("open");
-  }
-});
-
-// ====== Toggle "ojito" en Login ======
-document.addEventListener("click", (e) => {
-  const togglePassword = e.target.closest("#togglePasswordLogin");
-  if (togglePassword) {
-    const passwordInput = document.getElementById("password");
-    if (passwordInput) {
-      const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
-      passwordInput.setAttribute("type", type);
-
-      // Cambiar icono
-      togglePassword.classList.toggle("fa-eye");
-      togglePassword.classList.toggle("fa-eye-slash");
-    }
-  }
-});
-
-// ====== Toggle "ojitos" en Registro ======
-document.addEventListener("click", (e) => {
-  // Contraseña
-  const toggle1 = e.target.closest("#togglePassword");
-  if (toggle1) {
-    const passwordInput = document.getElementById("password");
-    if (passwordInput) {
-      const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
-      passwordInput.setAttribute("type", type);
-
-      toggle1.classList.toggle("fa-eye");
-      toggle1.classList.toggle("fa-eye-slash");
-    }
+    return;
   }
 
-  // Confirmar contraseña
-  const toggle2 = e.target.closest("#togglePassword2");
-  if (toggle2) {
-    const confirmInput = document.getElementById("confirmPassword");
-    if (confirmInput) {
-      const type = confirmInput.getAttribute("type") === "password" ? "text" : "password";
-      confirmInput.setAttribute("type", type);
+  // ===== Toggle "ojitos" en Login y Registro =====
+  const eye = e.target.closest(".toggle-icon");
+  if (eye) {
+    // 1) Preferencia: usar data-target explícito
+    const selector = eye.getAttribute("data-target");
+    let input = selector ? document.querySelector(selector) : null;
 
-      toggle2.classList.toggle("fa-eye");
-      toggle2.classList.toggle("fa-eye-slash");
+    // 2) Fallback: buscar dentro del wrapper correspondiente
+    if (!input) {
+      const wrapper = eye.closest(
+        ".input-wrapper, .input-wrapper-login, .input-wrapper-register"
+      );
+      input = wrapper?.querySelector(
+        'input[type="password"], input[type="text"]'
+      );
     }
+
+    // 3) Alternar tipo de input
+    if (input) {
+      input.type = input.type === "password" ? "text" : "password";
+
+      // Cambiar icono FontAwesome
+      eye.classList.toggle("fa-eye");
+      eye.classList.toggle("fa-eye-slash");
+    }
+
+    return; // evita que se propaguen otros handlers
   }
 });

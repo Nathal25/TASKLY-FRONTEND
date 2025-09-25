@@ -111,12 +111,16 @@
   margin-top: 1rem;
   display: inline-block;
   font-size: 0.9rem;
-  color: var(--color-subtle);
+  font-weight: 500;
+  color: var(--color-primary);   /* desde el inicio morado principal */
+  transition: color var(--transition-fast), text-decoration var(--transition-fast);
 }
 
 .login-container .back:hover {
-  color: var(--color-primary);
+  color: var(--color-primary-hover); /* se aclara suavemente */
+  text-decoration: underline;        /* cambio sutil en hover */
 }
+
 
 /* Responsividad */
 @media (max-width: 480px) {
@@ -142,38 +146,36 @@
   }
 }
 
-/* Wrapper genérico para inputs con icono a la derecha */
-.input-wrapper {
+/* Wrappers de inputs con ojito */
+.input-wrapper-login,
+.input-wrapper-register {
   position: relative;
   width: 100%;
 }
 
-.input-wrapper input {
+/* Input estilizado */
+.input-wrapper-login input,
+.input-wrapper-register input {
   width: 100%;
-  height: 44px;              /* altura consistente */
-  line-height: 44px;         /* ayuda al centrado vertical */
-  padding: 0.8rem 2.5rem 0.8rem 0.8rem; /* espacio para el ojito a la derecha */
+  height: 42px;               /* altura uniforme */
+  padding: 0 2.5rem 0 0.8rem; /* 👈 quitamos padding vertical */
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  line-height: 42px;          /* 👈 texto centrado verticalmente */
   box-sizing: border-box;
 }
 
-/* Icono ojito centrado verticalmente */
-.input-wrapper .toggle-icon {
+/* Ojito */
+.input-wrapper-login .toggle-icon {
   position: absolute;
   right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  margin-top: -7px; /* súbelo lo que necesites */
-  font-size: 1.15rem;
-  color: #888;
-  cursor: pointer;
+  top: 14px !important;   /* 👈 lo sube fijo, y el !important rompe cualquier override */
+  transform: none !important;
 }
 
 
-
-.input-wrapper .toggle-icon:hover {
-  color: var(--color-primary);
-}
-
-.input-wrapper .toggle-icon:active {
-  transform: translateY(-50%) scale(0.96);
+.input-wrapper-login .toggle-icon:hover,
+.input-wrapper-register .toggle-icon:hover {
+  color: #5e2491; /* tu color primario */
 }

@@ -86,13 +86,16 @@
   margin-top: 1rem;
   display: inline-block;
   font-size: 0.9rem;
-  color: var(--color-subtle);
-  transition: color var(--transition-fast);
+  font-weight: 500;
+  color: var(--color-primary);   /* visible de entrada */
+  transition: color var(--transition-fast), text-decoration var(--transition-fast);
 }
 
 .recover-container .back:hover {
-  color: var(--color-primary);
+  color: var(--color-primary-hover); /* un poco más claro al pasar el mouse */
+  text-decoration: underline;        /* subrayado sutil */
 }
+
 
 /* Responsividad */
 @media (max-width: 480px) {

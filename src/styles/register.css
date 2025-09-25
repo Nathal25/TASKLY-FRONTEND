@@ -118,12 +118,16 @@
   margin: 0 auto;
   text-align: center;
   font-size: 0.9rem;
-  color: var(--color-subtle);
+  font-weight: 500;
+  color: var(--color-primary);   /* se ve morado fuerte siempre */
+  transition: color var(--transition-fast), text-decoration var(--transition-fast);
 }
 
 .register-container .back:hover {
-  color: var(--color-primary);
+  color: var(--color-primary-hover); /* un morado más claro */
+  text-decoration: underline;        /* subrayado sutil */
 }
+
 
 /* Responsividad: en móvil se apilan */
 @media (max-width: 600px) {
@@ -228,23 +232,35 @@
   background: #e74c3c; /* rojo */
 }
 
-.input-wrapper {
+/* =======================
+   Wrappers de Inputs con Ojito
+   ======================= */
+
+/* Wrapper general */
+.input-wrapper-login,
+.input-wrapper-register {
   position: relative;
   width: 100%;
 }
 
-.input-wrapper input {
-  width: 100%;
-  padding-right: 2.5rem; /* deja espacio para el ícono */
-  box-sizing: border-box;
+.input-wrapper-register,
+.input-wrapper-login {
+  position: relative;
 }
 
-.input-wrapper .toggle-icon {
+.input-wrapper-register input,
+.input-wrapper-login input {
+  position: relative;
+  z-index: 1;
+  padding-right: 2.5rem; /* espacio para el ojito */
+}
+
+.input-wrapper-register .toggle-icon,
+.input-wrapper-login .toggle-icon {
   position: absolute;
-  right: 10px;
+  right: 12px;
   top: 50%;
   transform: translateY(-50%);
+  z-index: 2;  /* asegura que quede arriba del input */
   cursor: pointer;
-  font-size: 1.2rem;
-  user-select: none;
 }

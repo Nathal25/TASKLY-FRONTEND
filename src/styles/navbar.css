@@ -4,9 +4,10 @@
   justify-content: space-between;
   align-items: center;
   padding: 1rem;
-  background: var(--color-primary, #5e2491); /* variable o fallback */
+  background: var(--color-bg); /* tono morado más claro que el fondo */
   position: relative;
   z-index: 1000;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2); /* sutil sombra para separación */
 }
 
 .logo-nav {
@@ -21,7 +22,7 @@
   position: absolute;
   top: 60px;
   right: 0;
-  background: #3a1e3b;
+  background: var(--color-bg-page); /* fondo oscuro en el menú desplegable */
   width: 180px;
   padding: 18px 35px;
   border-radius: 0 0 0 8px;
@@ -29,14 +30,14 @@
 }
 
 .nav-links a {
-  color: #fff;
+  color: var(--color-text); /* blanco para que combine con el logo */
   text-decoration: none;
   font-weight: 500;
   transition: color 0.3s;
 }
 
 .nav-links a:hover {
-  color: #d1a3ff;
+  color: var(--color-subtle); /* gris lila para hover */
 }
 
 /* Menú activo (se abre en móvil) */
@@ -81,7 +82,7 @@
 /* ===== Escritorio (≥700px) ===== */
 @media (min-width: 700px) {
   .nav-links {
-    display: flex;   /* sin !important */
+    display: flex;
     flex-direction: row;
     position: static;
     background: none;

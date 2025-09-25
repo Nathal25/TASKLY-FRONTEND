@@ -111,37 +111,49 @@ function initHome() {
 function initRegister() {
   console.log("Vista register cargada");
 
-  // Tomamos referencias al formulario, mensaje y botón de submit
+  // Formulario y botón
   const form = document.getElementById('registerForm');
   const submitButton = form?.querySelector('button[type="submit"]');
+  if (!form || !submitButton) {
+    console.warn("⚠️ Formulario de registro no encontrado en el DOM");
+    return;
+  }
 
-  // Se verifica que el formulario y el botón existan
-  if (!form || !submitButton) return;
+  // Inputs principales
+  const passwordInput = document.getElementById("password");
+  const confirmInput = document.getElementById("confirmPassword");
+  const ageInput = document.getElementById("age");
 
-  // Expresión regular para validar la contraseña
+  // Tooltips
+  const passwordTip1 = document.getElementById("password-tip1");
+  const passwordTip2 = document.getElementById("password-tip2");
+  const passwordTip3 = document.getElementById("password-tip3");
+  const passwordTip4 = document.getElementById("password-tip4");
+  const passwordConfirmTip = document.getElementById("passwordConfirm-tip");
+  const ageTip = document.getElementById("age-tip");
+
+  // Validar existencia de inputs
+  if (!passwordInput || !confirmInput || !ageInput ||
+      !passwordTip1 || !passwordTip2 || !passwordTip3 || !passwordTip4 ||
+      !passwordConfirmTip || !ageTip) {
+    console.warn("⚠️ No se encontraron todos los campos de registro");
+    return;
+  }
+
+  // Expresiones regulares para validar contraseña
   const passwordRegex1 = /^(?=.*[A-Z])/;
   const passwordRegex2 = /^(?=.*\d)/;
   const passwordRegex3 = /^(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])/;
   const passwordRegex4 = /^[A-Za-z\d!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{8,}$/;
 
-  // Referencias a los elementos del DOM relacionados con la contraseña
-  const passwordInput = document.getElementById("password");
-  const passwordTip1 = document.getElementById("password-tip1");
-  const passwordTip2 = document.getElementById("password-tip2");
-  const passwordTip3 = document.getElementById("password-tip3");
-  const passwordTip4 = document.getElementById("password-tip4");
+  // Configurar atributos accesibilidad
+  [passwordTip1, passwordTip2, passwordTip3, passwordTip4, passwordConfirmTip, ageTip]
+    .forEach(tip => {
+      tip.setAttribute("role", "tooltip");
+      tip.setAttribute("aria-live", "polite");
+    });
 
-  // Configuramos atributos de accesibilidad para el mensaje de la contraseña
-  passwordTip1.setAttribute("role", "tooltip"); // Indica que es un tooltip (mensaje informativo flotante para usuarios con lectores de pantalla)
-  passwordTip1.setAttribute("aria-live", "polite"); // Indica que los cambios en este elemento deben ser anunciados de forma no intrusiva
-  passwordTip2.setAttribute("role", "tooltip");
-  passwordTip2.setAttribute("aria-live", "polite");
-  passwordTip3.setAttribute("role", "tooltip");
-  passwordTip3.setAttribute("aria-live", "polite");
-  passwordTip4.setAttribute("role", "tooltip");
-  passwordTip4.setAttribute("aria-live", "polite");
-
-  // Escuchar el evento de entrada en el campo de contraseña para validar en tiempo real (manejo de mensajes)
+  // Validación en vivo de la contraseña
   passwordInput.addEventListener("input", () => {
     if (!passwordRegex4.test(passwordInput.value)) {
       passwordTip4.classList.add("show");
@@ -164,22 +176,11 @@ function initRegister() {
       passwordTip3.classList.remove("show");
       passwordTip4.classList.remove("show");
     } else {
-      passwordTip1.classList.remove("show");
-      passwordTip2.classList.remove("show");
-      passwordTip3.classList.remove("show");
-      passwordTip4.classList.remove("show");
+      [passwordTip1, passwordTip2, passwordTip3, passwordTip4].forEach(t => t.classList.remove("show"));
     }
   });
 
-  // Referencias a los elementos del DOM relacionados con la edad (input, mensaje)
-  const ageInput = document.getElementById("age");
-  const ageTip = document.getElementById("age-tip");
-
-  // Configuramos atributos de accesibilidad para el mensaje de la edad
-  ageTip.setAttribute("role", "tooltip");
-  ageTip.setAttribute("aria-live", "polite");
-
-  // Escuchar el evento de entrada en el campo de edad para validar en tiempo real (manejo de mensajes)
+  // Validación en vivo de la edad
   ageInput.addEventListener("input", () => {
     if (!/^\d+$/.test(ageInput.value) || Number(ageInput.value) < 13) {
       ageTip.classList.add("show");
@@ -188,15 +189,7 @@ function initRegister() {
     }
   });
 
-  // Referencias a los elementos del DOM relacionados con la confirmación de la contraseña
-  const confirmInput = document.getElementById("confirmPassword");
-  const passwordConfirmTip = document.getElementById("passwordConfirm-tip");
-
-  // Configuramos atributos de accesibilidad para el mensaje de confirmación de contraseña
-  passwordConfirmTip.setAttribute("role", "tooltip");
-  passwordConfirmTip.setAttribute("aria-live", "polite");
-
-  // Escuchar el evento de entrada en el campo de confirmación de contraseña para validar en tiempo real (manejo de mensajes)
+  // Validación confirmación de contraseña
   confirmInput.addEventListener("input", () => {
     if (confirmInput.value !== passwordInput.value) {
       passwordConfirmTip.classList.add("show");
@@ -205,62 +198,23 @@ function initRegister() {
     }
   });
 
-  document.getElementById("togglePassword").addEventListener("click", function () {
-    const passwordInput = document.getElementById("password");
-    const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
-    passwordInput.setAttribute("type", type);
-
-    this.classList.toggle("fa-eye");
-    this.classList.toggle("fa-eye-slash");
-  });
-
-  document.getElementById("togglePassword2").addEventListener("click", function () {
-    const passwordInput = document.getElementById("confirmPassword");
-    const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
-    passwordInput.setAttribute("type", type);
-
-    this.classList.toggle("fa-eye");
-    this.classList.toggle("fa-eye-slash");
-  });
-
-  // Función para validar todos los campos del formulario
+  // Validar formulario completo
   function validateForm(data) {
     const errors = [];
+    if (!data.firstName) errors.push("El nombre es obligatorio");
+    if (!data.lastName) errors.push("El apellido es obligatorio");
+    if (!data.age || data.age < 13) errors.push("La edad debe ser mayor o igual a 13 años");
 
-    // Validar nombre y apellido (no vacíos)
-    if (!data.firstName || data.firstName.length === 0) {
-      errors.push("El nombre es obligatorio");
-    }
-    if (!data.lastName || data.lastName.length === 0) {
-      errors.push("El apellido es obligatorio");
-    }
-
-    // Validar edad
-    if (!data.age || data.age < 13) {
-      errors.push("La edad debe ser mayor o igual a 13 años");
-    }
-
-    // Validar email (formato básico)
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!data.email || !emailRegex.test(data.email)) {
       errors.push("El email debe tener un formato válido");
     }
 
-    // Validar contraseña con todas las reglas
-    if (!passwordRegex1.test(data.password)) {
-      errors.push("La contraseña debe contener al menos una letra mayúscula");
-    }
-    if (!passwordRegex2.test(data.password)) {
-      errors.push("La contraseña debe contener al menos un número");
-    }
-    if (!passwordRegex3.test(data.password)) {
-      errors.push("La contraseña debe contener al menos un carácter especial");
-    }
-    if (!passwordRegex4.test(data.password)) {
-      errors.push("La contraseña debe tener al menos 8 caracteres");
-    }
+    if (!passwordRegex1.test(data.password)) errors.push("La contraseña debe contener al menos una letra mayúscula");
+    if (!passwordRegex2.test(data.password)) errors.push("La contraseña debe contener al menos un número");
+    if (!passwordRegex3.test(data.password)) errors.push("La contraseña debe contener al menos un carácter especial");
+    if (!passwordRegex4.test(data.password)) errors.push("La contraseña debe tener al menos 8 caracteres");
 
-    // Validar confirmación de contraseña
     if (data.password !== data.confirmPassword) {
       errors.push("Las contraseñas no coinciden");
     }
@@ -268,11 +222,10 @@ function initRegister() {
     return errors;
   }
 
-  // Manejar el envío del formulario
+  // Envío del formulario
   form.addEventListener('submit', async (e) => {
-    e.preventDefault();  // Esto previene el comportamiento por defecto del formulario (que recarga la página)
+    e.preventDefault();
 
-    // Extraer datos del formulario
     const formData = new FormData(form);
     const data = {
       firstName: formData.get('firstName')?.trim(),
@@ -283,22 +236,15 @@ function initRegister() {
       confirmPassword: formData.get('confirmPassword')?.trim(),
     };
 
-    // Validar todos los campos antes de enviar
     const validationErrors = validateForm(data);
-
     if (validationErrors.length > 0) {
-      // Si hay errores, mostrar el primer error y no enviar el formulario
       showToast(validationErrors[0], "error");
-      return; // Detener la ejecución aquí
+      return;
     }
 
-    // Si llegamos aquí, todas las validaciones pasaron
     submitButton.disabled = true;
-
-    // Mostrar spinner en el botón (máx 3s)
     submitButton.innerHTML = `<span class="spinner"></span>`;
 
-    // Llamar al servicio registerUser para registrar el usuario
     try {
       await registerUser(data);
       showToast("Cuenta creada con éxito", "success");
@@ -309,10 +255,11 @@ function initRegister() {
       setTimeout(() => {
         submitButton.disabled = false;
         submitButton.innerHTML = "Registrarse";
-      }, 3000); // spinner máx 3s
+      }, 3000);
     }
   });
 }
+
 
 // Función para mostrar mensajes tipo toast
 function showToast(message, type) {

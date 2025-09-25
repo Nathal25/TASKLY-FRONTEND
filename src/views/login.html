@@ -1,3 +1,4 @@
+<!-- Navbar -->
 <nav class="navbar">
   <!-- Logo -->
   <img src="/taskly-logo.png" alt="Taskly Logo" class="logo-nav">
@@ -26,9 +27,21 @@
       <input type="text" id="email" name="email" placeholder="Email" required>
 
       <!-- Campo de contraseña con ojito -->
-      <div class="input-wrapper">
-        <input type="password" id="password" name="password" placeholder="Contraseña" required>
-        <i id="togglePasswordLogin" class="fa-solid fa-eye toggle-icon"></i>
+      <div class="input-wrapper-login">
+        <input
+          type="password"
+          id="password"
+          name="password"
+          placeholder="Contraseña"
+          required
+        />
+        <i
+          class="fa-solid fa-eye toggle-icon"
+          data-target="#password"
+          aria-label="Mostrar u ocultar contraseña"
+          role="button"
+          tabindex="0"
+        ></i>
       </div>
 
       <button type="submit">Ingresar</button>
