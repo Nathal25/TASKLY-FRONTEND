@@ -134,8 +134,8 @@ function initRegister() {
 
   // Validar existencia de inputs
   if (!passwordInput || !confirmInput || !ageInput ||
-      !passwordTip1 || !passwordTip2 || !passwordTip3 || !passwordTip4 ||
-      !passwordConfirmTip || !ageTip) {
+    !passwordTip1 || !passwordTip2 || !passwordTip3 || !passwordTip4 ||
+    !passwordConfirmTip || !ageTip) {
     console.warn("⚠️ No se encontraron todos los campos de registro");
     return;
   }
@@ -384,7 +384,7 @@ function initSendEmail() {
   const form = document.getElementById('recoverForm');
   const correoInput = document.getElementById('email');
   if (!form) return;
-  
+
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const correo = correoInput?.value.trim();
@@ -776,6 +776,15 @@ async function initCreateTask() {
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
+    const taskDate = new Date(form.querySelector('#date').value);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Normalizamos al inicio del día
+
+    if (taskDate < today) {
+      showToast('La fecha debe ser hoy o futura', 'error');
+      return;
+    }
+
     const taskData = {
       title: form.querySelector('#title').value.trim(),
       details: form.querySelector('#details').value.trim(),
@@ -787,11 +796,10 @@ async function initCreateTask() {
 
     try {
       await createTask(taskData); // Llama al servicio para crear la tarea
-      alert('Tarea creada exitosamente');
+      showToast('Tarea creada exitosamente', 'success');
       location.hash = '#/tasks'; // Redirige a la vista de tareas
     } catch (error) {
-      console.error('Error al crear la tarea:', error.message);
-      alert('Error al crear la tarea');
+      showToast2('Error al crear la tarea', 'error');
     }
   });
 
@@ -878,7 +886,7 @@ async function initEditTask() {
  * Saves the task ID to localStorage and navigates to the edit task view.
  * @param {string} taskId - The ID of the task to edit.
  */
-window.handleEditTask = async function(taskId) {
+window.handleEditTask = async function (taskId) {
   if (!taskId) {
     console.error('No se proporcionó un ID de tarea para editar.');
     return;
@@ -895,29 +903,46 @@ window.handleEditTask = async function(taskId) {
  * Prompts for confirmation, deletes the task via the service, and removes it from the UI.
  * @param {string} taskId - The ID of the task to delete.
  */
-window.initDeleteTask = async function(taskId) {
+window.initDeleteTask = function (taskId) {
   if (!taskId) {
-    console.error('No se proporcionó un ID de tarea para eliminar.');
-    alert('No se pudo eliminar la tarea.');
+    console.error("No se proporcionó un ID de tarea para eliminar.");
+    alert("No se pudo eliminar la tarea.");
     return;
   }
 
-  const confirmDelete = window.confirm('¿Estás seguro de que quieres eliminar esta tarea?');
-    if (!confirmDelete) {
-      return;
-    }
-  try {
-    // Llama a la función para eliminar la tarea
-    await deleteTask(taskId);
+  const deleteModal = document.getElementById("delete-task-modal");
+  const cancelDelete = document.getElementById("cancel-delete");
+  const confirmDelete = document.getElementById("confirm-delete");
+  const closeModal = document.getElementById("delete-task-close");
 
-    // Remover elemento visual
-    const taskElement = document.querySelector(`[data-task-id="${taskId}"]`);
-    if (taskElement) {
-      taskElement.remove();
-    } else {
-      console.warn(`No se encontró el elemento visual para la tarea con ID ${taskId}.`);
+  // Mostrar modal
+  deleteModal.classList.add("show");
+
+  // Cancelar eliminación
+  cancelDelete.onclick = () => {
+    deleteModal.classList.remove("show");
+  };
+
+  // Cerrar modal con la X
+  closeModal.onclick = () => {
+    deleteModal.classList.remove("show");
+  };
+
+  // Confirmar eliminación
+  confirmDelete.onclick = async () => {
+    try {
+      await deleteTask(taskId); // Tu función de backend
+
+      // Remover la tarea del DOM
+      const taskElement = document.querySelector(`[data-task-id="${taskId}"]`);
+      if (taskElement) {
+        taskElement.remove();
+      }
+
+      deleteModal.classList.remove("show");
+    } catch (error) {
+      console.error(error);
+      alert("Error al eliminar la tarea.");
     }
-  } catch (error) {
-    alert('Error al eliminar la tarea.');
-  }
-}
+  };
+};

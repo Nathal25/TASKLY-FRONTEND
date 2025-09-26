@@ -3,25 +3,56 @@
    ======================= */
 html {
   scroll-behavior: smooth;
+  margin: 0 !important;
+  padding: 0 !important;
+  height: 100% !important;
+  background: linear-gradient(135deg, #2a0f21, #3a1e3b, #523355) !important;
 }
 
 body {
-  background: linear-gradient(135deg, #2a0f21, #3a1e3b, #523355);
+  background: linear-gradient(135deg, #2a0f21, #3a1e3b, #523355) !important;
+  background-attachment: fixed !important;
+  background-repeat: no-repeat !important;
+  background-size: cover !important;
   color: #fff;
+  margin: 0 !important;
+  padding: 0 !important;
+  min-height: 100vh !important;
+  overflow-x: hidden !important;
+}
+
+/* Main container */
+main {
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  background: transparent !important;
+}
+
+/* Ensure all containers are transparent */
+#app, .particles {
+  background: transparent !important;
+}
+
+/* Override any conflicting base styles */
+* {
+  box-sizing: border-box;
 }
 
 /* =======================
    Home Hero Section
    ======================= */
 .home-container {
-  min-height: 100vh;
+  height: 95vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   position: relative;
   text-align: center;
-  padding: 20px;
+  padding: 90px 20px 20px 20px; 
+  box-sizing: border-box;
+  margin-top: -40px;
 }
 
 /* Logo circular */
@@ -29,7 +60,7 @@ body {
   width: clamp(120px, 25vw, 160px);
   height: clamp(120px, 25vw, 160px);
   border-radius: var(--radius-full);
-  background: #2a0f21; /* un tono oscuro que contraste con el blanco del logo */
+  background: linear-gradient(135deg, #344d70, #334155);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -229,6 +260,100 @@ body {
 /* =======================
    Media Queries
    ======================= */
+/* =======================
+   Site Map Footer
+   ======================= */
+.sitemap-footer {
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 60px 20px 20px;
+  margin-top: 80px;
+}
+
+.sitemap-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.sitemap-container h2 {
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 40px;
+  color: #fff;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.sitemap-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 40px;
+  margin-bottom: 40px;
+}
+
+.sitemap-section h3 {
+  color: #a044c6;
+  font-size: 1.4rem;
+  margin-bottom: 15px;
+  border-bottom: 2px solid #a044c6;
+  padding-bottom: 8px;
+}
+
+.sitemap-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sitemap-section li {
+  margin-bottom: 8px;
+}
+
+.sitemap-section a {
+  color: #e0e0e0;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  display: block;
+  padding: 5px 0;
+  border-left: 3px solid transparent;
+  padding-left: 10px;
+}
+
+.sitemap-section a:hover {
+  color: #fff;
+  border-left-color: #a044c6;
+  background: rgba(160, 68, 198, 0.1);
+  transform: translateX(5px);
+}
+
+.footer-bottom {
+  text-align: center;
+  padding-top: 30px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  color: #b0b0b0;
+}
+
+.footer-bottom p {
+  margin: 5px 0;
+  font-size: 0.9rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .sitemap-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 30px;
+  }
+  
+  .sitemap-container h2 {
+    font-size: 2rem;
+  }
+  
+  .sitemap-section h3 {
+    font-size: 1.2rem;
+  }
+}
+
 @media (max-width: 400px) {
   .home-container .btn {
     width: 100%;
@@ -239,5 +364,14 @@ body {
     flex-direction: column;
     gap: 10px;
     text-align: center;
+  }
+  
+  .sitemap-footer {
+    padding: 40px 15px 20px;
+  }
+  
+  .sitemap-grid {
+    grid-template-columns: 1fr;
+    gap: 25px;
   }
 }
