@@ -40,9 +40,14 @@
 }
 
 .nav-links a:hover {
-  color: var(--color-primary-hover); /* morado claro */
-  text-shadow: 0 0 6px rgba(255, 255, 255, 0.7); /* resplandor sutil */
+  color: #ffd700; /* amarillo/dorado para resaltar fuerte */
+  background: rgba(255, 255, 255, 0.1); /* un fondo sutil semitransparente */
+  padding: 6px 10px;
+  border-radius: 6px;
+  text-shadow: none; /* quitamos el brillo que se pierde */
+  transition: all 0.3s ease;
 }
+
 
 /* Menú activo (se abre en móvil) */
 .nav-links.active {

@@ -1,18 +1,23 @@
+/* Desactiva scroll SOLO en la vista de tasks */
 .tasks-layout {
   display: flex;
   min-height: 100vh;
+  height: 100vh;        /* 👈 asegura altura fija */
+  overflow: hidden;     /* 👈 bloquea scroll */
 }
 
-/* Sidebar */
+
 .sidebar {
   width: 250px;
   background: var(--color-primary);
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;  /* 👈 en lugar de space-between */
   padding: 20px;
   box-shadow: var(--shadow-md);
+  gap: 20px; /* 👈 opcional, controla la separación */
 }
+
 
 .user-info {
   text-align: center;
@@ -20,9 +25,22 @@
 }
 
 .user-avatar img {
-  border-radius: var(--radius-full);
-  border: 2px solid var(--color-surface);
+  border-radius: 50%;
+  padding: 12px;
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  background: linear-gradient(135deg, #5e2491, #8149c5); /* Degradado morado */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
+
+.user-avatar img:hover {
+  transform: scale(1.08);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.5),
+              0 0 14px rgba(129,73,197,0.6); /* Glow morado */
+}
+
 
 .user-name {
   margin-top: 10px;
@@ -61,20 +79,21 @@
 .sidebar-action {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;   /* 👈 alinea contenido a la izquierda */
   gap: 8px;
   padding: 12px;
-  width: 100%;                 /* todos mismo ancho */
-  min-height: 45px;            /* altura mínima igualada */
+  padding-left: 20px;            /* 👈 espacio desde el borde izquierdo */
+  width: 100%;
+  min-height: 45px;
   background: var(--color-surface);
   color: var(--color-primary);
   font-weight: bold;
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-md);
   transition: all var(--transition-fast);
-  text-align: center;
-  white-space: nowrap;         /* evita que el texto salte de línea */
+  white-space: nowrap;
 }
+
 
 .sidebar-action:hover {
   background: #f0e6ff; /* claro en hover */
@@ -87,49 +106,44 @@
   color: var(--color-primary);
 }
 
-
-.kanban-board {
-  display: flex; /* Asegura que las columnas estén en fila */
-  flex-direction: row; /* Alineación horizontal */
-  gap: 20px; /* Espaciado entre columnas */
-  justify-content: flex-start; /* Alineación horizontal */
-  align-items: flex-start; /* Alineación vertical */
-  overflow-x: auto; /* Permitir scroll horizontal si hay muchas columnas */
-  padding: 20px;
-  background-color: var(--background-color);
-  border-radius: 8px;
-  box-shadow: var(--shadow-md);
-}
-
 .tasks-title {
   font-size: 1.8em;
-  margin-bottom: 20px;
+  margin-bottom: 20px; /* 👈 espacio entre título y kanban */
+  text-align: center;
+  width: 100%;
 }
 
+
 .kanban-section {
-  flex: 1;
+  flex: 1;                         /* 👈 que use todo el espacio disponible */
   display: flex;
-  overflow-x: auto;
+  justify-content: center;         /* 👈 centra si sobra espacio */
+  align-items: flex-start;
   padding-bottom: 10px;
 }
+
+
 
 /* ========================
    Kanban Mejorado
    ======================== */
 
-/* Kanban Board */
 .kanban-board {
-  display: flex;
-  flex-direction: row;
-  gap: 20px;
-  justify-content: flex-start;
-  align-items: flex-start;
-  overflow-x: auto;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
   padding: 20px;
-  background-color: var(--background-color);
-  border-radius: 8px;
+  display: flex;
+  gap: 20px;
+  justify-content: space-evenly;
+  align-items: flex-start;
+  width: 100%;
+  flex: 1;
   box-shadow: var(--shadow-md);
 }
+
+
+
 
 /* Kanban Column */
 .kanban-column {
@@ -217,6 +231,17 @@
   border-radius: 3px;
 }
 
+.tasks-main {
+  flex: 1;
+  padding: 20px 40px;
+  display: flex;
+  flex-direction: column;  /* 👈 coloca el título arriba y el kanban debajo */
+  justify-content: flex-start;
+  align-items: center;     /* 👈 centra horizontalmente */
+  overflow: hidden;        /* 👈 evita scroll */
+}
+
+
 /* Responsive */
 @media (max-width: 1024px) {
   .tasks-layout {
@@ -231,8 +256,12 @@
   }
 
   .tasks-main {
-    padding: 15px;
-  }
+  flex: 1;
+  padding: 20px 40px; /* 👈 mismo padding a izquierda y derecha */
+  display: flex;
+  justify-content: center;
+}
+
 
   .kanban-board {
     flex-wrap: nowrap;

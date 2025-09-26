@@ -5,7 +5,7 @@
 /* Variables globales */
 :root {
   --color-bg: #6b21a8;            /* Fondo principal */
-  --color-bg-page: #344d70;       /* Fondo de páginas */
+  --color-bg-page: #2e1328;       /* Fondo de páginas */
   --color-primary: #6a2aa1;       /* Botones, títulos */
   --color-primary-hover: #af7add; /* Hover de botones/links */
   --color-text: #ffffff;          /* Texto blanco */
@@ -51,3 +51,4 @@ button {
   cursor: pointer;
   transition: background var(--transition-fast), transform var(--transition-fast);
 }
+

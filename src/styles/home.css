@@ -29,14 +29,15 @@ body {
   width: clamp(120px, 25vw, 160px);
   height: clamp(120px, 25vw, 160px);
   border-radius: var(--radius-full);
-  background: var(--color-surface);
+  background: #2a0f21; /* un tono oscuro que contraste con el blanco del logo */
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 20px;
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 0 15px rgba(0,0,0,0.6); /* un halo oscuro para resaltarlo */
   position: relative;
 }
+
 
 .logo-circle .logo {
   max-width: 80%;
