@@ -776,6 +776,15 @@ async function initCreateTask() {
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
+    const taskDate = new Date(form.querySelector('#date').value);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Normalizamos al inicio del día
+
+    if (taskDate < today) {
+      showToast('La fecha debe ser hoy o futura', 'error');
+      return;
+    }
+
     const taskData = {
       title: form.querySelector('#title').value.trim(),
       details: form.querySelector('#details').value.trim(),
