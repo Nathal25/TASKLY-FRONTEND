@@ -312,6 +312,7 @@ async function initLogin() {
 
   // Tomamos el evento submit del formulario
   form.addEventListener('submit', async (e) => {
+    console.log("submit ejecutado")
     // Prevenimos el comportamiento por defecto del formulario (que recarga la página)
     e.preventDefault();
 

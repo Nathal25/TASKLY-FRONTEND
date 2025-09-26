@@ -35,6 +35,33 @@ document.addEventListener("click", (e) => {
     return;
   }
 
+  document.querySelectorAll(".toggle-icon").forEach((eye) => {
+    eye.addEventListener("click", () => {
+      const selector = eye.getAttribute("data-target");
+      let input = selector ? document.querySelector(selector) : null;
+
+      if (!input) {
+        const wrapper = eye.closest(
+          ".input-wrapper, .input-wrapper-login, .input-wrapper-register"
+        );
+        input = wrapper?.querySelector('input[type="password"], input[type="text"]');
+      }
+
+      if (input) {
+        // Alternar tipo
+        const isPassword = input.type === "password";
+        input.type = isPassword ? "text" : "password";
+
+        // Sincronizar icono en el mismo clic
+        eye.classList.toggle("fa-eye", !isPassword);
+        eye.classList.toggle("fa-eye-slash", isPassword);
+      }
+    });
+  });
+
+  
+
+  /*
   // ===== Toggle "ojitos" en Login y Registro =====
   const eye = e.target.closest(".toggle-icon");
   if (eye) {
@@ -62,5 +89,5 @@ document.addEventListener("click", (e) => {
     }
 
     return; // evita que se propaguen otros handlers
-  }
+  }*/
 });
