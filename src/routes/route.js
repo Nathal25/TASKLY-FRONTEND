@@ -787,11 +787,10 @@ async function initCreateTask() {
 
     try {
       await createTask(taskData); // Llama al servicio para crear la tarea
-      alert('Tarea creada exitosamente');
+      showToast('Tarea creada exitosamente', 'success');
       location.hash = '#/tasks'; // Redirige a la vista de tareas
     } catch (error) {
-      console.error('Error al crear la tarea:', error.message);
-      alert('Error al crear la tarea');
+      showToast2('Error al crear la tarea', 'error');
     }
   });
 
