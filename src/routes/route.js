@@ -744,12 +744,11 @@ async function initEditProfile() {
 
       try {
         await editLoggedUser(updatedUser);
-        console.log('Perfil actualizado:', updatedUser);
-        alert('Perfil actualizado exitosamente');
+        showToast2('Perfil actualizado exitosamente', 'success');
         location.hash = '#/profile'; // Redirige a la vista del perfil
       } catch (error) {
         console.error('Error al actualizar el perfil:', error.message);
-        alert('Error al actualizar el perfil');
+        showToast2('Error al actualizar el perfil', 'error');
       }
     });
   } catch (error) {
@@ -855,17 +854,16 @@ async function initEditTask() {
 
       try {
         await updateTask(taskId, updatedTask);
-        console.log('Tarea actualizada:', updatedTask);
-        alert('Tarea actualizada exitosamente');
+        showToast2('Tarea actualizada exitosamente', 'success');
         location.hash = '#/tasks'; // Redirige a la vista de tareas
       } catch (error) {
         console.error('Error al actualizar la tarea:', error.message);
-        alert('Error al actualizar la tarea');
+        showToast2('Error al actualizar la tarea', 'error');
       }
     });
   } catch (error) {
     console.error('Error al cargar la tarea:', error.message);
-    alert('Error al cargar la tarea');
+    showToast2('Error al cargar la tarea', 'error');
     location.hash = '#/tasks';
   }
 
