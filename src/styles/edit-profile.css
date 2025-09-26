@@ -3,7 +3,7 @@
    ======================= */
 
 /* Contenedor principal */
-.edit-profile-main {
+/* .edit-profile-main {
   padding: 20px;
   font-family: var(--font-family);
   color: var(--color-text);
@@ -11,7 +11,7 @@
   min-height: 100vh;
 }
 
-/* Título principal */
+
 .edit-profile-main h1 {
   font-size: 24px;
   font-weight: 700;
@@ -20,7 +20,7 @@
   text-align: center;
 }
 
-/* Formulario */
+
 #edit-profile-form {
   background-color: var(--color-primary);
   padding: 20px;
@@ -64,7 +64,6 @@
   transform: scale(1.05);
 }
 
-/* Botón de cancelar */
 #backToProfile {
   background-color: var(--color-bg-page);
   color: var(--color-surface);
@@ -73,4 +72,152 @@
 #backToProfile:hover {
   background-color: var(--color-primary-hover);
   color: var(--color-text);
+} */
+
+/* =======================
+   Edit Profile Styles
+   ======================= */
+
+/* Contenedor principal */
+.edit-profile-main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 20px;
+  font-family: var(--font-family, 'Segoe UI', sans-serif);
+  background: var(--color-bg-page);
+}
+
+/* Tarjeta del formulario */
+#edit-profile-form {
+  background-color: var(--color-surface, #fff);
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  max-width: 450px;
+  width: 100%;
+
+  /* Animación de entrada */
+  opacity: 0;
+  transform: translateY(40px);
+  animation: fadeSlideUp 0.8s ease-out forwards;
+}
+
+
+/* Logo */
+.edit-profile-main .logo3 {
+  width: 90px;
+  display: block;
+  margin: 0 auto 20px; /* arriba 0, centrado horizontal, abajo 20px */
+  transition: transform 0.3s ease;
+}
+.edit-profile-main .logo3:hover {
+  transform: scale(1.08);
+}
+
+/* Título */
+.edit-profile-main h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 25px;
+  color: var(--color-primary, #6a0dad);
+  animation: fadeIn 1s ease-in forwards;
+}
+
+/* Labels */
+#edit-profile-form label {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #444;
+}
+
+/* Inputs */
+#edit-profile-form input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 18px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  outline: none;
+  transition: all 0.2s ease-in-out;
+}
+
+#edit-profile-form input:focus {
+  border-color: var(--color-primary, #6a0dad);
+  box-shadow: 0 0 6px rgba(106, 13, 173, 0.4);
+}
+
+/* Botones */
+#edit-profile-form button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.3s ease;
+}
+
+/* Guardar */
+#edit-profile-form button[type="submit"] {
+  background-color: var(--color-primary, #6a0dad);
+  color: #fff;
+}
+
+#edit-profile-form button[type="submit"]:hover {
+  background-color: #4a148c;
+  transform: scale(1.03);
+}
+
+/* Cancelar */
+#backToProfile {
+  background-color: #f3f3f3;
+  color: #333;
+}
+
+#backToProfile:hover {
+  background-color: #ddd;
+  transform: scale(1.03);
+}
+
+/* Animaciones */
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* =======================
+   Responsive
+   ======================= */
+@media (max-width: 480px) {
+  #edit-profile-form {
+    padding: 20px;
+  }
+
+  .edit-profile-main h1 {
+    font-size: 1.5rem;
+  }
+
+  #edit-profile-form input,
+  #edit-profile-form button {
+    font-size: 0.9rem;
+  }
 }

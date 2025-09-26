@@ -2,7 +2,7 @@
    Profile View Styles
    ======================= */
 
-/* Contenedor principal */
+/* Contenedor principal
 .profile-main {
   padding: 20px;
   font-family: var(--font-family);
@@ -11,7 +11,6 @@
   min-height: 100vh;
 }
 
-/* Título principal */
 .profile-main h1 {
   font-size: 24px;
   font-weight: 700;
@@ -19,7 +18,7 @@
   color: var(--color-surface);
 }
 
-/* Información del usuario */
+
 #profile-info {
   background-color: var(--color-primary);
   padding: 20px;
@@ -33,7 +32,7 @@
   color: var(--color-surface);
 }
 
-/* Botón para volver */
+
 #backToTasks {
   margin-top: 20px;
   padding: 10px 15px;
@@ -74,10 +73,7 @@
   transition: background var(--transition-fast), transform var(--transition-fast);
 }
 
-/* #editInfoBtn:hover {
-  background-color: var(--color-primary-hover);
-  transform: scale(1.05);
-} */
+
 
 .user-main {
   padding: 20px;
@@ -87,7 +83,7 @@
   min-height: 100vh;
 }
 
-/* Título principal */
+
 .user-main h1 {
   font-size: 24px;
   font-weight: 700;
@@ -95,7 +91,7 @@
   color: var(--color-surface);
 }
 
-/* Información del usuario */
+
 #user-info {
   background-color: var(--color-primary);
   padding: 20px;
@@ -109,7 +105,6 @@
   color: var(--color-surface);
 }
 
-/* Botón para volver */
 #backToTasks {
   margin-top: 20px;
   padding: 10px 15px;
@@ -125,25 +120,25 @@
   transform: scale(1.05);
 }
 
-/* ----- Estado oculto de Modal ----- */
+
 .modal.hidden {
   display: none;
 }
 
-/* ----- Fondo oscuro de Modal ----- */
+
 .modal {
   position: fixed;
-  inset: 0; /* equivale a top:0, left:0, right:0, bottom:0 */
+  inset: 0; 
   display: flex;
   align-items: center;
   justify-content: center;
   background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(2px); /* desenfoque elegante */
+  backdrop-filter: blur(2px); 
   z-index: 1000;
   animation: fadeIn 0.25s ease-in-out;
 }
 
-/* ----- Contenedor del modal ----- */
+
 .modal-content {
   background: #fff;
   padding: 2rem 1.5rem;
@@ -155,7 +150,7 @@
   text-align: center;
 }
 
-/* ----- Títulos y textos ----- */
+
 .modal-content h2 {
   margin-bottom: 0.5rem;
   font-size: 1.5rem;
@@ -168,7 +163,7 @@
   margin-bottom: 1.25rem;
 }
 
-/* ----- Inputs ----- */
+
 .modal-content input {
   width: 100%;
   padding: 0.6rem 0.75rem;
@@ -180,12 +175,12 @@
 }
 
 .modal-content input:focus {
-  border-color: #6366f1; /* azul violeta */
+  border-color: #6366f1; 
   outline: none;
   box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
 }
 
-/* ----- Botones ----- */
+
 .modal-actions {
   display: flex;
   justify-content: flex-end;
@@ -202,7 +197,7 @@
 }
 
 .modal-actions .secondary {
-  background: #e5e7eb; /* gris claro */
+  background: #e5e7eb; 
   color: #374151;
 }
 
@@ -212,7 +207,7 @@
 }
 
 .modal-actions .danger {
-  background: #ef4444; /* rojo */
+  background: #ef4444; 
   color: white;
 }
 
@@ -221,7 +216,7 @@
   transform: scale(1.02);
 }
 
-/* ----- Animaciones ----- */
+
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -230,4 +225,245 @@
 @keyframes slideUp {
   from { transform: translateY(20px); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }
+} */
+
+/* =======================
+   Profile Page Styles
+   ======================= */
+
+
+   /* Nuevo contenedor general de la tarjeta */
+.profile-card {
+  background: var(--color-surface);
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+  max-width: 550px;
+  width: 100%;
+  margin-bottom: 30px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px; /* espacio interno uniforme */
+  animation: fadeSlideIn 0.8s ease-out forwards;
+}
+
+/* Ajustamos los botones dentro del card */
+.profile-card button {
+  width: 100%;
+  margin: 0; /* eliminamos el margen extra */
+}
+
+.profile-main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 60px 20px;
+  font-family: var(--font-family, 'Segoe UI', sans-serif);
+  background: var(--color-bg-page);
+  min-height: 100vh;
+  color: var(--color-text);
+  text-align: center;
+}
+
+/* Logo */
+.profile-main .logo2 {
+  width: 90px;
+  height: auto;
+  margin-bottom: 20px;
+  transition: transform 0.3s ease;
+}
+.profile-main .logo2:hover {
+  transform: scale(1.08);
+}
+
+/* Título */
+.profile-main h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 25px;
+  color:  var(--color-primary);
+  animation: fadeSlideIn 0.7s ease-out;
+}
+
+/* Contenedor de info */
+#profile-info {
+  background: var(--color-surface);
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+  margin-bottom: 25px;
+  max-width: 500px;
+  width: 100%;
+
+  opacity: 0;
+  transform: translateY(25px);
+  animation: fadeSlideIn 0.8s ease-out forwards;
+}
+
+#profile-info p {
+  font-size: 1rem;
+  margin: 8px 0;
+  color: var(--color-bg-page);
+}
+
+/* Botones */
+.profile-main button {
+  display: block;
+  width: 100%;
+  max-width: 500px;
+  margin: 2px auto;
+  padding: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+/* Botón editar */
+#editInfoBtn {
+  background: var(--color-primary);
+  color: var(--color-text);
+}
+#editInfoBtn:hover {
+  background: #4a148c;
+  transform: scale(1.03);
+}
+
+/* Botón volver */
+#backToTasks {
+  background: #f3f3f3;
+  color: #333;
+}
+#backToTasks:hover {
+  background: #ddd;
+  transform: scale(1.03);
+}
+
+/* Botón eliminar */
+#deleteAccountBtn {
+  background: #ef4444;
+  color: white;
+}
+#deleteAccountBtn:hover {
+  background: #dc2626;
+  transform: scale(1.03);
+}
+
+/* Modal */
+.modal.hidden {
+  display: none;
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(3px);
+  z-index: 1000;
+  animation: fadeIn 0.25s ease-in-out;
+}
+
+.modal-content {
+  background: var(--color-surface);
+  padding: 2rem 1.5rem;
+  border-radius: 12px;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+  animation: slideUp 0.3s ease-out;
+  text-align: center;
+}
+
+.modal-content h2 {
+  margin-bottom: 0.75rem;
+  font-size: 1.5rem;
+  color: var(--color-primary);
+}
+
+.modal-content p {
+  font-size: 0.95rem;
+  color: #444;
+  margin-bottom: 1rem;
+}
+
+/* Inputs */
+.modal-content input {
+  width: 100%;
+  padding: 0.7rem;
+  margin-bottom: 0.9rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+.modal-content input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(175, 122, 221, 0.3);
+  outline: none;
+}
+
+/* Acciones modal */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.8rem;
+}
+.modal-actions button {
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+}
+.modal-actions .secondary {
+  background: #e5e7eb;
+  color: #374151;
+}
+.modal-actions .secondary:hover {
+  background: #d1d5db;
+  transform: scale(1.02);
+}
+.modal-actions .danger {
+  background: #ef4444;
+  color: white;
+}
+.modal-actions .danger:hover {
+  background: #dc2626;
+  transform: scale(1.02);
+}
+
+/* Animaciones */
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(25px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .profile-main {
+    padding: 40px 15px;
+  }
+  .profile-main h1 {
+    font-size: 1.5rem;
+  }
+  #profile-info {
+    padding: 20px;
+  }
+  .profile-main button {
+    font-size: 0.95rem;
+  }
 }

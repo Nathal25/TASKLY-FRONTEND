@@ -3,7 +3,7 @@
    ======================= */
 
 /* Contenedor principal */
-.edit-task-main {
+/* .edit-task-main {
   padding: 20px;
   font-family: var(--font-family);
   color: var(--color-text);
@@ -11,7 +11,7 @@
   min-height: 100vh;
 }
 
-/* Título principal */
+
 .edit-task-main h1 {
   font-size: 24px;
   font-weight: 700;
@@ -20,7 +20,7 @@
   text-align: center;
 }
 
-/* Formulario */
+
 #edit-task-form {
   background-color: var(--color-primary);
   padding: 20px;
@@ -71,7 +71,7 @@
   transform: scale(1.05);
 }
 
-/* Botón de cancelar */
+
 #cancelEditTask {
   background-color: var(--color-bg-page);
   color: var(--color-surface);
@@ -80,4 +80,170 @@
 #cancelEditTask:hover {
   background-color: var(--color-primary-hover);
   color: var(--color-text);
+} */
+
+/* =======================
+   Edit Task Styles
+   ======================= */
+
+/* Fondo general */
+.edit-task-main {
+  display: flex;
+  align-items: flex-start; /* formulario más arriba */
+  justify-content: center;
+  padding: 90px 15px; /* espacio arriba y lados */
+  min-height: 100vh;
+  font-family: var(--font-family, 'Segoe UI', sans-serif);
+  background: var(--color-bg-page); /* usa la paleta */
 }
+
+/* Contenedor tipo tarjeta */
+.form-container-edit-task {
+  background: var(--color-surface);
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0px 6px 20px rgba(0,0,0,0.25);
+  width: 100%;
+  max-width: 600px;
+
+  /* Animación de entrada */
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeSlideIn 0.8s ease-out forwards;
+}
+
+/* Título */
+.form-container-edit-task h1 {
+  font-size: 1.8rem;
+  text-align: center;
+  margin-bottom: 20px;
+  color: var(--color-primary);
+}
+
+/* Formulario */
+#edit-task-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Grupo de inputs */
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--color-bg-page);
+}
+
+/* Inputs, selects, textarea */
+#edit-task-form input,
+#edit-task-form textarea,
+#edit-task-form select {
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  outline: none;
+  transition: all 0.2s ease-in-out;
+}
+
+#edit-task-form input:focus,
+#edit-task-form textarea:focus,
+#edit-task-form select:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 6px rgba(175, 122, 221, 0.6);
+}
+
+#edit-task-form textarea {
+  resize: none;
+  height: 100px;
+}
+
+/* Fecha y hora en una fila */
+.form-row {
+  display: flex;
+  gap: 15px;
+}
+
+.form-row .form-group {
+  flex: 1;
+}
+
+/* Botones */
+.form-actions {
+  display: flex;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.btn {
+  flex: 1;
+  padding: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.3s ease;
+}
+
+
+/* Botón guardar */
+.btn.save {
+  background: var(--color-primary);
+  color: var(--color-text);
+}
+
+.btn.save:hover {
+  background: #4a148c;
+  transform: scale(1.03);
+}
+
+/* Botón cancelar */
+.btn.cancel {
+  background: #f3f3f3;
+  color: #333;
+}
+
+.btn.cancel:hover {
+  background: #ddd;
+  transform: scale(1.03);
+}
+
+/* Logo */
+.form-container-edit-task .logo {
+  display: block; /* 👈 importante para que el margin funcione */
+  width: 80px;
+  height: auto;
+  margin: 0 auto 20px; /* arriba 0, auto horizontal, abajo 20px */
+  transition: transform var(--transition-fast);
+}
+
+.form-container-edit-task .logo:hover {
+  transform: scale(1.05);
+}
+
+/* Animación */
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .form-row {
+    flex-direction: column;
+  }
+}
+
