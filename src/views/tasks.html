@@ -1,5 +1,3 @@
-
-
 <!-- Vista de tareas mejorada siguiendo el mockup -->
 <div class="tasks-layout">
   <!-- Sidebar -->
@@ -44,13 +42,13 @@
   <!-- Main content -->
   <main class="tasks-main">
     <h1 class="tasks-title" id="current-list-title">LISTA 1</h1>
-    
+
     <!-- Mensaje de error/loading -->
     <div id="loading-message" style="display: none; text-align: center; color: var(--color-text); margin: 2rem 0;">
       Cargando tareas...
     </div>
     <div id="error-message" style="display: none; text-align: center; color: #ffb4b4; margin: 2rem 0;"></div>
-    
+
     <div class="kanban-section">
       <div id="kanban-board" class="kanban-board">
         <!-- Columna NUEVO -->
@@ -67,7 +65,7 @@
           <div class="kanban-tasks" id="in-progress-tasks">
             <!-- Tareas se cargarán dinámicamente aquí -->
           </div>
-     
+
         </div>
 
         <!-- Columna HECHO -->
@@ -76,7 +74,18 @@
           <div class="kanban-tasks" id="completed-tasks">
             <!-- Tareas se cargarán dinámicamente aquí -->
           </div>
-        
+
+        </div>
+      </div>
+    </div>
+    <div id="delete-task-modal" class="task-modal">
+      <div class="task-modal-content">
+        <span class="task-modal-close" id="delete-task-close">&times;</span>
+        <h2>Eliminar tarea</h2>
+        <p>¿Estás seguro de que quieres eliminar esta tarea?</p>
+        <div class="form-buttons">
+          <button class="btn-secondary" id="cancel-delete">Cancelar</button>
+          <button class="btn-primary" id="confirm-delete">Eliminar</button>
         </div>
       </div>
     </div>
@@ -126,7 +135,7 @@
       </div>
     </form>
   </div>
-</div> -->  
+</div> -->
 
 <!-- <script>
 // Funcionalidad Kanban mejorada
