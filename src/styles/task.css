@@ -1,18 +1,23 @@
+/* Desactiva scroll SOLO en la vista de tasks */
 .tasks-layout {
   display: flex;
   min-height: 100vh;
+  height: 100vh;        /* 👈 asegura altura fija */
+  overflow: hidden;     /* 👈 bloquea scroll */
 }
 
-/* Sidebar */
+
 .sidebar {
   width: 250px;
   background: var(--color-primary);
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;  /* 👈 en lugar de space-between */
   padding: 20px;
   box-shadow: var(--shadow-md);
+  gap: 20px; /* 👈 opcional, controla la separación */
 }
+
 
 .user-info {
   text-align: center;
@@ -20,9 +25,22 @@
 }
 
 .user-avatar img {
-  border-radius: var(--radius-full);
-  border: 2px solid var(--color-surface);
+  border-radius: 50%;
+  padding: 12px;
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  background: linear-gradient(135deg, #5e2491, #8149c5); /* Degradado morado */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
+
+.user-avatar img:hover {
+  transform: scale(1.08);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.5),
+              0 0 14px rgba(129,73,197,0.6); /* Glow morado */
+}
+
 
 .user-name {
   margin-top: 10px;
@@ -55,83 +73,121 @@
 .sidebar-bottom {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 15px; /* más separación entre botones */
 }
 
 .sidebar-action {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 5px;
-  padding: 10px;
-  background: var(--color-bg);
-  color: var(--color-text);
+  justify-content: flex-start;   /* 👈 alinea contenido a la izquierda */
+  gap: 8px;
+  padding: 12px;
+  padding-left: 20px;            /* 👈 espacio desde el borde izquierdo */
+  width: 100%;
+  min-height: 45px;
+  background: var(--color-surface);
+  color: var(--color-primary);
+  font-weight: bold;
   border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-fast);
+  white-space: nowrap;
 }
 
+
 .sidebar-action:hover {
-  background: var(--color-primary-hover);
+  background: #f0e6ff; /* claro en hover */
+  color: var(--color-primary);
   transform: translateY(-2px);
 }
 
-.kanban-board {
-  display: flex; /* Asegura que las columnas estén en fila */
-  flex-direction: row; /* Alineación horizontal */
-  gap: 20px; /* Espaciado entre columnas */
-  justify-content: flex-start; /* Alineación horizontal */
-  align-items: flex-start; /* Alineación vertical */
-  overflow-x: auto; /* Permitir scroll horizontal si hay muchas columnas */
-  padding: 20px;
-  background-color: var(--background-color);
-  border-radius: 8px;
-  box-shadow: var(--shadow-md);
+.sidebar-action:active {
+  background: #e0ccff; /* tono intermedio al hacer click */
+  color: var(--color-primary);
 }
 
 .tasks-title {
   font-size: 1.8em;
-  margin-bottom: 20px;
+  margin-bottom: 20px; /* 👈 espacio entre título y kanban */
+  text-align: center;
+  width: 100%;
 }
 
+
 .kanban-section {
-  flex: 1;
+  flex: 1;                         /* 👈 que use todo el espacio disponible */
   display: flex;
-  overflow-x: auto;
+  justify-content: center;         /* 👈 centra si sobra espacio */
+  align-items: flex-start;
   padding-bottom: 10px;
 }
 
-/* Kanban Board */
+
+
+/* ========================
+   Kanban Mejorado
+   ======================== */
+
 .kanban-board {
-  display: flex; /* Asegura que las columnas estén en fila */
-  flex-direction: row; /* Alineación horizontal */
-  gap: 20px; /* Espaciado entre columnas */
-  justify-content: flex-start; /* Alineación horizontal */
-  align-items: flex-start; /* Alineación vertical */
-  overflow-x: auto; /* Permitir scroll horizontal si hay muchas columnas */
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
   padding: 20px;
-  background-color: var(--background-color);
-  border-radius: 8px;
+  display: flex;
+  gap: 20px;
+  justify-content: space-evenly;
+  align-items: flex-start;
+  width: 100%;
+  flex: 1;
   box-shadow: var(--shadow-md);
 }
+
+
+
 
 /* Kanban Column */
 .kanban-column {
   background: var(--color-surface);
   color: var(--color-bg);
-  border-radius: var(--radius-md);
+  border-radius: 12px;
   flex: 0 0 300px;
   display: flex;
   flex-direction: column;
   max-height: 80vh;
   box-shadow: var(--shadow-md);
   padding: 15px;
+  transition: transform var(--transition-fast);
 }
 
+.kanban-column:hover {
+  transform: translateY(-2px);
+}
+
+/* Diferenciar columnas con colores en el borde superior */
+.kanban-column[data-status="Pending"] {
+  border-top: 6px solid #f39c12; /* naranja */
+}
+
+.kanban-column[data-status="In-progress"] {
+  border-top: 6px solid #3498db; /* azul */
+}
+
+.kanban-column[data-status="Completed"] {
+  border-top: 6px solid #2ecc71; /* verde */
+}
+
+/* Títulos de columnas */
 .kanban-column h3 {
   text-align: center;
   margin-bottom: 15px;
-  font-size: 1.2em;
+  font-size: 1rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--color-subtle);
   color: var(--color-primary);
 }
+
 
 /* Kanban Tasks Container */
 .kanban-tasks {
@@ -175,6 +231,17 @@
   border-radius: 3px;
 }
 
+.tasks-main {
+  flex: 1;
+  padding: 20px 40px;
+  display: flex;
+  flex-direction: column;  /* 👈 coloca el título arriba y el kanban debajo */
+  justify-content: flex-start;
+  align-items: center;     /* 👈 centra horizontalmente */
+  overflow: hidden;        /* 👈 evita scroll */
+}
+
+
 /* Responsive */
 @media (max-width: 1024px) {
   .tasks-layout {
@@ -189,8 +256,12 @@
   }
 
   .tasks-main {
-    padding: 15px;
-  }
+  flex: 1;
+  padding: 20px 40px; /* 👈 mismo padding a izquierda y derecha */
+  display: flex;
+  justify-content: center;
+}
+
 
   .kanban-board {
     flex-wrap: nowrap;
@@ -225,24 +296,42 @@
   border-color: var(--color-surface);
 }
 
-/* Estilos de las tareas */
+/* ========================
+   Kanban Task Mejorado
+   ======================== */
+
+/* Tarjeta base */
 .kanban-task {
-  background: var(--color-primary);
-  color: var(--color-text);
+  background: var(--color-surface);
+  color: #333;
   padding: 15px;
   border-radius: var(--radius-md);
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 3px 10px rgba(0,0,0,0.15);
   cursor: grab;
-  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
-  margin-bottom: 10px;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
+  margin-bottom: 12px;
   position: relative;
+  border-left: 6px solid var(--color-primary);
 }
 
 .kanban-task:hover {
   transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.35);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+  background: #f9f6ff; /* tono claro en hover */
 }
 
+/* Variaciones de color */
+.kanban-task.alt {
+  background: var(--color-primary);
+  color: var(--color-text);
+  border-left: 6px solid var(--color-surface);
+}
+
+.kanban-task.alt:hover {
+  background: #7038a8; /* un morado más oscuro */
+}
+
+/* Texto de la tarea */
 .kanban-task .task-title {
   font-weight: bold;
   margin-bottom: 5px;
@@ -251,18 +340,20 @@
 
 .kanban-task .task-description {
   font-size: 0.9em;
-  opacity: 0.9;
+  opacity: 0.85;
   margin-bottom: 8px;
 }
 
 .kanban-task .task-date {
   font-size: 0.8em;
-  opacity: 0.7;
+  opacity: 0.75;
   display: flex;
   align-items: center;
-  gap: 3px;
+  gap: 5px;
+  font-style: italic;
 }
 
+/* Acciones (editar/eliminar) */
 .kanban-task .task-actions {
   position: absolute;
   top: 5px;
@@ -271,35 +362,24 @@
 }
 
 .kanban-task:hover .task-actions {
-  display: block;
+  display: flex;
+  gap: 5px;
 }
 
 .task-action-btn {
-  background: rgba(255,255,255,0.2);
+  background: rgba(0,0,0,0.15);
   border: none;
-  color: white;
-  padding: 3px 6px;
-  border-radius: 3px;
+  color: #fff;
+  padding: 4px 6px;
+  border-radius: 4px;
   cursor: pointer;
-  margin-left: 2px;
+  font-size: 0.8em;
 }
 
 .task-action-btn:hover {
-  background: rgba(255,255,255,0.4);
+  background: rgba(0,0,0,0.35);
 }
 
-/* Modal styles */
-.task-modal {
-  display: none;
-  position: fixed;
-  z-index: 1000;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0,0,0,0.5);
-  backdrop-filter: blur(3px);
-}
 
 .task-modal-content {
   background-color: var(--color-surface);

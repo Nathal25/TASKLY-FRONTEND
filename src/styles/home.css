@@ -65,9 +65,10 @@ main {
   align-items: center;
   justify-content: center;
   margin-bottom: 20px;
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 0 15px rgba(0,0,0,0.6); /* un halo oscuro para resaltarlo */
   position: relative;
 }
+
 
 .logo-circle .logo {
   max-width: 80%;

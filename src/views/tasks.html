@@ -1,43 +1,32 @@
+
 <!-- Vista de tareas mejorada siguiendo el mockup -->
 <div class="tasks-layout">
   <!-- Sidebar -->
   <aside class="sidebar">
-    <div class="user-info">
-      <div class="user-avatar">
-        <img src="/taskly-logo.png" alt="Usuario" style="width: 90px;height:90px;object-fit:contain;" />
-      </div>
-      <div class="user-name">
-        <p id="user-name"></p>
-      </div>
+  <div class="user-info">
+    <div class="user-avatar">
+      <img src="/taskly-logo.png" alt="Usuario" style="width: 90px;height:90px;object-fit:contain;" />
     </div>
-
-    <nav class="lists-nav" id="lists-nav">
-      <a class="list-btn active" data-list-id="1">LISTA 1</a>
-      <a class="list-btn" data-list-id="2">LISTA 2</a>
-      <a class="list-btn" data-list-id="3">LISTA 3</a>
-    </nav>
-
-    <div class="sidebar-bottom">
-      <!-- Botón crear lista -->
-      <button class="sidebar-action" id="new-list-btn">
-        <span style="font-size:1.2em;">⚙️</span> Nueva lista
-      </button>
-
-      <a href="#/create-task" class="sidebar-action">
-        <span style="font-size:1.2em;">➕</span> Crear Tarea
-      </a>
-
-      <!-- Botón perfil de usuario -->
-      <a href="#/profile" class="sidebar-action">
-        <span style="font-size:1.2em;">👤</span> Perfil
-      </a>
-
-      <!-- Botón logout -->
-      <button class="sidebar-action" id="logout">
-        <span style="font-size:1.2em;">🚪</span> Cerrar sesión
-      </button>
+    <div class="user-name">
+      <p id="user-name"></p>
     </div>
-  </aside>
+  </div>
+
+  <div class="sidebar-bottom">
+    <a href="#/create-task" class="sidebar-action">
+      <span style="font-size:1.2em;">➕</span> Crear Tarea
+    </a>
+
+    <a href="#/profile" class="sidebar-action">
+      <span style="font-size:1.2em;">👤</span> Perfil
+    </a>
+
+    <button class="sidebar-action" id="logout">
+      <span style="font-size:1.2em;">🚪</span> Cerrar sesión
+    </button>
+  </div>
+</aside>
+
 
   <!-- Main content -->
   <main class="tasks-main">
@@ -53,7 +42,7 @@
       <div id="kanban-board" class="kanban-board">
         <!-- Columna NUEVO -->
         <div class="kanban-column" data-status="Pending">
-          <h3>NUEVO</h3>
+          <h3>POR HACER</h3>
           <div class="kanban-tasks" id="pending-tasks">
             <!-- Tareas se cargarán dinámicamente aquí -->
           </div>
@@ -61,7 +50,7 @@
 
         <!-- Columna EN PROGRESO -->
         <div class="kanban-column" data-status="In-progress">
-          <h3>EN PROGRESO</h3>
+          <h3>HACIENDO</h3>
           <div class="kanban-tasks" id="in-progress-tasks">
             <!-- Tareas se cargarán dinámicamente aquí -->
           </div>
