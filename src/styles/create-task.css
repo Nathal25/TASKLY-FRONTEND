@@ -2,62 +2,77 @@
    Create Task Styles
    ======================= */
 
-/* Contenedor principal */
+/* Fondo general */
 .create-task-main {
-  padding: 20px;
-  font-family: var(--font-family);
-  color: var(--color-text);
-  background-color: var(--color-bg);
+  display: flex;
+  align-items: flex-start; /* formulario más arriba */
+  justify-content: center;
+  padding: 90px 15px; /* espacio arriba y lados */
   min-height: 100vh;
+  font-family: var(--font-family, 'Segoe UI', sans-serif);
+  background: var(--color-bg-page); /* usa la paleta */
 }
 
-/* Título principal */
-.create-task-main h1 {
-  font-size: 24px;
-  font-weight: 700;
-  margin-bottom: 20px;
-  color: var(--color-surface);
+/* Contenedor tipo tarjeta */
+.form-container-create-task {
+  background: var(--color-surface);
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0px 6px 20px rgba(0,0,0,0.25);
+  width: 100%;
+  max-width: 600px;
+
+  /* Animación de entrada */
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeSlideIn 0.8s ease-out forwards;
+}
+
+/* Título */
+.form-container-create-task h1 {
+  font-size: 1.8rem;
   text-align: center;
+  margin-bottom: 20px;
+  color: var(--color-primary);
 }
 
 /* Formulario */
 #create-task-form {
-  background-color: var(--color-primary);
-  padding: 20px;
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-md);
-  max-width: 500px;
-  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
-
-#create-task-form label {
-  display: block;
-  font-size: 16px;
-  margin-bottom: 5px;
-  color: var(--color-surface);
+/* Grupo de inputs */
+.form-group {
+  display: flex;
+  flex-direction: column;
 }
 
-#create-task-form input[type="time"] {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 15px;
-  border: none;
-  border-radius: var(--radius-md);
-  font-size: 16px;
-  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+.form-group label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--color-bg-page);
 }
 
+/* Inputs, selects, textarea */
 #create-task-form input,
 #create-task-form textarea,
 #create-task-form select {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 15px;
-  border: none;
-  border-radius: var(--radius-md);
-  font-size: 16px;
-  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  outline: none;
+  transition: all 0.2s ease-in-out;
+}
+
+#create-task-form input:focus,
+#create-task-form textarea:focus,
+#create-task-form select:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 6px rgba(175, 122, 221, 0.6);
 }
 
 #create-task-form textarea {
@@ -65,30 +80,84 @@
   height: 100px;
 }
 
-#create-task-form button {
-  width: 100%;
-  padding: 10px;
-  margin-top: 10px;
-  background-color: var(--color-primary-hover);
-  color: var(--color-surface);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-md);
-  font-size: 16px;
-  cursor: pointer;
+/* Fecha y hora en una fila */
+.form-row {
+  display: flex;
+  gap: 15px;
 }
 
-#create-task-form button:hover {
-  background-color: var(--color-subtle);
+.form-row .form-group {
+  flex: 1;
+}
+
+/* Botones */
+.form-actions {
+  display: flex;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.btn {
+  flex: 1;
+  padding: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.3s ease;
+}
+
+/* Botón guardar */
+.btn.save {
+  background: var(--color-primary);
+  color: var(--color-text);
+}
+
+.btn.save:hover {
+  background: #4a148c;
+  transform: scale(1.03);
+}
+
+/* Botón cancelar */
+.btn.cancel {
+  background: #f3f3f3;
+  color: #333;
+}
+
+.btn.cancel:hover {
+  background: #ddd;
+  transform: scale(1.03);
+}
+
+/* Logo */
+.form-container-create-task .logo {
+  display: block; /* 👈 importante para que el margin funcione */
+  width: 80px;
+  height: auto;
+  margin: 0 auto 20px; /* arriba 0, auto horizontal, abajo 20px */
+  transition: transform var(--transition-fast);
+}
+
+.form-container-create-task .logo:hover {
   transform: scale(1.05);
 }
 
-/* Botón de cancelar */
-#cancelCreateTask {
-  background-color: var(--color-bg-page);
-  color: var(--color-surface);
+/* Animación */
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-#cancelCreateTask:hover {
-  background-color: var(--color-primary-hover);
-  color: var(--color-text);
+/* Responsive */
+@media (max-width: 600px) {
+  .form-row {
+    flex-direction: column;
+  }
 }

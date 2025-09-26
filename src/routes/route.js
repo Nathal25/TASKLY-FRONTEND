@@ -699,8 +699,9 @@ function setupDragAndDrop() {
           // Mover la tarea visualmente
           const tasksContainer = column.querySelector('.kanban-tasks');
           tasksContainer.appendChild(taskElement);
+          showToast2('Tarea movida exitosamente', 'success');
         } catch (error) {
-          alert('No se pudo mover la tarea. Inténtalo de nuevo.');
+          showToast2('No se pudo mover la tarea. Inténtalo de nuevo.', 'error');
         }
       } else {
         console.warn(`No se encontró el elemento visual para la tarea con ID ${taskId}.`);
@@ -906,7 +907,7 @@ window.handleEditTask = async function (taskId) {
 window.initDeleteTask = function (taskId) {
   if (!taskId) {
     console.error("No se proporcionó un ID de tarea para eliminar.");
-    alert("No se pudo eliminar la tarea.");
+    showToast2('No se pudo eliminar la tarea.', 'error');
     return;
   }
 
@@ -938,11 +939,11 @@ window.initDeleteTask = function (taskId) {
       if (taskElement) {
         taskElement.remove();
       }
-
+      showToast('Tarea eliminada exitosamente', 'success');
       deleteModal.classList.remove("show");
     } catch (error) {
       console.error(error);
-      alert("Error al eliminar la tarea.");
+      showToast2('Error al eliminar la tarea', 'error');
     }
   };
 };

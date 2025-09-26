@@ -8,28 +8,45 @@
 </nav>
 
 <main class="create-task-main">
-  <h1>Crear Nueva Tarea</h1>
-  <form id="create-task-form">
-    <label for="title">Título:</label>
-    <input type="text" id="title" name="title" placeholder="Título de la tarea" required />
+  <section class="form-container-create-task">
+    <img src="/taskly-logo.png" alt="Taskly Logo" class="logo" />
+    <h1>Crear Nueva Tarea</h1>
+    <form id="create-task-form">
+      <div class="form-group">
+        <label for="title">Título</label>
+        <input type="text" id="title" name="title" placeholder="Título de la tarea" required />
+      </div>
 
-    <label for="details">Descripción:</label>
-    <textarea id="details" name="details" placeholder="Descripción de la tarea"></textarea>
+      <div class="form-group">
+        <label for="details">Descripción</label>
+        <textarea id="details" name="details" placeholder="Descripción de la tarea"></textarea>
+      </div>
 
-    <label for="date">Fecha Límite:</label>
-    <input type="date" id="date" name="date" required />
+      <div class="form-row">
+        <div class="form-group">
+          <label for="date">Fecha Límite</label>
+          <input type="date" id="date" name="date" required />
+        </div>
 
-    <label for="time">Hora:</label>
-    <input type="time" id="time" name="time" required />
+        <div class="form-group">
+          <label for="time">Hora</label>
+          <input type="time" id="time" name="time" required />
+        </div>
+      </div>
 
-    <label for="status">Estado:</label>
-    <select id="status" name="status" required>
-      <option value="Pending">Por Hacer</option>
-      <option value="In-progress">Haciendo</option>
-      <option value="Completed">Hecho</option>
-    </select>
+      <div class="form-group">
+        <label for="status">Estado</label>
+        <select id="status" name="status" required>
+          <option value="Pending">Por Hacer</option>
+          <option value="In-progress">Haciendo</option>
+          <option value="Completed">Hecho</option>
+        </select>
+      </div>
 
-    <button type="submit">Crear Tarea</button>
-    <button type="button" id="cancelCreateTask">Cancelar</button>
-  </form>
+      <div class="form-actions">
+        <button type="submit" class="btn save">Crear Tarea</button>
+        <button type="button" id="cancelCreateTask" class="btn cancel">Cancelar</button>
+      </div>
+    </form>
+  </section>
 </main>
