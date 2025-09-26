@@ -1,4 +1,4 @@
-<nav class="navbar">
+<!-- <nav class="navbar">
   <img src="/taskly-logo.png" alt="Taskly Logo" class="logo-nav">
   <div class="nav-links">
     <a href="#/tasks">Tareas</a>
@@ -31,4 +31,56 @@
     <button type="submit">Guardar Cambios</button>
     <button type="button" id="cancelEditTask">Cancelar</button>
   </form>
+</main> -->
+
+<nav class="navbar">
+  <img src="/taskly-logo.png" alt="Taskly Logo" class="logo-nav">
+  <div class="nav-links">
+    <a href="#/tasks">Tareas</a>
+    <a href="#/profile">Mi perfil</a>
+  </div>
+</nav>
+
+<main class="edit-task-main">
+  <section class="form-container-edit-task">
+    <img src="/taskly-logo.png" alt="Taskly Logo" class="logo" />
+    <h1>Editar Tarea</h1>
+    <form id="edit-task-form">
+      <div class="form-group">
+        <label for="title">Título</label>
+        <input type="text" id="title" name="title" placeholder="Título de la tarea" required />
+      </div>
+
+      <div class="form-group">
+        <label for="details">Descripción</label>
+        <textarea id="details" name="details" placeholder="Descripción de la tarea"></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="date">Fecha Límite</label>
+          <input type="date" id="date" name="date" required />
+        </div>
+
+        <div class="form-group">
+          <label for="time">Hora</label>
+          <input type="time" id="time" name="time" required />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="status">Estado</label>
+        <select id="status" name="status" required>
+          <option value="Pending">Por Hacer</option>
+          <option value="In-progress">En Progreso</option>
+          <option value="Completed">Completada</option>
+        </select>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn save">Guardar Cambios</button>
+        <button type="button" id="cancelEditTask" class="btn cancel">Cancelar</button>
+      </div>
+    </form>
+  </section>
 </main>

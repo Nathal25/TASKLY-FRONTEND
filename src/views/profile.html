@@ -7,27 +7,30 @@
 </nav>
 
 <main class="profile-main">
-  <h1>Información del Usuario</h1>
-  <div id="profile-info">
-    <!-- Aquí se cargará la información del usuario -->
+  <div class="profile-card">
+    <img src="/taskly-logo.png" alt="Taskly Logo" class="logo2" />
+    <h1>Detalles de mi Cuenta</h1>
+    <div id="profile-info">
+      <!-- Aquí se cargará la información del usuario -->
+    </div>
+    <button id="editInfoBtn">Editar perfil</button>
+    <button id="backToTasks">Volver a Tareas</button>
+    <button id="deleteAccountBtn">Eliminar cuenta</button>
   </div>
-  <button id="editInfoBtn">Editar perfil</button>
-  <button id="backToTasks">Volver a Tareas</button>
-  <button id="deleteAccountBtn">Eliminar cuenta</button>
 
   <!-- Modal de confirmación para eliminar cuenta -->
   <div id="deleteModal" class="modal hidden">
-  <div class="modal-content">
-    <h2>Eliminar cuenta</h2>
-    <p>Para confirmar escribe <strong>ELIMINAR</strong> y tu contraseña.</p>
+    <div class="modal-content">
+      <h2>Eliminar cuenta</h2>
+      <p>Para confirmar escribe <strong>ELIMINAR</strong> y tu contraseña.</p>
 
-    <input id="confirmText" type="text" placeholder="Escribe ELIMINAR" />
-    <input id="password" type="password" placeholder="Contraseña" />
+      <input id="confirmText" type="text" placeholder="Escribe ELIMINAR" />
+      <input id="password" type="password" placeholder="Contraseña" />
 
-    <div class="modal-actions">
-      <button id="cancelDelete" class="secondary">Cancelar</button>
-      <button id="confirmDelete" class="danger">Eliminar</button>
+      <div class="modal-actions">
+        <button id="cancelDelete" class="secondary">Cancelar</button>
+        <button id="confirmDelete" class="danger">Eliminar</button>
+      </div>
     </div>
   </div>
-</div>
 </main>
