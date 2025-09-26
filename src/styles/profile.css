@@ -264,7 +264,7 @@
   background: var(--color-bg-page);
   min-height: 100vh;
   color: var(--color-text);
-  text-align: center;
+  text-align: left;
 }
 
 /* Logo */
